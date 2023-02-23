@@ -1,1 +1,2 @@
-"# cs142" 
+CS 142: Web Applications
+Winter 2023
