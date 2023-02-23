@@ -1,0 +1,35 @@
+/*
+CSS for the CS142 Project 4, Problem 2 States component
+
+Since CSS uses a global name space for classes we should use names starting with
+cs142-states- here.
+*/
+
+.cs142-states-div{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: pink;
+}
+
+.cs142-states-horizontal{
+    display: inline-block;
+    background-color: plum;
+    width: 100%;
+}
+
+.cs142-states-div p{
+    font-weight: bold;
+    padding-left: 10px;
+
+}
+
+.cs142-states-horizontal p{
+    display: inline-block;
+    padding-right: 10px;
+}
+
+.cs142-states-div ol{
+    font-size: medium;
+    column-count: auto;
+    padding-bottom: 10px;
+    
+}

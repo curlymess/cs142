@@ -1,0 +1,43 @@
+body{
+	background-color: #ffe0e5;
+	color: #9b795a;
+	font: bold 1rem sans-serif;
+	text-align: center;
+	cursor: default;
+	
+}
+
+table {
+	text-align: center;
+	border: 0.5rem outset pink;
+	outline: 0.5rem solid khaki;
+	box-shadow: 0 0 0 2rem skyblue;
+	border-radius: 12px;
+	font: 2rem sans-serif;
+	margin: 2rem;
+	padding: 1rem;
+	outline-offset: 0.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+	cursor: default;
+}
+
+th {
+	border-bottom: 0.3rem solid pink;
+}
+
+#diffMonth {
+	color: #f6e5db;
+	cursor: default;
+}
+
+#currMonth {
+	cursor: pointer;
+}
+
+#bttn {
+	cursor: pointer;
+	font: bold 2rem sans-serif;
+
+}
