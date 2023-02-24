@@ -1,13 +1,17 @@
 import React from 'react';
 import {
+  Avatar,
   Divider,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemText,
   Typography,
 }
 from '@mui/material';
 import './userList.css';
+import { Link } from 'react-router-dom';
+import fetchModel from '../../lib/fetchModelData';
 
 /**
  * Define UserList, a React componment of CS142 project #5
@@ -15,32 +19,54 @@ import './userList.css';
 class UserList extends React.Component {
   constructor(props) {
     super(props);
+    console.log('window.cs142models.userListModel()', window.cs142models.userListModel());
+    
+    this.state = {
+      users: [],
+    };
   }
 
+  componentDidMount() {
+    fetchModel('/user/list')
+			.then((response) => {
+				this.setState({ users: response.data });
+			})
+			.catch((e) => {
+				console.log(e);
+			});
+  }
+ 
   render() {
     return (
       <div>
         <Typography variant="body1">
-          This is the user list, which takes up 3/12 of the window.
-          You might choose to use <a href="https://mui.com/components/lists/">Lists</a> and <a href="https://mui.com/components/dividers/">Dividers</a> to
-          display your users like so:
+          User List
         </Typography>
+
         <List component="nav">
-          <ListItem>
-            <ListItemText primary="Item #1" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Item #2" />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Item #3" />
-          </ListItem>
-          <Divider />
+          {this.state.users.map((user) => (
+              <ListItem divider={true} key={user._id}>
+                
+                <ListItemAvatar>
+                  <Avatar> </Avatar>
+                </ListItemAvatar>
+                
+                <Link to={`/users/${user._id}`} style={{ textDecoration: 'none'}}> 
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1">
+                        {`${user.first_name} ${user.last_name}`}
+                      </Typography>
+                    }/>
+                </Link>
+              
+              </ListItem>
+          ))}
         </List>
+
+
         <Typography variant="body1">
-          The model comes in from window.cs142models.userListModel()
+          text after list
         </Typography>
       </div>
     );
