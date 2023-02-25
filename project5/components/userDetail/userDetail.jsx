@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Typography,
-  Button
-} from '@mui/material';
+import {  Button } from '@mui/material';
 import './userDetail.css';
 import { Link } from 'react-router-dom';
 import fetchModel from '../../lib/fetchModelData';

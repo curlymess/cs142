@@ -4,7 +4,7 @@ import {
   HashRouter, Route, Switch
 } from 'react-router-dom';
 import {
-  Grid, Typography, Paper
+  Grid, Paper
 } from '@mui/material';
 import './styles/main.css';
 
@@ -28,15 +28,16 @@ class PhotoShare extends React.Component {
           <TopBar/>
         </Grid>
         <div className="cs142-main-topbar-buffer"/>
+        
         <Grid item sm={3}>
           <Paper className="user-list">
             <UserList />
           </Paper>
         </Grid>
+
         <Grid item sm={9}>
           <Paper className="user-photos">
             <Switch>
-            
               <Route path="/users/:userId"
                 render={ props => <UserDetail {...props} /> }
               />
