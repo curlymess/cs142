@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+ }
+ 
+ .container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    border: dotted #95BDFF;
+ }
+ 
+ h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    border-bottom: #95BDFF dotted;
+    margin-bottom: 20px;
+    align-self: center;
+ }
+ 
+ .status {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-family: "Itim";
+ }
+
+ .info-box {
+    background-color: #DFFFD8;
+    width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+ }
+

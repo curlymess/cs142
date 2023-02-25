@@ -35,20 +35,25 @@ constructor(props) {
 	render() {
 		return (
 			<div className='container'>
-				<h1>
-					{this.state.user.first_name} {this.state.user.last_name}
-				</h1>
-				<p className='user-id'>{this.state.user._id}</p>
-				<h2>Description</h2>
-				<p className='description'>{this.state.user.description}</p>
-
-				<div className='details'>
-					<p>Work: {this.state.user.occupation}</p>
-					<p>Location: {this.state.user.location}</p>
+				<h1>{this.state.user.first_name} {this.state.user.last_name}</h1>
+				
+				<div className='info-box'>
+					<p>Description</p>
+					<p className='status'>{this.state.user.description}</p>
 				</div>
-				<Link to={`/photos/${this.state.user._id}`} style={{ textDecoration: 'none' }}>
+
+				<div className='info-box'>
+					<p>Work</p>
+					<p className='status'>{this.state.user.occupation}</p>
+				</div>
+				
+				<div className='info-box'>
+					<p>Location</p>
+					<p className='status'>{this.state.user.location}</p>
+				</div>
+				<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none' }}>
 					<Button variant='contained' color='primary' disableElevation>
-						Veiw Photos
+						View Photos
 					</Button>
 				</Link>
 			</div>

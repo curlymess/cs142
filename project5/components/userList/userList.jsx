@@ -4,7 +4,7 @@ import {
   Divider,
   List,
   ListItem,
-  ListItemAvatar,
+  ListItemIcon,
   ListItemText,
   Typography,
 }
@@ -12,7 +12,7 @@ from '@mui/material';
 import './userList.css';
 import { Link } from 'react-router-dom';
 import fetchModel from '../../lib/fetchModelData';
-
+import Face2Icon from '@mui/icons-material/Face2';
 /**
  * Define UserList, a React componment of CS142 project #5
  */
@@ -39,7 +39,7 @@ class UserList extends React.Component {
   render() {
     return (
       <div>
-        <Typography variant="body1">
+        <Typography variant="h5" className='listTitle' fontFamily={"Itim"} fontWeight={700}>
           User List
         </Typography>
 
@@ -47,27 +47,21 @@ class UserList extends React.Component {
           {this.state.users.map((user) => (
               <ListItem divider={true} key={user._id}>
                 
-                <ListItemAvatar>
-                  <Avatar> </Avatar>
-                </ListItemAvatar>
+                <ListItemIcon>
+                  <Avatar sx={{backgroundColor: "#DFFFD8"}}> <Face2Icon sx={{color: "#95BDFF"}}/> </Avatar>
+                </ListItemIcon>
                 
                 <Link to={`/users/${user._id}`} style={{ textDecoration: 'none'}}> 
-                  <ListItemText
-                    primary={
-                      <Typography variant="body1">
+                  <ListItemText primary={
+                      <Typography variant="h7" fontFamily={"Itim"} fontWeight={700} >
                         {`${user.first_name} ${user.last_name}`}
-                      </Typography>
-                    }/>
+                      </Typography>}/>
                 </Link>
               
               </ListItem>
           ))}
         </List>
 
-
-        <Typography variant="body1">
-          text after list
-        </Typography>
       </div>
     );
   }

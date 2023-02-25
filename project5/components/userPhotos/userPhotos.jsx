@@ -1,16 +1,18 @@
 import React from 'react';
 import {
-  
   Grid, Card, CardHeader, Avatar, CardMedia, CardContent, Typography, Divider, FormControlLabel, Checkbox, MobileStepper, Button,
 } from '@mui/material';
+import { KeyboardArrowRight, KeyboardArrowLeft } from '@mui/icons-material';
 import './userPhotos.css';
 import fetchModel from '../../lib/fetchModelData';
 import { Link } from 'react-router-dom';
+import Face2Icon from '@mui/icons-material/Face2';
+
 /**
  * Define UserPhotos, a React componment of CS142 project #5
  */
 class UserPhotos extends React.Component {
-  constructor(props) {
+  	constructor(props) {
 		super(props);
 		this.state = {
 			user: {},
@@ -18,9 +20,9 @@ class UserPhotos extends React.Component {
 			checked: false,
 			step: 0,
 		};
-		// this.handleToggle = this.handleToggle.bind(this);
-		// this.handleBack = this.handleBack.bind(this);
-		// this.handleNext = this.handleNext.bind(this);
+		this.handleToggle = this.handleToggle.bind(this);
+		this.handleBack = this.handleBack.bind(this);
+		this.handleNext = this.handleNext.bind(this);
 	}
 
 	componentDidMount() {
@@ -41,53 +43,97 @@ class UserPhotos extends React.Component {
 			});
 	}
 
-  render() {
-    return (
-      <Grid className='photos-container'>
-			
-					<div>
-						{this.state.userPhotos.map((photo, index) => (
-							<Card key={photo._id} style={{ width: '560px' }}>
-								{Math.abs(this.state.step - index) < 1 ? (
-									<div>
-										<CardHeader
-											avatar={( <Avatar style={{  }}> </Avatar>  )}
-											title={`${this.state.user.first_name} ${this.state.user.last_name}`}
-											subheader={photo.date_time}
-										/>
-
-										<CardMedia component='img' height='auto' image={`/images/${photo.file_name}`} alt={photo._id} />
-										{photo.comments
-											? photo.comments.map((comment) => (
-													<Card key={comment._id} className='comment-section'>
-														<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-															<CardHeader
-																avatar={(
-                                                   <Avatar style={{ background: 'transparent' }}>
-                                                   </Avatar>
-                                                )}
-																title={`${comment.user.first_name} ${comment.user.last_name}`}
-																subheader={comment.date_time}
-															/>
-														</Link>
-														<CardContent className='comment'>
-															<Typography variant='body2'>{comment.comment}</Typography>
-														</CardContent>
-														<Divider />
-													</Card>
-											  ))
-											: null}
-                      
-									</div>
-								) : null}
-							</Card>
-						))}
-						
-					</div>
-				
-			</Grid>
-		);
+	handleToggle() {
+		this.setState((prevState) => ({
+			checked: !prevState.checked,
+		}));
 	}
+	handleNext() {
+		this.setState((prevState) => ({
+			step: prevState.step + 1,
+		}));
+	}
+	handleBack() {
+		this.setState((prevState) => ({
+			step: prevState.step - 1,
+		}));
+	}
+
+render() {
+    return (
+		<Grid className='photos-container'>
+			<FormControlLabel control={<Checkbox checked={this.state.checked} onChange={this.handleToggle} />} label='Enable Advanced Features' className='checkbox' />
+			
+			{!this.state.checked ? (this.state.userPhotos.map((photo) => (
+				// REGULAR PHOTO VIEWING 
+				
+				<Card key={photo._id} style={{ width: '600px' }}>
+					<CardHeader
+						avatar={(<Avatar sx={{backgroundColor: "#DFFFD8"}}> <Face2Icon sx={{color: "#95BDFF"}}/> </Avatar>)}
+						title={`${this.state.user.first_name} ${this.state.user.last_name}`}
+						subheader={photo.date_time}
+					/>
+				
+					<CardMedia component='img' height='auto' image={`/images/${photo.file_name}`} alt={photo._id} />
+			
+					{photo.comments	? photo.comments.map((comment) => (
+						<Card key={comment._id} className='comment-section'>
+							<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+								<CardHeader	avatar={(<Avatar sx={{backgroundColor: "#DFFFD8"}}> <Face2Icon sx={{color: "#95BDFF"}}/> </Avatar>)}
+									title={`${comment.user.first_name} ${comment.user.last_name}`}
+									subheader={comment.date_time} />
+							</Link>
+							<CardContent>
+								<Typography variant='body1'>{comment.comment}</Typography>
+							</CardContent>
+							<Divider />
+						</Card> ))
+					: null}
+				</Card>	))
+			) : ( // ADV FEAT DIV BEGIN 
+			<div> 
+				{this.state.userPhotos.map((photo, index) => (
+					<Card key={photo._id} style={{ width: '600px' }}>
+						{Math.abs(this.state.step - index) < 1 ? (
+							<div>
+								<CardHeader avatar={(<Avatar sx={{backgroundColor: "#DFFFD8"}}> <Face2Icon sx={{color: "#95BDFF"}}/> </Avatar>)}
+									title={`${this.state.user.first_name} ${this.state.user.last_name}`}
+									subheader={photo.date_time} />
+
+								<CardMedia component='img' height='auto' image={`/images/${photo.file_name}`} alt={photo._id} />
+
+								{photo.comments ? photo.comments.map((comment) => (
+									<Card key={comment._id} className='comment-section'>
+										<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+											<CardHeader avatar={(<Avatar sx={{backgroundColor: "#DFFFD8"}}> <Face2Icon sx={{color: "#95BDFF"}}/> </Avatar>)}
+												title={`${comment.user.first_name} ${comment.user.last_name}`}
+												subheader={comment.date_time}
+											/>
+										</Link>
+										<CardContent>
+											<Typography variant='body1'>{comment.comment}</Typography>
+										</CardContent>
+										<Divider />
+									</Card>
+								)) : null}
+							</div>
+						) : null}
+					</Card>
+				))}
+
+				<MobileStepper
+					steps={this.state.userPhotos.length}
+					activeStep={this.state.step}
+					position='static'
+					nextButton={(<Button size='small' onClick={this.handleNext} disabled={this.state.step === this.state.userPhotos.length - 1}>
+						{' '} Next <KeyboardArrowRight /> </Button>)}
+					backButton={(<Button size='small' onClick={this.handleBack} disabled={this.state.step === 0}>
+						<KeyboardArrowLeft /> Back </Button>)} />
+			</div> // ADV FEAT DIV END
+			) } 
+		</Grid> 
+	);
+}
 }
 
 export default UserPhotos;
