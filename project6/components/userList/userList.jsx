@@ -3,7 +3,7 @@ import { Avatar, List, ListItem, ListItemIcon, ListItemText, Typography, } from 
 import './userList.css';
 import { Link } from 'react-router-dom';
 import Face2Icon from '@mui/icons-material/Face2';
-import fetchModel from '../../lib/fetchModelData';
+import axios from 'axios';
 /**
  * Define UserList, a React componment of CS142 project #5
  */
@@ -18,7 +18,7 @@ class UserList extends React.Component {
   }
 
   componentDidMount() {
-    fetchModel('/user/list')
+    axios.get('user/list')
       .then((response) => {
         this.setState({ users: response.data });
       })

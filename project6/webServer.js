@@ -135,14 +135,12 @@ app.get('/user/list', function (request, response) {
         }  else if (users.length === 0) {
             response.status(400).send("no user found");
         } else {
-            let userList = users.map(user => {
-                return {
-                    _id : user._id.valueOf(),
-                    first_name : user.first_name,
-                    last_name : user.last_name
-                };
+            const userList = JSON.parse(JSON.stringify(users)); 
+            const newList = userList.map(user => {
+                const { first_name, last_name, _id } = user;
+                return { first_name, last_name, _id };
             });
-            response.status(200).send(JSON.stringify(userList));
+            response.status(200).send(JSON.stringify(newList));
         }
     });
 });
@@ -153,15 +151,21 @@ app.get('/user/list', function (request, response) {
  */
 app.get('/user/:id', function (request, response) {
     const id = request.params.id;
-    User.findUserByID({_id: id}, function(err, user) {
+    User.findById(id, function(err, user) {
         if (err) {
             response.status(500).send(JSON.stringify(err));
         } else if (!user){
             response.status(400).send('missing user id: ' + id);
         } else {
-            const jsUser = JSON.parse(JSON.stringify(user));
-            delete jsUser.__v;                              
-            response.json(jsUser);
+            let userInfo = {
+                _id : user._id.valueOf(), 
+                first_name : user.first_name, 
+                last_name : user.last_name, 
+                location : user.location, 
+                description : user.description, 
+                occupation : user.occupation
+            };                             
+            response.status(200).send(JSON.stringify(userInfo));
         }
     });
 });
@@ -172,7 +176,6 @@ app.get('/user/:id', function (request, response) {
  */
 app.get('/photosOfUser/:id', function (request, response) {
     var id = request.params.id;
-
     Photo.find({user_id: id}, (err, photos) => {
         if (err) {
             response.status(400).send(JSON.stringify(`NOT FOUND: photos for user id ` + id));
@@ -184,7 +187,7 @@ app.get('/photosOfUser/:id', function (request, response) {
                 delete photo.__v;
 
                 async.eachOf(photo.comments, (comment, index, callback) => {
-                    User.findUserByID({_id: comment.user_id}, (error, user) => {
+                    User.findById({_id: comment.user_id}, (error, user) => {
                         if (!error) {
                             const jsUser = JSON.parse(JSON.stringify(user)); //js obj
                             const {location, description, occupation, __v, ...rest} = jsUser; 

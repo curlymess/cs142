@@ -4,7 +4,7 @@ import { KeyboardArrowRight, KeyboardArrowLeft } from '@mui/icons-material';
 import './userPhotos.css';
 import { Link } from 'react-router-dom';
 import Face2Icon from '@mui/icons-material/Face2';
-import fetchModel from '../../lib/fetchModelData';
+import axios from 'axios';
 /**
  * Define UserPhotos, a React componment of CS142 project #5
  */
@@ -23,7 +23,7 @@ class UserPhotos extends React.Component {
 	}
 
 	componentDidMount() {
-		fetchModel(`/photosOfUser/${this.props.match.params.userId}`)
+		axios(`/photosOfUser/${this.props.match.params.userId}`)
 			.then((response) => {
 				this.setState({ userPhotos: response.data });
 			})
@@ -31,7 +31,7 @@ class UserPhotos extends React.Component {
 				console.log(e);
 			});
 
-		fetchModel(`/user/${this.props.match.params.userId}`)
+		axios(`/user/${this.props.match.params.userId}`)
 			.then((response) => {
 				this.setState({ user: response.data });
 			})

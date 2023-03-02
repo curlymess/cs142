@@ -11,23 +11,20 @@ import axios from 'axios';
 class TopBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      version: '',
-    };
-  }
+    this.currVersion = null;
 
-  componentDidMount() {
-    // fetchModel('/test/info')
     axios.get('http://127.0.0.1:3000/test/info')
       .then((response) => {
-        this.setState({
-          version: response.data.__v,
-        });
+        console.log("curr version " + response.data.version)
+        this.currVersion = response.data.version;
       })
       .catch((err) => {
         console.log(err);
       });
   }
+
+
+    
 
   render() {
 
@@ -69,7 +66,7 @@ class TopBar extends React.Component {
                 textDecoration: "none"
               }}
             >
-              Photo Application v{this.state.version}
+              Photo Application v{this.currVersion}
             </Typography>
 
             <Typography 

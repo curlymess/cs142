@@ -2,7 +2,6 @@ import React from 'react';
 import {  Button } from '@mui/material';
 import './userDetail.css';
 import { Link } from 'react-router-dom';
-import fetchModel from '../../lib/fetchModelData';
 import axios from 'axios';
 
 /**
@@ -12,7 +11,7 @@ class UserDetail extends React.Component {
 constructor(props) {
 		super(props);
 		this.state = {
-			user: {},
+			user: '',
 		};
 	}
 
@@ -21,15 +20,13 @@ constructor(props) {
 	}
 
 	componentDidUpdate() {
-		fetchModel(`/user/${this.props.match.params.userId}`)
-		// const url = 'http://127.0.0.1:3000/users/${this.props.match.params.currUser}';
-		// axios.get(url)
+		axios.get('/user/'+this.props.match.params.userId)
 			.then((response) => {
 				this.setState({ user: response.data });
 				this.props.handler(response.data.first_name + " " + response.data.last_name)
 			})
 			.catch((e) => {
-				console.log(e);
+				console.log("in userdetail: " + e);
 			});
 	}
 
