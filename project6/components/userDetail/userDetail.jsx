@@ -13,13 +13,7 @@ constructor(props) {
 		this.state = {
 			user: '',
 		};
-	}
 
-	componentDidMount() {
-		this.componentDidUpdate();
-	}
-
-	componentDidUpdate() {
 		axios.get('/user/'+this.props.match.params.userId)
 			.then((response) => {
 				this.setState({ user: response.data });
@@ -28,6 +22,20 @@ constructor(props) {
 			.catch((e) => {
 				console.log("in userdetail: " + e);
 			});
+	}
+
+	componentDidUpdate(prev) {
+		if ( prev !== this.props ){
+			axios.get('/user/'+this.props.match.params.userId)
+			.then((response) => {
+				this.setState({ user: response.data });
+				this.props.handler(response.data.first_name + " " + response.data.last_name)
+			})
+			.catch((e) => {
+				console.log("in userdetail: " + e);
+			});
+		}
+		
 	}
 
 	render() {
