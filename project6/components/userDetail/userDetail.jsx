@@ -17,7 +17,7 @@ constructor(props) {
 		axios.get('/user/'+this.props.match.params.userId)
 			.then((response) => {
 				this.setState({ user: response.data });
-				this.props.handler(response.data.first_name + " " + response.data.last_name)
+				this.props.handler(response.data.first_name + " " + response.data.last_name);
 			})
 			.catch((e) => {
 				console.log("in userdetail: " + e);
@@ -29,7 +29,7 @@ constructor(props) {
 			axios.get('/user/'+this.props.match.params.userId)
 			.then((response) => {
 				this.setState({ user: response.data });
-				this.props.handler(response.data.first_name + " " + response.data.last_name)
+				this.props.handler(response.data.first_name + " " + response.data.last_name);
 			})
 			.catch((e) => {
 				console.log("in userdetail: " + e);
@@ -58,7 +58,7 @@ constructor(props) {
 					<p className='status'>{this.state.user.location}</p>
 				</div>
 				<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none' }}>
-					<Button variant='contained' color='primary' disableElevation>
+					<Button variant='contained' color='secondary' disableElevation>
 						View Photos
 					</Button>
 				</Link>

@@ -4,11 +4,10 @@ import {
   HashRouter, Route, Switch
 } from 'react-router-dom';
 import {
-  Grid, Paper
+  Grid, Paper, ThemeProvider
 } from '@mui/material';
 import './styles/main.css';
 
-import { ThemeProvider } from '@mui/material'
 import theme from './lib/theme';
 
 // import necessary components
@@ -49,12 +48,10 @@ class PhotoShare extends React.Component {
           <Paper className="user-photos">
             <Switch>
               <Route path="/users/:userId"
-                render={ props => <UserDetail {...props} 
-                handler={this.handleCurrUserChange}/> }
+                render={( (props) => <UserDetail {...props} handler={this.handleCurrUserChange}/> )}
               />
               <Route path="/photos/:userId"
-                render ={ props => <UserPhotos {...props} 
-                handler={this.handleCurrUserChange} /> }
+                render ={( (props) => <UserPhotos {...props} handler={this.handleCurrUserChange} /> )}
               />
               <Route path="/users" component={UserList} />
             </Switch>

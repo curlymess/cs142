@@ -6,4 +6,6 @@
   font-family: 'Itim', cursive;
 }
 
-
+.logo {
+  display: flex;
+}

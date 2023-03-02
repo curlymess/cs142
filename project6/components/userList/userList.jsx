@@ -30,7 +30,7 @@ class UserList extends React.Component {
   render() {
     return (
       <div>
-        <Typography variant="h5" className='listTitle' fontFamily={"Itim"} fontWeight={700}>
+        <Typography variant="h2" className='listTitle'>
           User List
         </Typography>
 
@@ -44,10 +44,13 @@ class UserList extends React.Component {
 
               <Link to={`/users/${user._id}`} style={{ textDecoration: 'none' }}>
                 <ListItemText primary={
-                  <Typography variant="h7" fontFamily={"Itim"} fontWeight={700}>
+                  (
+                  <Typography variant="h4">
                     {`${user.first_name} ${user.last_name}`}
                   </Typography>
-                } />
+                  )
+                } 
+                />
               </Link>
 
             </ListItem>

@@ -63,53 +63,57 @@ class UserPhotos extends React.Component {
 
 				{!this.state.checked ? (this.state.userPhotos.map((photo) => (
 					// REGULAR PHOTO VIEWING 
-					<Card
-						key={photo._id}
-						style={{ width: '600px' }}>
+					<Card key={photo._id} style={{ width: '600px' }}>
 						<CardHeader
-							avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
+							avatar={(
+								<Avatar sx={{ backgroundColor: "#DFFFD8" }}> 
+									<Face2Icon sx={{ color: "#95BDFF" }} /> 
+								</Avatar>
+							)}
 							title={`${this.state.user.first_name} ${this.state.user.last_name}`}
 							subheader={photo.date_time}
+							sx={{ backgroundColor: "#F7c8e0" }}
 						/>
 
 						<CardMedia component='img' height='auto' image={`/images/${photo.file_name}`} alt={photo._id} />
 
 						{photo.comments ? photo.comments.map((comment) => (
-							<Card key={comment._id} className='comment-section'>
+							<Card key={comment._id} className='comment-section' sx={{backgroundColor:"#fbe3ef"}}> 
 								<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
 									<CardHeader avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
 										title={`${comment.user.first_name} ${comment.user.last_name}`}
 										subheader={comment.date_time} />
 								</Link>
-								<CardContent>
+								<CardContent sx={{backgroundColor: "#fdf1f7"}}>
 									<Typography variant='body1'>{comment.comment}</Typography>
 								</CardContent>
 								<Divider />
 							</Card>
 						))
 							: null}
-					</Card>))
+					</Card>
+					))
 				) : ( // ADV FEAT DIV BEGIN 
 					<div>
 						{this.state.userPhotos.map((photo, index) => (
-							<Card key={photo._id} style={{ width: '600px' }}>
+							<Card key={photo._id} style={{ width: '600px' }} >
 								{Math.abs(this.state.step - index) < 1 ? (
 									<div>
 										<CardHeader avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
 											title={`${this.state.user.first_name} ${this.state.user.last_name}`}
-											subheader={photo.date_time} />
+											subheader={photo.date_time} sx={{ backgroundColor: "#F7c8e0" }} />
 
 										<CardMedia component='img' height='auto' image={`/images/${photo.file_name}`} alt={photo._id} />
 
 										{photo.comments ? photo.comments.map((comment) => (
-											<Card key={comment._id} className='comment-section'>
+											<Card key={comment._id} className='comment-section' sx={{backgroundColor:"#fbe3ef"}}>
 												<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
 													<CardHeader avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
 														title={`${comment.user.first_name} ${comment.user.last_name}`}
-														subheader={comment.date_time}
+														subheader={comment.date_time} 
 													/>
 												</Link>
-												<CardContent>
+												<CardContent sx={{backgroundColor:"#fdf1f7"}}>
 													<Typography variant='body1'>{comment.comment}</Typography>
 												</CardContent>
 												<Divider />
