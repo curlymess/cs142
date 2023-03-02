@@ -8,6 +8,9 @@ import {
 } from '@mui/material';
 import './styles/main.css';
 
+import { ThemeProvider } from '@mui/material'
+import theme from './lib/theme';
+
 // import necessary components
 import TopBar from './components/topBar/TopBar';
 import UserDetail from './components/userDetail/userDetail';
@@ -66,6 +69,8 @@ class PhotoShare extends React.Component {
 
 
 ReactDOM.render(
-  <PhotoShare />,
+  <ThemeProvider theme={theme}>
+    <PhotoShare />
+  </ThemeProvider>,
   document.getElementById('photoshareapp'),
 );

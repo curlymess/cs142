@@ -153,8 +153,6 @@ app.get('/user/:id', function (request, response) {
     const id = request.params.id;
     User.findById(id, function(err, user) {
         if (err) {
-            response.status(500).send(JSON.stringify(err));
-        } else if (!user){
             response.status(400).send('missing user id: ' + id);
         } else {
             let userInfo = {
