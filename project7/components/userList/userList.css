@@ -1,0 +1,10 @@
+*{
+    box-sizing: border-box;
+}
+
+.listTitle{
+    font-family: 'Itim', cursive;
+    color: #95BDFF;
+    border-bottom: #F7C8E0 dotted;
+    text-align: center;
+}

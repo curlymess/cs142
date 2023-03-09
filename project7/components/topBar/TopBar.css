@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Itim&display=swap');
+
+.cs142-topbar-appBar {
+  height: 60;
+  justify-content: 'center';
+  font-family: 'Itim', cursive;
+}
+
+.logo {
+  display: flex;
+}
