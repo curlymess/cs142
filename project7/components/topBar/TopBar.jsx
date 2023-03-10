@@ -11,6 +11,7 @@ class TopBar extends React.Component {
   constructor(props) {
     super(props);
     this.currVersion = 0;
+    this.handleLogOutClick = this.handleLogOutClick.bind(this);
 
     axios.get('http://127.0.0.1:3000/test/info')
       .then((response) => {
@@ -19,8 +20,19 @@ class TopBar extends React.Component {
       })
       .catch((err) => {
         console.log(err);
-      });
+      });  
   }
+
+  handleLogOutClick () {
+    axios.post('admin/logout')
+    .then(() => {
+      this.props.handler(null);
+      // this.props.history.push(`/login-register`);
+    })
+    .catch(err => console.log(err));
+  }
+
+
 
   render() {
     return (
@@ -41,11 +53,18 @@ class TopBar extends React.Component {
 
               {/* TO-DO: Make log in conditional and show log out */}
               {/* https://mui.com/material-ui/react-app-bar/ */}
-              <Button type="submit" variant="contained" color="secondary">
+              
                 {
-                  this.props.loggedInUser ? <Typography noWrap>Sign Out</Typography> : <Typography noWrap>Log In</Typography>
+                  this.props.loggedInUser ? 
+                  <Button variant="contained" color="secondary" >
+                    <Typography variant="h6" noWrap onClick={this.handleLogOutClick}>Log Out</Typography> 
+                  </Button>
+                  : 
+                  <Button variant="contained" color="secondary">
+                    <Typography variant="h6" noWrap >Log In</Typography>
+                  </Button>
                 }
-              </Button>
+              
 
           </Toolbar>    
         </Container>

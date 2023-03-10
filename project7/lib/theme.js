@@ -42,6 +42,15 @@ typography: {
         fontWeight: 600,
     },
 
+    h6: { // button
+        fontFamily: '"Itim", cursive',
+        fontWeight: 700,
+        letterSpacing: ".1rem",
+        color: "#FFF",
+        fontSize: 18,
+        color: "#95BDFF",
+    },
+
     body1: {
         fontFamily: '"Itim", cursive',
     },

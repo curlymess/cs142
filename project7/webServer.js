@@ -97,9 +97,16 @@ app.post('/admin/login', upload.any(), (req, res) => {
 });
 
 // Log-Out
-
-
-
+app.post('/admin/logout', (req, res) => {
+    console.log("log out button clicked");
+    if (!req.session.loginName) {
+        res.status(401).send('The user is not currently logged in.');
+    } else {
+        console.log(req.session.loginName + "logout!");
+        req.session.loginName = '';
+        res.status(200).send('The user logged out successfully!');
+    }
+});
 
 
 /*

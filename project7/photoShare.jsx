@@ -40,7 +40,7 @@ class PhotoShare extends React.Component {
       <div>
       <Grid container spacing={8}>
         <Grid item xs={12}>
-          <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser}/>
+          <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser} handler={this.handleLoggedInUserChange}/>
         </Grid>
         <div className="cs142-main-topbar-buffer"/>
         
