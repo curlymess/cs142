@@ -38,10 +38,9 @@ class UserList extends React.Component {
           {this.state.users.map((user) => (
             <ListItem divider={true} key={user._id}>
 
-              <ListItemIcon>
+              <ListItemIcon sx={{display: { xs: 'none', lg:'flex'}}}>
                 <Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
               </ListItemIcon>
-
               <Link to={`/users/${user._id}`} style={{ textDecoration: 'none' }}>
                 <ListItemText primary={
                   (
