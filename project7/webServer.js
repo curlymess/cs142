@@ -29,11 +29,24 @@
  *
  */
 
+// connect to database
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
+mongoose.set('strictQuery', false);
+mongoose.connect('mongodb://127.0.0.1/cs142project6', { useNewUrlParser: true, useUnifiedTopology: true });
+
+/* Express middleware modules
+ * express-session: handles session management
+ * body-parser: parses the body of HTTP requests. Can parse JSON POST request bodies in our server API 
+ * multer:  Express middleware body parser that is capable of handling the multi part forms we need to upload photos
+ */
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const multer = require("multer"); // used for photo uploading
 
 var async = require('async');
 
+// expressJS App
 var express = require('express');
 var app = express();
 
@@ -42,15 +55,13 @@ var User = require('./schema/user.js');
 var Photo = require('./schema/photo.js');
 var SchemaInfo = require('./schema/schemaInfo.js');
 
-// XXX - Your submission should work without this line. Comment out or delete this line for tests and before submission!
-// var cs142models = require('./modelData/photoApp.js').cs142models;
-mongoose.set('strictQuery', false);
-mongoose.connect('mongodb://127.0.0.1/cs142project6', { useNewUrlParser: true, useUnifiedTopology: true });
-
 // We have the express static module (http://expressjs.com/en/starter/static-files.html) do all
 // the work for us.
 app.use(express.static(__dirname));
 
+// add middleware modules to Express app
+app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
+app.use(bodyParser.json());
 
 app.get('/', function (request, response) {
     response.send('Simple web server of files from ' + __dirname);
