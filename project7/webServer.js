@@ -63,9 +63,44 @@ app.use(express.static(__dirname));
 app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
 app.use(bodyParser.json());
 
+// TO-DO
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 app.get('/', function (request, response) {
     response.send('Simple web server of files from ' + __dirname);
 });
+
+/* problem 1 */
+// Log-In
+const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
+
+
+app.post('/admin/login', upload.any(), (req, res) => {
+    let {loginName} = req.body;
+    console.log(loginName + " ask to login.");
+
+    User.find({login_name : loginName}, function(err, user){
+        if (err || user.length === 0) {
+            res.status(400).send('login_name is not a valid account');
+            return;
+        }
+
+        req.session.loginName = loginName;
+
+        let resData = {
+            _id: user[0]._id,
+            first_name: user[0].first_name
+        };
+
+        res.status(200).send(JSON.stringify(resData));
+    });
+});
+
+// Log-Out
+
+
+
+
 
 /*
  * Use express to handle argument passing in the URL.  This .get will cause express

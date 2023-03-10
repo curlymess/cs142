@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Container } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
 import './TopBar.css';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import axios from 'axios';
@@ -26,23 +26,52 @@ class TopBar extends React.Component {
     return (
       <AppBar className="cs142-topbar-appBar">
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{justifyContent: 'space-between'}}>
-            <div className='logo'> 
-              <LocalFloristIcon />
-              <Typography variant="h3" noWrap sx={{ mr: 1, display: "flex", }}>  
-                Noor Fakih 
+          <Toolbar disableGutters className='bar1'>
+            
+              <div className='logo'> 
+                <LocalFloristIcon />
+                <Typography variant="h3" noWrap>  
+                  Noor Fakih 
+                </Typography>
+              </div>
+
+              <Typography variant="h1" noWrap >
+                Photo Application v{this.currVersion}
               </Typography>
+
+              {/* TO-DO: Make log in conditional and show log out */}
+              {/* https://mui.com/material-ui/react-app-bar/ */}
+              <Button type="submit" variant="contained" color="secondary">
+                {
+                  this.props.loggedInUser ? <Typography noWrap>Sign Out</Typography> : <Typography noWrap>Log In</Typography>
+                }
+              </Button>
+
+          </Toolbar>    
+        </Container>
+        <Container maxWidth="xl" className='bar2Container'>
+          <div className='bar2'>
+          {
+            this.props.loggedInUser ? 
+            <div className='bar2LoggedIn'>
+
+              <Typography variant="h2" noWrap > 
+                hello there, &nbsp; 
+                { this.props.loggedInUser ? this.props.loggedInUser : 'no one' }
+              </Typography>
+
+              <Typography variant="h2" noWrap> 
+                currently viewing &nbsp; 
+                { this.props.currUser ? this.props.currUser : 'no one' }
+              </Typography>
+
             </div>
-
-            <Typography variant="h1" noWrap sx={{ mr: 1, display: "flex", }}>
-              Photo Application v{this.currVersion}
+            : 
+            <Typography className='bar2SignedOut'> 
+              why don't you log in? 
             </Typography>
-
-            <Typography variant="h2" noWrap
-              sx={{display: "flex"}}> currently viewing &nbsp; 
-              { this.props.currUser ? this.props.currUser : 'nothing' }
-            </Typography>
-          </Toolbar>
+          }
+          </div>
         </Container>
       </AppBar>
     );
