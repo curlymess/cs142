@@ -9,7 +9,7 @@ export default function NewComment(props){
 
 return(
     <div>
-        <Typography variant='body1'>heyy</Typography>
+        heyyy
     </div>
 
 );

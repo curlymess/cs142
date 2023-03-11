@@ -31,12 +31,14 @@ class UserList extends React.Component {
       this.fetchData();
   }
 
-  componentDidUpdate(){
-    this.fetchData();
+  componentDidUpdate(prevProps){
+    if (this.props.loginUser !== prevProps.loginUser && this.props.loginUser) {
+      this.fetchData();
+    }
   }
 
   componentWillUnmount() {
-    this.source.cancel("user cancelled req");
+    this.source.cancel("user cancelled req in userlist");
   }
 
   render() {

@@ -13,20 +13,12 @@ constructor(props) {
 		this.state = {
 			user: '',
 		};
-
-		axios.get('/user/'+this.props.match.params.userId)
-			.then((response) => {
-				this.setState({ user: response.data });
-				this.props.handler(response.data.first_name + " " + response.data.last_name);
-			})
-			.catch((e) => {
-				console.log("in userdetail: " + e);
-			});
+		this.source = axios.CancelToken.source();
 	}
 
-	componentDidUpdate(prev) {
-		if ( prev !== this.props ){
-			axios.get('/user/'+this.props.match.params.userId)
+	componentDidMount(){
+		if(this.props.match.params.userId){
+			axios.get('/user/'+this.props.match.params.userId, { cancelToken: this.source.token })
 			.then((response) => {
 				this.setState({ user: response.data });
 				this.props.handler(response.data.first_name + " " + response.data.last_name);
@@ -35,8 +27,24 @@ constructor(props) {
 				console.log("in userdetail: " + e);
 			});
 		}
-		
 	}
+
+	componentDidUpdate(prev) {
+		if ( prev !== this.props ){
+			axios.get('/user/'+this.props.match.params.userId, { cancelToken: this.source.token })
+			.then((response) => {
+				this.setState({ user: response.data });
+				this.props.handler(response.data.first_name + " " + response.data.last_name);
+			})
+			.catch((e) => {
+				console.log("in userdetail: " + e);
+			});
+		}
+	}
+
+	componentWillUnmount() {
+		this.source.cancel("user cancelled req in userDetail");
+	  }
 
 	render() {
 		return (
