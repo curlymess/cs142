@@ -90,7 +90,7 @@ app.post('/admin/login', upload.any(), (req, res) => {
             _id: user[0]._id,
             first_name: user[0].first_name
         };
-
+        console.log("logged in!");
         res.status(200).send(JSON.stringify(resData));
     });
 });

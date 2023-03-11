@@ -73,10 +73,15 @@ class PhotoShare extends React.Component {
                 <Redirect path="/photos/:userID" to="/login-register" />
               }
               
+              { this.state.loggedInUser ? 
+                <Route path="/users">
+                  <UserList loggedInUser={this.state.loggedInUser} />
+                </Route> 
+                :
+                <Redirect path="/users" to="/login-register" />
+              }
+
               
-              <Route path="/users">
-                <UserList loggedInUser={this.state.loggedInUser} />
-              </Route> 
             </Switch>
           </Paper>
         </Grid>

@@ -14,11 +14,13 @@ class UserList extends React.Component {
     this.state = {
       users: [],
     };
-    this.source = axios.CancelToken.source();
+
+    this.fetchData();
+
   }
 
   fetchData(){
-    axios.get('user/list', { cancelToken: this.source.token })
+    axios.get('user/list')
       .then((response) => {
         this.setState({ users: response.data });
       })
@@ -27,16 +29,8 @@ class UserList extends React.Component {
       });
   }
 
-  componentDidMount() {
-      this.fetchData();
-  }
-
   componentDidUpdate(prevProps){
       this.fetchData();
-  }
-
-  componentWillUnmount() {
-    this.source.cancel("user cancelled req in userlist");
   }
 
   render() {
