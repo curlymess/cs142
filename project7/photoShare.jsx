@@ -46,7 +46,7 @@ class PhotoShare extends React.Component {
         
         <Grid item sm={3}>
           <Paper className="user-list">
-            <UserList />
+            <UserList loggedInUser={this.state.loggedInUser} />
           </Paper>
         </Grid>
 
@@ -74,7 +74,9 @@ class PhotoShare extends React.Component {
               }
               
               
-              <Route path="/users" component={UserList} />
+              <Route path="/users">
+                <UserList loggedInUser={this.state.loggedInUser} />
+              </Route> 
             </Switch>
           </Paper>
         </Grid>

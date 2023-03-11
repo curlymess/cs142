@@ -181,7 +181,11 @@ app.get('/test/:p1', function (request, response) {
  * URL /user/list - Return all the User object.
  */
 app.get('/user/list', function (request, response) {
-
+    if (!request.session.loginName) {
+        response.status(401).send('The user is not logged in.');
+        return;
+    }
+    
     User.find({}, function(err, users) {
         if (err) {
             response.status(500).send(JSON.stringify(err));

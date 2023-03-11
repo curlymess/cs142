@@ -10,21 +10,33 @@ import axios from 'axios';
 class UserList extends React.Component {
   constructor(props) {
     super(props);
-    console.log('window.cs142models.userListModel()', window.cs142models.userListModel());
 
     this.state = {
       users: [],
     };
+    this.source = axios.CancelToken.source();
   }
 
-  componentDidMount() {
-    axios.get('user/list')
+  fetchData(){
+    axios.get('user/list', { cancelToken: this.source.token })
       .then((response) => {
         this.setState({ users: response.data });
       })
       .catch((e) => {
         console.log(e);
       });
+  }
+
+  componentDidMount() {
+      this.fetchData();
+  }
+
+  componentDidUpdate(){
+    this.fetchData();
+  }
+
+  componentWillUnmount() {
+    this.source.cancel("user cancelled req");
   }
 
   render() {
@@ -34,7 +46,9 @@ class UserList extends React.Component {
           User List
         </Typography>
 
-        <List component="nav">
+        { 
+        this.props.loggedInUser ?
+          <List component="nav">
           {this.state.users.map((user) => (
             <ListItem divider={true} key={user._id}>
 
@@ -55,6 +69,10 @@ class UserList extends React.Component {
             </ListItem>
           ))}
         </List>
+        :
+        <Typography variant="body1">you need an account to view!</Typography>
+        }
+        
 
       </div>
     );
