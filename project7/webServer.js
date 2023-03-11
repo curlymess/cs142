@@ -77,7 +77,6 @@ const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 
 app.post('/admin/login', upload.any(), (req, res) => {
     let {loginName} = req.body;
-    console.log(loginName + " ask to login.");
 
     User.find({login_name : loginName}, function(err, user){
         if (err || user.length === 0) {
@@ -85,7 +84,7 @@ app.post('/admin/login', upload.any(), (req, res) => {
             return;
         }
 
-        req.session.loginName = loginName;
+        req.session.loginName = loginName; // store in express sessison
 
         let resData = {
             _id: user[0]._id,
@@ -107,7 +106,38 @@ app.post('/admin/logout', (req, res) => {
         res.status(200).send('The user logged out successfully!');
     }
 });
+/***************************************************** */
 
+// TO-DO
+/* problem 2 */
+// new comments
+app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
+    if (!req.session.loginUser) {
+        res.status(401).send('The user is not currently logged in.');
+        return;
+    }
+
+    Photo.findById(req.params.photo_id, (err , photo) => {
+        if(err) {
+            res.status(404).send('Found no photo with this id');
+            return;
+        }
+
+        Photo.findByIdAndUpdate(req.params.photo_id, {
+                comments : [...photo.comments, {
+                    comment: req.body.comment,
+                    user_id: req.session.loginUser
+                }]
+            },
+            e => res.status(500).send(JSON.stringify(e))
+        );
+
+    });
+
+});
+
+
+/******************************************************* */
 
 /*
  * Use express to handle argument passing in the URL.  This .get will cause express
@@ -185,7 +215,7 @@ app.get('/user/list', function (request, response) {
         response.status(401).send('The user is not logged in.');
         return;
     }
-    
+
     User.find({}, function(err, users) {
         if (err) {
             response.status(500).send(JSON.stringify(err));

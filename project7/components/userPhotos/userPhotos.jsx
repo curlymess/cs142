@@ -5,6 +5,7 @@ import './userPhotos.css';
 import { Link } from 'react-router-dom';
 import Face2Icon from '@mui/icons-material/Face2';
 import axios from 'axios';
+import NewComment from '../newComment/NewComment'
 /**
  * Define UserPhotos, a React componment of CS142 project #5
  */
