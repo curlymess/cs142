@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import {
 	Grid, Card, CardHeader, CardMedia, CardContent, CardActions,
+	List, ListItem, ListItemText, ListItemAvatar, ListItemIcon,
 	Avatar, Typography, Divider, FormControlLabel, Checkbox, MobileStepper, Button,
 	Collapse
 } from '@mui/material';
@@ -80,7 +81,7 @@ class UserPhotos extends React.Component {
 				{(this.state.userPhotos.map(
 					(photo, index) => (
 					<Grid item key={photo._id}>
-						<Card >
+						<Card>
 							{Math.abs(this.state.step - index) < 1 ? (
 
 								// start of card
@@ -116,31 +117,32 @@ class UserPhotos extends React.Component {
 									{/* the comments */}
 									{photo.comments ? 
 										// comment section
-										(photo.comments.map((comment) => (
-											<Card key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef" }}>
-												<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-													<CardHeader avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
-														title={`${comment.user.first_name} ${comment.user.last_name}`}
-														subheader={comment.date_time}
-													/>
-												</Link>
+										<List >
+											
+											{photo.comments.map((comment) => (
+												<ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef" }}>
+													
+													<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+														<ListItemAvatar sx={{display: { xs: 'none', md:'flex'}}}>
+															<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
+														</ListItemAvatar>
+													</Link>
+													<ListItemText primary={(
+																	<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+																	<Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
+																	</Link>
+																	)}
+																secondary={(<Typography variant="body1">{comment.comment}</Typography>)}/>
+												</ListItem>
+											)) }
 
-												<CardContent sx={{ backgroundColor: "#fdf1f7" }}>
-													<Typography variant='body1'>{comment.comment}</Typography>
-												</CardContent>
-												<Divider />
-											</Card>
-										)) )
-									: null }
+										</List>
+										
+									: null 
+									// <Typography variant="body1">you need an account to view!</Typography>
+									}
 
-									{!photo.comments ? 
-										// comment section
-											<Card className='comment-section' sx={{ backgroundColor: "#fbe3ef" }}>
-												<CardContent sx={{ backgroundColor: "#fdf1f7" }}>
-													<Typography variant='body1'>heyhynbu</Typography>
-												</CardContent>
-											</Card>
-									: null }		
+										
 									{/* end of comment section */}
 								
 								
