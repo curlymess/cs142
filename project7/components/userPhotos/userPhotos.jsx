@@ -92,7 +92,9 @@ class UserPhotos extends React.Component {
 							</Card>
 						))
 							: null}
+							< NewComment />
 					</Card>
+					
 					))
 				) : ( // ADV FEAT DIV BEGIN 
 					<div>
