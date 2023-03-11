@@ -110,44 +110,35 @@ class UserPhotos extends React.Component {
 									{/* action bar */}
 									<CardActions sx={{display: "flex", justifyContent: "space-between"}}>
 										<Button size="small"><FavoriteIcon /></Button>
-										<Button size="small"><AddCommentIcon /></Button>
+										<NewComment currPhotoId={photo._id}/>
 									</CardActions>
-									< NewComment />
-
 									{/* the comments */}
 									{photo.comments ? 
 										// comment section
-										<List >
-											
-											{photo.comments.map((comment) => (
-												<ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef" }}>
-													
-													<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-														<ListItemAvatar sx={{display: { xs: 'none', md:'flex'}}}>
-															<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
-														</ListItemAvatar>
-													</Link>
-													<ListItemText primary={(
-																	<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-																	<Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
-																	</Link>
-																	)}
-																secondary={(<Typography variant="body1">{comment.comment}</Typography>)}/>
-												</ListItem>
-											)) }
-
-										</List>
+										<div>
+											<Typography variant='h4' sx={{paddingLeft: "5px"}}>Comment Section</Typography>
+											<List >
+												{photo.comments.map((comment) => (
+													<ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef" }}>
+														
+														<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+															<ListItemAvatar sx={{display: { xs: 'none', sm:'flex'}}}>
+																<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
+															</ListItemAvatar>
+														</Link>
+														<ListItemText primary={(
+																		<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+																		<Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
+																		</Link>
+																		)}
+																	secondary={(<Typography variant="body1">{comment.comment}</Typography>)}/>
+													</ListItem>
+												)) }
+											</List>
+										</div>
 										
-									: null 
-									// <Typography variant="body1">you need an account to view!</Typography>
-									}
-
-										
+									:  null	}
 									{/* end of comment section */}
-								
-								
-								
-
 							</div>
 							// end of card
 

@@ -32,9 +32,7 @@ class UserList extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.loginUser !== prevProps.loginUser && this.props.loginUser) {
       this.fetchData();
-    }
   }
 
   componentWillUnmount() {
