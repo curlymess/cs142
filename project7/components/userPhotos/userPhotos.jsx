@@ -76,23 +76,22 @@ class UserPhotos extends React.Component {
 
 	render() {
 		return (
-			<Grid className='photos-container'>
-
+			<Grid>
 				{(this.state.userPhotos.map(
 					(photo, index) => (
-					<Grid item key={photo._id}>
-						<Card>
+					<Grid item key={photo._id} >
+						<Card >
 							{Math.abs(this.state.step - index) < 1 ? (
 
 								// start of card
-								<div>
+								<div> 
 									{/* poster */}
 									<CardHeader
 										avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
 										title={`${this.state.user.first_name} ${this.state.user.last_name}`}
 										subheader={photo.date_time} sx={{ backgroundColor: "#F7c8e0" }} />
 									{/* image */}
-									<CardMedia component='img' height='auto' image={`/images/${photo.file_name}`} alt={photo._id} />
+									<CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} />
 									{/* scroll images */}
 									<MobileStepper
 										steps={this.state.userPhotos.length}
@@ -117,7 +116,15 @@ class UserPhotos extends React.Component {
 										// comment section
 										<div>
 											<Typography variant='h4' sx={{paddingLeft: "5px"}}>Comment Section</Typography>
-											<List >
+											<List 
+												sx={{
+													width: '100%',
+													bgcolor: 'background.paper',
+													position: 'relative',
+													overflow: 'auto',
+													maxHeight: 200,
+												}}
+											>
 												{photo.comments.map((comment) => (
 													<ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef" }}>
 														

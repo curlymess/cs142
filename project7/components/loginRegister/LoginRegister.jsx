@@ -4,8 +4,10 @@ import {
     Box,
     Input,
     FormControl,
-    InputLabel
+    InputLabel,
+    Typography
 } from '@mui/material';
+
 import axios from 'axios';
 
 class LoginRegister extends React.Component {
@@ -45,11 +47,14 @@ class LoginRegister extends React.Component {
     render() {
         return (
             <Box sx={{width:'100%'}}>
+                <Typography variant='h4'>Welcome Back!</Typography>
                 <FormControl variant="standard">
                     <InputLabel htmlFor="login-name">Login Name</InputLabel>
                     <Input id="login-name" value={this.state.loginName} onChange={this.handleInputChange} />
                 </FormControl>
-                <Button type="submit" variant="contained" component="button" onClick={this.handleSubmitClick}>Login</Button>
+                <Button type="submit" variant="contained" color="secondary" component="button" onClick={this.handleSubmitClick}>
+                    <Typography variant="h6" noWrap >Log In</Typography>
+                </Button>
             </Box>
         );
     }

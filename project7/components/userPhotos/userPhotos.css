@@ -2,17 +2,5 @@
     font-family: 'Itim', cursive;
 }
 
-.photos-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    position: relative;
-    padding-block: 2.4rem;
-    align-items: center;
- }
- 
- .checkbox {
-    position: absolute;
-    top: 5px;
-    left: 5px;
- }
+
+
