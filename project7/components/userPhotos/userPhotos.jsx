@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 
 import './userPhotos.css';
-import NewComment from '../newComment/NewComment'
+import NewComment from './NewComment'
 
 import { KeyboardArrowRight, KeyboardArrowLeft } from '@mui/icons-material';
 import Face2Icon from '@mui/icons-material/Face2';
