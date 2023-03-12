@@ -6,6 +6,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NewPhoto from '../NewPhoto/newPhoto';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 /**
  * Define TopBar, a React componment of CS142 project #5
@@ -17,7 +18,6 @@ class TopBar extends React.Component {
     this.handleLogOutClick = this.handleLogOutClick.bind(this);
 
     this.source = axios.CancelToken.source();
-
     axios.get('http://127.0.0.1:3000/test/info', { cancelToken: this.source.token })
       .then((response) => {
         console.log("curr version " + response.data.version);
@@ -37,7 +37,8 @@ class TopBar extends React.Component {
     .then(( res ) => {
       if(res.status === 200){
         this.props.handler(null);
-        console.log("fully logged out")
+        this.useHistory().push('/login-register');
+        console.log("fully logged out");
       }
     })
     .catch(err => console.log(err));

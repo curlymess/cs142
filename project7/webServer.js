@@ -166,29 +166,35 @@ const fs = require("fs");
 
 /* problem 3 */
 // new photo upload
-app.post('/photos/new', processFormBody, (req, res) => {
-    if (!req.session.loginName) {
-        res.status(401).send('The user is not currently logged in.');
-        return;
-    }
+app.post('/photos/new', (req, res) => {
+    processFormBody(req, res, err => {
+        if (err || !req.session.loginName) {
+            res.status(401).send('401: not logged in');
+            return;
+        }
 
-    if (!req.file) {
-        // XXX -  Insert error handling code here.
-        res.status(500).send('recive no file');
-        return;
-    }
+        if (!req.file || req.file.buffer.size === 0 ) {
+            req.status(400).send('error: no file');
+            return;
+        }
 
-    const timestamp = new Date().valueOf();
-    const filename = 'U' +  String(timestamp) + req.file.originalname;
+        const timestamp = new Date().valueOf();
+        const filename = 'U' +  String(timestamp) + req.file.originalname;
 
-    fs.writeFile("./images/" + filename, req.file.buffer, function (err) {
-      // XXX - Once you have the file written into your images directory under the name
-      // filename you can create the Photo object in the database
-      console.log(err);
-    });
+        fs.writeFile("./images/" + filename, req.file.buffer, function (err) {
+        if (err){
+            console.log("issue with writing image into img directory ...");
+        } else {
+            console.log("image saved in directory!!");
+        }
+        });
 
-    Photo.create({file_name : filename, user_id : req.session.loginUser}, (err) => {
-        res.status(500).send(JSON.stringify(err));
+        Photo.create({file_name : filename, date_time: timestamp, user_id : req.session.loginId})
+        .then(() => console.log("yayyy photo made it to the db finally"))
+        .catch((err) => console.log("err saving photo in the db ...." + err));
+        
+        res.status(500).send();
+        
     });
 });
 
