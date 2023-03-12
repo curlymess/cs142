@@ -30,6 +30,10 @@ class UserList extends React.Component {
     
   }
 
+  componentDidMount(){
+    this.fetchData();
+  }
+
   componentDidUpdate(){
     if(!this.state.users){
       this.fetchData();

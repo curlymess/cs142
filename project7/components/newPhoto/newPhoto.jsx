@@ -27,7 +27,7 @@ export default function NewPhoto() {
        .then((res) => {
          console.log(res);
        })
-       .catch(err => console.log(`POST ERR: ${err}`));
+       .catch(err => console.log("uploading error:" + err));
     }
     };
 
@@ -47,16 +47,16 @@ export default function NewPhoto() {
             <DialogTitle id="form-dialog-title">New Photo</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Select your new photo file
+                    Select your new photo 
                 </DialogContentText>
                 <input type="file" accept="image/*" onChange={handleChange} />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="secondary">
+                <Button onClick={handleClose} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={handleSubmit} color="secondary">
-                    submit new photo
+                <Button onClick={handleSubmit} color="primary">
+                    Upload New Photo!
                 </Button>
             </DialogActions>
         </Dialog>
