@@ -70,7 +70,7 @@ class UserPhotos extends React.Component {
 
 	componentWillUnmount() {
 		this.source.cancel("cancelled by user in userphotos");
-	  }
+	}
 
 
 	// for mobilestepper

@@ -47,6 +47,7 @@ const RegisterNewUserForm = (props) => {
     });
   };
 
+  const source = axios.CancelToken.source();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -57,11 +58,11 @@ const RegisterNewUserForm = (props) => {
       return;
     }
 
-    axios.post('/user', formValues)
+    axios.post('/user', formValues, { cancelToken: source.token })
       .then(res => {
         console.log(res.data)
           props.handler(res.data.first_name);
-          //props.history.push(`/users/${res.data._id}`);
+          props.history.push(`/`);
         console.log("successfull registration!");
         handleClose();
       })

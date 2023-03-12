@@ -1,14 +1,11 @@
 import React from 'react';
 import {
     Button,
-    Box,
     Input,
     FormControl,
     InputLabel,
     Typography,
     Grid,
-    FormLabel,
-
 
 } from '@mui/material';
 import axios from 'axios';
@@ -31,6 +28,7 @@ class LoginRegister extends React.Component {
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleLoginButtonClick = this.handleLoginButtonClick.bind(this);
+		this.source = axios.CancelToken.source();
     }
 
     handleLoginButtonClick() {
@@ -38,7 +36,7 @@ class LoginRegister extends React.Component {
         formData.append('loginName', this.state.loginName);
         formData.append('loginPassword', this.state.loginPassword);
 
-        axios.post('/admin/login', formData)
+        axios.post('/admin/login', formData, { cancelToken: this.source.token })
             .then(res => {
                 this.props.handler(res.data.first_name);
                 this.props.history.push(`/users/${res.data._id}`);
@@ -58,6 +56,10 @@ class LoginRegister extends React.Component {
         });
         console.log("handleInputChange: setState = " + this.state.loginName);
     }
+
+    componentWillUnmount() {
+		this.source.cancel("cancelled by user in userphotos");
+	}
 
     render() {
         return (
@@ -92,7 +94,7 @@ class LoginRegister extends React.Component {
 
             {/* register */}
                 <Grid item >
-                    <RegisterNewUserForm handler={this.props.handler} />
+                    <RegisterNewUserForm handler={this.props.handler} history={this.props.history}/>
                 </Grid>
 
             </Grid>
