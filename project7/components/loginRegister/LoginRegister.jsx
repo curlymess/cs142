@@ -15,8 +15,8 @@ class LoginRegister extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loginName: '',
-            loginPassword: '',
+            login_name: '',
+            password: '',
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleLoginButtonClick = this.handleLoginButtonClick.bind(this);
@@ -25,8 +25,8 @@ class LoginRegister extends React.Component {
 
     handleLoginButtonClick() {
         const formData = new FormData();
-        formData.append('loginName', this.state.loginName);
-        formData.append('loginPassword', this.state.loginPassword);
+        formData.append('login_name', this.state.login_name);
+        formData.append('password', this.state.password);
 
         axios.post('/admin/login', formData, { cancelToken: this.source.token })
             .then(res => {
@@ -36,8 +36,8 @@ class LoginRegister extends React.Component {
             .catch(err => {
                 console.log("handleCLick Log IN err" + err);
                 this.setState({
-                    loginName: '',
-                    loginPassword: '',
+                    login_name: '',
+                    password: '',
                 });
             });
     }
@@ -46,7 +46,7 @@ class LoginRegister extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         });
-        console.log("handleInputChange: setState = " + this.state.loginName);
+        console.log("handleInputChange: setState = " + this.state.login_name);
     }
 
     componentWillUnmount() {
@@ -67,13 +67,13 @@ class LoginRegister extends React.Component {
                     <Grid item>
                         <FormControl variant="standard" >
                             <InputLabel htmlFor="login-name">Login Name</InputLabel>
-                            <Input id="login-name" name='loginName' value={this.state.loginName} onChange={this.handleInputChange} />
+                            <Input id="login-name" name='login_name' value={this.state.login_name} onChange={this.handleInputChange} />
                         </FormControl>
                     </Grid>
                     <Grid item>
                         <FormControl variant="standard" >
-                            <InputLabel htmlFor="loginPassword">Password</InputLabel>
-                            <Input id="loginPassword" name='loginPassword' type='password' value={this.state.loginPassword} onChange={this.handleInputChange} />
+                            <InputLabel htmlFor="password">Password</InputLabel>
+                            <Input id="password" name='password' type='password' value={this.state.password} onChange={this.handleInputChange} />
                         </FormControl>
                     </Grid>
                 </Grid>

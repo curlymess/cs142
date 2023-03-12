@@ -93,22 +93,22 @@ const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 //     });
 // });
 app.post('/admin/login', upload.any(), (req, res) => {
-    let { loginName, loginPassword } = req.body;
+    let { login_name, password } = req.body;
 
-    User.findOne({ login_name: loginName })
+    User.findOne({ login_name: login_name })
         .then(user => {
             if (!user || user.length === 0) {
                 res.status(400).send('not a valid account');
                 return;
             }
-            if (user.password !== loginPassword) {
-                console.log(loginPassword + " is a wrong pass ");
+            if (user.password !== password) {
+                console.log(password + " is a wrong pass ");
                 console.log(user.password + " is a right pass ");
                 res.status(400).json({ message: `Password is not correct, please try again` });
                 return;
             }
 
-            req.session.loginName = loginName; // store in express sessison
+            req.session.loginName = login_name; // store in express sessison
             req.session.loginId = user._id; // store in express sessison
 
             console.log("logged in!");
