@@ -56,6 +56,8 @@ var User = require('./schema/user.js');
 var Photo = require('./schema/photo.js');
 var SchemaInfo = require('./schema/schemaInfo.js');
 
+var cs142password = require('./cs142password.js');
+
 // We have the express static module (http://expressjs.com/en/starter/static-files.html) do all
 // the work for us.
 app.use(express.static(__dirname));
@@ -64,7 +66,6 @@ app.use(express.static(__dirname));
 app.use(session({ secret: "secretKey", resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
 
-// TO-DO
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.get('/', function (request, response) {
@@ -75,23 +76,6 @@ app.get('/', function (request, response) {
 // Log-In
 const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 
-
-// app.post('/admin/login', upload.any(), (req, res) => {
-//     let {loginName} = req.body;
-
-//     User.find({login_name : loginName}, function(err, user){
-//         if (err || user.length === 0) {
-//             res.status(400).send('login_name is not a valid account');
-//             return;
-//         }
-
-//         req.session.loginName = loginName; // store in express sessison
-//         req.session.loginId = user[0]._id; // store in express sessison
-
-//         console.log("logged in!");
-//         res.status(200).json({first_name: user[0].first_name, _id: user[0]._id});
-//     });
-// });
 app.post('/admin/login', upload.any(), (req, res) => {
     let { login_name, password } = req.body;
 
@@ -101,7 +85,8 @@ app.post('/admin/login', upload.any(), (req, res) => {
                 res.status(400).send('not a valid account');
                 return;
             }
-            if (user.password !== password) {
+            var checkPassword = cs142password.doesPasswordMatch(user.password_digest, user.salt, password);
+            if (!checkPassword) {
                 console.log(password + " is a wrong pass ");
                 console.log(user.password + " is a right pass ");
                 res.status(400).json({ message: `Password is not correct, please try again` });
@@ -396,7 +381,7 @@ app.get('/photosOfUser/:id', function (request, response) {
                         if (!error) {
                             const jsUser = JSON.parse(JSON.stringify(user)); //js obj
                             //remove props
-                            const { location, description, occupation, __v, login_name, password, ...rest } = jsUser;
+                            const { location, description, occupation, __v, login_name, password, password_digest, salt, ...rest } = jsUser;
                             photo.comments[index].user = rest;
                             delete photo.comments[index].user_id; // avoid extra props
                         }
