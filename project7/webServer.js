@@ -75,24 +75,41 @@ app.get('/', function (request, response) {
 const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 
 
+// app.post('/admin/login', upload.any(), (req, res) => {
+//     let {loginName} = req.body;
+
+//     User.find({login_name : loginName}, function(err, user){
+//         if (err || user.length === 0) {
+//             res.status(400).send('login_name is not a valid account');
+//             return;
+//         }
+
+//         req.session.loginName = loginName; // store in express sessison
+//         req.session.loginId = user[0]._id; // store in express sessison
+        
+//         console.log("logged in!");
+//         res.status(200).json({first_name: user[0].first_name, _id: user[0]._id});
+//     });
+// });
 app.post('/admin/login', upload.any(), (req, res) => {
     let {loginName} = req.body;
 
-    User.find({login_name : loginName}, function(err, user){
-        if (err || user.length === 0) {
-            res.status(400).send('login_name is not a valid account');
-            return;
-        }
+    User.findOne({ login_name : loginName })
+        .then( user => {
+            if ( !user || user.length === 0 ) {
+                res.status(400).send('not a valid account');
+                return;
+            } 
 
-        req.session.loginName = loginName; // store in express sessison
-        req.session.loginId = user[0]._id; // store in express sessison
-        let resData = {
-            _id: user[0]._id,
-            first_name: user[0].first_name
-        };
-        console.log("logged in!");
-        res.status(200).send(JSON.stringify(resData));
-    });
+            req.session.loginName = loginName; // store in express sessison
+            req.session.loginId = user._id; // store in express sessison
+        
+            console.log("logged in!");
+            res.status(200).json({first_name: user.first_name, _id: user._id});
+        })
+        .catch( err => {
+            console.error(" ERROR :" + err);
+        });
 });
 
 // Log-Out
@@ -103,22 +120,22 @@ app.post('/admin/logout', (req, res) => {
     } else {
         console.log(req.session.loginName + "logout!");
         req.session.loginName = '';
+        req.session.loginId = '';
         res.status(200).send('The user logged out successfully!');
     }
 });
 /***************************************************** */
 
-// TO-DO
 /* problem 2 */
 // new comments
 app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
     if (!req.session.loginName) {
-        res.status(401).send('The user is not currently logged in.');
+        res.status(401).send('401: The user is not currently logged in.');
         return;
     }
 
     if((req.body.comment).length === 0){
-        res.status(400).send("400: empty comment forbidden");
+        res.status(400).send("400: empty comments are not allowed");
         return;
     }
 
@@ -136,24 +153,6 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
             },
             e => res.status(500).send(JSON.stringify(e))
         );
-
-        // res.status(200).send("yayyy!");
-
-        // const newComment = {
-        //     comment: req.body.comment,
-        //     date_time: new Date().toISOString(),
-        //     user_id: req.session.id,
-        // };
-
-        // if (!photo.comments){
-        //     photo.comments = [newComment];
-        // } else {
-        //     photo.comments.push(newComment);
-        // }
-
-        // photo.save();
-        // res.status(200).json(newComment);
-
 
     });
 
@@ -283,6 +282,10 @@ app.get('/user/:id', function (request, response) {
  * URL /photosOfUser/:id - Return the Photos for User (id)
  */
 app.get('/photosOfUser/:id', function (request, response) {
+    if (!request.session.loginName) {
+        response.status(401).send('401: The user is not currently logged in.');
+        return;
+    }
     var id = request.params.id;
     Photo.find({user_id: id}, (err, photos) => {
         if (err) {

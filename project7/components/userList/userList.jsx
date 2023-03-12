@@ -20,17 +20,20 @@ class UserList extends React.Component {
   }
 
   fetchData(){
-    axios.get('user/list')
+      axios.get('user/list')
       .then((response) => {
         this.setState({ users: response.data });
       })
       .catch((e) => {
         console.log(e);
       });
+    
   }
 
-  componentDidUpdate(prevProps){
+  componentDidUpdate(){
+    if(!this.state.users){
       this.fetchData();
+    }
   }
 
   render() {

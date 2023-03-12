@@ -13,7 +13,9 @@ class TopBar extends React.Component {
     this.currVersion = 0;
     this.handleLogOutClick = this.handleLogOutClick.bind(this);
 
-    axios.get('http://127.0.0.1:3000/test/info')
+    this.source = axios.CancelToken.source();
+
+    axios.get('http://127.0.0.1:3000/test/info', { cancelToken: this.source.token })
       .then((response) => {
         console.log("curr version " + response.data.version);
         this.currVersion = response.data.version;
@@ -23,11 +25,17 @@ class TopBar extends React.Component {
       });  
   }
 
+  componentWillUnmount(){
+    this.source.cancel("cancelled by topbar");
+  }
+
   handleLogOutClick () {
-    axios.post('admin/logout')
-    .then(() => {
-      this.props.handler(null);
-      // this.props.history.push(`/login-register`);
+    axios.post('admin/logout' )
+    .then(( res ) => {
+      if(res.status === 200){
+        this.props.handler(null);
+        console.log("fully logged out")
+      }
     })
     .catch(err => console.log(err));
   }

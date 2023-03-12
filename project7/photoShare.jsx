@@ -53,7 +53,9 @@ class PhotoShare extends React.Component {
         <Grid item sm={9}>
           <Paper className="user-photos">
             <Switch>
-            <Route path="/login-register"
+              
+
+              <Route path="/login-register"
                 render={( (props) => <LoginRegister {...props} handler={this.handleLoggedInUserChange} loggedInUser={this.loggedInUser}/> )}
               />
 
@@ -81,6 +83,13 @@ class PhotoShare extends React.Component {
                 <Redirect path="/users" to="/login-register" />
               }
 
+              { this.state.loggedInUser ?
+                <Route path="/">
+                  <Typography variant="h3">Welcome to my photosharing app!</Typography>
+                </Route>
+                :
+                <Redirect path="/" to="/login-register" />
+              }
               
             </Switch>
           </Paper>
