@@ -40,9 +40,8 @@ export default function NewComment(props) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button onClick={handleClickOpen}>
            <AddCommentIcon />
-           <Typography> Add Comment</Typography>
       </Button>
       <Dialog
         fullScreen

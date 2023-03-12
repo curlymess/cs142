@@ -88,7 +88,11 @@ class UserPhotos extends React.Component {
 									{/* poster */}
 									<CardHeader
 										avatar={(<Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>)}
-										title={`${this.state.user.first_name} ${this.state.user.last_name}`}
+										title={
+											<Link to={`/users/${this.state.user._id}`} style={{ textDecoration: 'none' }}>
+												<Typography variant="h4">{`${this.state.user.first_name} ${this.state.user.last_name}`}</Typography>
+											</Link>
+										}
 										subheader={photo.date_time} sx={{ backgroundColor: "#F7c8e0" }} />
 									{/* image */}
 									<CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} />
