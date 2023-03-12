@@ -34,8 +34,8 @@ class UserList extends React.Component {
     this.fetchData();
   }
 
-  componentDidUpdate(){
-    if(!this.state.users){
+  componentDidUpdate(prevProps){
+    if(!this.state.users || prevProps !== this.props){
       this.fetchData();
     }
   }

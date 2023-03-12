@@ -39,7 +39,6 @@ export default function NewPhoto() {
   return (
     <div>
         <IconButton color="secondary" aria-label="upload picture" onClick={handleClickOpen} >
-            {/* <input hidden accept="image/*" type="file" ref={(domFileRef) => { this.uploadInput = domFileRef; }} /> */}
             <UploadIcon />
         </IconButton>
         
@@ -49,7 +48,7 @@ export default function NewPhoto() {
                 <DialogContentText>
                     Select your new photo 
                 </DialogContentText>
-                <input type="file" accept="image/*" onChange={handleChange} />
+                <input type="file" accept="image/*" onChange={handleChange} ref={(domFileRef) => { this.uploadInput = domFileRef; }}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">

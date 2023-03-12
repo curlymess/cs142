@@ -161,6 +161,39 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
 
 /******************************************************* */
 
+const processFormBody = multer({storage: multer.memoryStorage()}).single('uploadedphoto');
+const fs = require("fs");
+
+/* problem 3 */
+// new photo upload
+app.post('/photos/new', processFormBody, (req, res) => {
+    if (!req.session.loginName) {
+        res.status(401).send('The user is not currently logged in.');
+        return;
+    }
+
+    if (!req.file) {
+        // XXX -  Insert error handling code here.
+        res.status(500).send('recive no file');
+        return;
+    }
+
+    const timestamp = new Date().valueOf();
+    const filename = 'U' +  String(timestamp) + req.file.originalname;
+
+    fs.writeFile("./images/" + filename, req.file.buffer, function (err) {
+      // XXX - Once you have the file written into your images directory under the name
+      // filename you can create the Photo object in the database
+      console.log(err);
+    });
+
+    Photo.create({file_name : filename, user_id : req.session.loginUser}, (err) => {
+        res.status(500).send(JSON.stringify(err));
+    });
+});
+
+/******************************************************* */
+
 /*
  * Use express to handle argument passing in the URL.  This .get will cause express
  * To accept URLs with /test/<something> and return the something in request.params.p1
