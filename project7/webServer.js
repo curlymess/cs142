@@ -193,6 +193,7 @@ app.post('/photos/new', (req, res) => {
         fs.writeFile("./images/" + filename, req.file.buffer, function (err1) {
             if (err1) {
                 console.log("issue with writing image into img directory ...");
+                req.status(500).send('error: writing img to directory');
             } else {
                 console.log("image saved in directory!!");
             }
@@ -202,7 +203,7 @@ app.post('/photos/new', (req, res) => {
             .then(() => console.log("yayyy photo made it to the db finally"))
             .catch((err2) => console.log("err saving photo in the db ...." + err2));
 
-        // res.status(500).send();
+         res.status(200).send();
 
     });
 });
