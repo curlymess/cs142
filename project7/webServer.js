@@ -60,7 +60,7 @@ var SchemaInfo = require('./schema/schemaInfo.js');
 app.use(express.static(__dirname));
 
 // add middleware modules to Express app
-app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
+app.use(session({ secret: "secretKey", resave: false, saveUninitialized: false }));
 app.use(bodyParser.json());
 
 // TO-DO
@@ -86,36 +86,36 @@ const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 
 //         req.session.loginName = loginName; // store in express sessison
 //         req.session.loginId = user[0]._id; // store in express sessison
-        
+
 //         console.log("logged in!");
 //         res.status(200).json({first_name: user[0].first_name, _id: user[0]._id});
 //     });
 // });
 app.post('/admin/login', upload.any(), (req, res) => {
-    let {loginName, loginPassword} = req.body;
+    let { loginName, loginPassword } = req.body;
 
-    User.findOne({ login_name : loginName })
-        .then( user => {
-            if ( !user || user.length === 0 ) {
+    User.findOne({ login_name: loginName })
+        .then(user => {
+            if (!user || user.length === 0) {
                 res.status(400).send('not a valid account');
                 return;
             }
-            if ( user.password !== loginPassword ){
+            if (user.password !== loginPassword) {
                 console.log(loginPassword + " is a wrong pass ");
                 console.log(user.password + " is a right pass ");
                 res.status(400).json({ message: `Password is not correct, please try again` });
                 return;
-            } 
+            }
 
             req.session.loginName = loginName; // store in express sessison
             req.session.loginId = user._id; // store in express sessison
-        
+
             console.log("logged in!");
-            res.status(200).json({first_name: user.first_name, _id: user._id});
+            res.status(200).json({ first_name: user.first_name, _id: user._id });
         })
-        .catch( err => {
+        .catch(err => {
             console.error(" LOGIN ERROR :" + err);
-            res.status(400).json({ message: "some err occurred."});
+            res.status(400).json({ message: "some err occurred." });
         });
 });
 
@@ -141,23 +141,23 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
         return;
     }
 
-    if((req.body.comment).length === 0){
+    if ((req.body.comment).length === 0) {
         res.status(400).send("400: empty comments are not allowed");
         return;
     }
 
-    Photo.findById(req.params.photo_id, (err , photo) => {
-        if(err) {
+    Photo.findById(req.params.photo_id, (err, photo) => {
+        if (err) {
             res.status(404).send('photo not found :/');
             return;
         }
 
         Photo.findByIdAndUpdate(req.params.photo_id, {
-                comments : [...photo.comments, {
-                    comment: req.body.comment,
-                    user_id: req.session.loginId
-                }]
-            },
+            comments: [...photo.comments, {
+                comment: req.body.comment,
+                user_id: req.session.loginId
+            }]
+        },
             e => res.status(500).send(JSON.stringify(e))
         );
 
@@ -168,7 +168,7 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
 
 /******************************************************* */
 
-const processFormBody = multer({storage: multer.memoryStorage()}).single('uploadedphoto');
+const processFormBody = multer({ storage: multer.memoryStorage() }).single('uploadedphoto');
 const fs = require("fs");
 
 /* problem 3 */
@@ -180,28 +180,28 @@ app.post('/photos/new', (req, res) => {
             return;
         }
 
-        if (!req.file || req.file.buffer.size === 0 ) {
+        if (!req.file || req.file.buffer.size === 0) {
             req.status(400).send('error: no file');
             return;
         }
 
         const timestamp = new Date().valueOf();
-        const filename = 'U' +  String(timestamp) + req.file.originalname;
+        const filename = 'U' + String(timestamp) + req.file.originalname;
 
         fs.writeFile("./images/" + filename, req.file.buffer, function (err) {
-        if (err){
-            console.log("issue with writing image into img directory ...");
-        } else {
-            console.log("image saved in directory!!");
-        }
+            if (err) {
+                console.log("issue with writing image into img directory ...");
+            } else {
+                console.log("image saved in directory!!");
+            }
         });
 
-        Photo.create({file_name : filename, date_time: timestamp, user_id : req.session.loginId})
-        .then(() => console.log("yayyy photo made it to the db finally"))
-        .catch((err) => console.log("err saving photo in the db ...." + err));
-        
-        res.status(500).send();
-        
+        Photo.create({ file_name: filename, date_time: timestamp, user_id: req.session.loginId })
+            .then(() => console.log("yayyy photo made it to the db finally"))
+            .catch((err) => console.log("err saving photo in the db ...." + err));
+
+        // res.status(500).send();
+
     });
 });
 
@@ -209,20 +209,76 @@ app.post('/photos/new', (req, res) => {
 /* problem 4 */
 // new user registration
 app.post('/user', upload.any(), (req, res) => {
-    let { loginName, loginPassword, first_name, last_name, occupation, location, description} = req.body;
-    console.log(loginName + " ask to register.");
+    let { login_name, password, first_name, last_name, occupation, location, description } = req.body;
+    let newUser = req.body;
+    req.session.loginName = login_name;
 
-    User.create({login_name: loginName, password: loginPassword, first_name, last_name, occupation, location, description}, (err) => {
-        if(err){
-            console.log("failed to register user");
-        } else {
-            console.log("registered!!");
-        }
-        
-        res.status(500).send(JSON.stringify(err));
-    });
+    if (!(newUser.first_name && newUser.last_name && newUser.password)) {
+        res.status(400).json({ message: "The first_name, last_name, and password must be non-empty strings" });
+        return;
+    }
+
+
+        // only create a new user if it have not existed
+    User.findOne({ login_name: newUser.login_name })
+        .then(user => {
+            if (!user) { // user not exists yet
+                console.log("User not found");
+                // create the user in the DB
+                User.create(newUser)
+                    .then(() => console.log("New User created in the DB"))
+                    .catch(e => console.log("Error creating new user ", e));
+                // res.status(200).json({ message: "succesfull login!!"});
+                res.status(200).send({ login_name: login_name, first_name: first_name });
+            } else { // user exists already
+                console.log("User already exists!");
+                console.log(user);
+                res.status(400).json({ message: "The login name already exists, please choose a different login name"});
+            }
+        })
+        .catch(error => {
+            console.log("Error: user found user error", error);
+            res.status(400).json({ message: "Other error occured: " });
+        });
+
+    // User.create(newUser, (err) => {
+    //     if (err) {
+    //         console.log("failed to register user");
+    //     } else {
+    //         console.log("registered!!");
+    //         res.status(200).send({ login_name: login_name, first_name: first_name });
+    //     }
+
+    // });
 
 });
+
+
+
+//     // only create a new user if it have not existed
+//     User.findOne({ login_name: newUser.loginName })
+//         .then(user => {
+//             if (!user) { // user not exists yet
+//                 console.log("User not found");
+//                 // create the user in the DB
+//                 User.create(newUser)
+//                     .then(() => console.log("New User created in the DB"))
+//                     .catch(e => console.log("Error creating new user ", e));
+//                 res.status(200).json({ message: "succesfull login!!"});
+//             } else { // user exists already
+//                 console.log("User already exists!");
+//                 console.log(user);
+//                 res.status(400).json({ message: "The login name already exists, please choose a different login name"});
+//             }
+//         })
+//         .catch(error => {
+//             console.log("Error: user found user error", error);
+//             res.status(400).json({ message: "Other error occured: " });
+//         });
+
+
+
+//     });
 
 
 /******************************************************* */
@@ -268,9 +324,9 @@ app.get('/test/:p1', function (request, response) {
         // do the work.  We put the collections into array and use async.each to
         // do each .count() query.
         var collections = [
-            {name: 'user', collection: User},
-            {name: 'photo', collection: Photo},
-            {name: 'schemaInfo', collection: SchemaInfo}
+            { name: 'user', collection: User },
+            { name: 'photo', collection: Photo },
+            { name: 'schemaInfo', collection: SchemaInfo }
         ];
         async.each(collections, function (col, done_callback) {
             col.collection.countDocuments({}, function (err, count) {
@@ -304,13 +360,13 @@ app.get('/user/list', function (request, response) {
         return;
     }
 
-    User.find({}, function(err, users) {
+    User.find({}, function (err, users) {
         if (err) {
             response.status(500).send(JSON.stringify(err));
-        }  else if (users.length === 0) {
+        } else if (users.length === 0) {
             response.status(400).send("no user found");
         } else {
-            const userList = JSON.parse(JSON.stringify(users)); 
+            const userList = JSON.parse(JSON.stringify(users));
             const newList = userList.map(user => {
                 const { first_name, last_name, _id } = user;
                 return { first_name, last_name, _id };
@@ -326,18 +382,18 @@ app.get('/user/list', function (request, response) {
  */
 app.get('/user/:id', function (request, response) {
     const id = request.params.id;
-    User.findById(id, function(err, user) {
+    User.findById(id, function (err, user) {
         if (err) {
             response.status(400).send('missing user id: ' + id);
         } else {
             let userInfo = {
-                _id : user._id.valueOf(), 
-                first_name : user.first_name, 
-                last_name : user.last_name, 
-                location : user.location, 
-                description : user.description, 
-                occupation : user.occupation
-            };                             
+                _id: user._id.valueOf(),
+                first_name: user.first_name,
+                last_name: user.last_name,
+                location: user.location,
+                description: user.description,
+                occupation: user.occupation
+            };
             response.status(200).send(JSON.stringify(userInfo));
         }
     });
@@ -353,23 +409,23 @@ app.get('/photosOfUser/:id', function (request, response) {
         return;
     }
     var id = request.params.id;
-    Photo.find({user_id: id}, (err, photos) => {
+    Photo.find({ user_id: id }, (err, photos) => {
         if (err) {
             response.status(400).send(JSON.stringify(`NOT FOUND: photos for user id ` + id));
         } else {
             let count = 0;
-            const allPhotos = JSON.parse(JSON.stringify(photos)); 
+            const allPhotos = JSON.parse(JSON.stringify(photos));
 
             allPhotos.forEach(photo => {
                 delete photo.__v;
 
                 async.eachOf(photo.comments, (comment, index, callback) => {
-                    User.findById({_id: comment.user_id}, (error, user) => {
+                    User.findById({ _id: comment.user_id }, (error, user) => {
                         if (!error) {
                             const jsUser = JSON.parse(JSON.stringify(user)); //js obj
-                            const {location, description, occupation, __v, ...rest} = jsUser; 
-                            photo.comments[index].user = rest;   
-                            delete photo.comments[index].user_id;  
+                            const { location, description, occupation, __v, ...rest } = jsUser;
+                            photo.comments[index].user = rest;
+                            delete photo.comments[index].user_id;
                         }
                         callback(error);
                     });
@@ -378,12 +434,12 @@ app.get('/photosOfUser/:id', function (request, response) {
                     if (error) {
                         response.status(400).send(JSON.stringify(`NOT FOUND: photos for user id ` + id));
                     } else if (count === allPhotos.length) {
-                        response.json(allPhotos); 
+                        response.json(allPhotos);
                     }
                 });
-            }); 
+            });
         }
-    });    
+    });
 });
 
 var server = app.listen(3000, function () {
