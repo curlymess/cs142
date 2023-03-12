@@ -60,6 +60,7 @@ class LoginRegister extends React.Component {
     handleRegisterButtonClick() {
         // verify password entered correctly both times
         if (this.state.registerPassword !== this.state.registerPassword2) {
+            // isnert message that password dont match
             return;
         }
         const formData = new FormData();
@@ -73,8 +74,9 @@ class LoginRegister extends React.Component {
 
         axios.post('/user', formData)
             .then(res => {
-                this.props.changeContext({loggedUser: res.data.first_name});
+                this.props.handler(res.data.first_name);
                 this.props.history.push(`/users/${res.data._id}`);
+                console.log("successfull registration!");
             })
             .catch(err => {
                 console.log(err);

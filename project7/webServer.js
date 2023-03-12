@@ -206,6 +206,26 @@ app.post('/photos/new', (req, res) => {
 });
 
 /******************************************************* */
+/* problem 4 */
+// new user registration
+app.post('/user', upload.any(), (req, res) => {
+    let { loginName, loginPassword, first_name, last_name, occupation, location, description} = req.body;
+    console.log(loginName + " ask to register.");
+
+    User.create({login_name: loginName, password: loginPassword, first_name, last_name, occupation, location, description}, (err) => {
+        if(err){
+            console.log("failed to register user");
+        } else {
+            console.log("registered!!");
+        }
+        
+        res.status(500).send(JSON.stringify(err));
+    });
+
+});
+
+
+/******************************************************* */
 
 /*
  * Use express to handle argument passing in the URL.  This .get will cause express
