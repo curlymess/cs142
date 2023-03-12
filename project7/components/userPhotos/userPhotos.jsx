@@ -104,7 +104,12 @@ class UserPhotos extends React.Component {
 												<Typography variant="h4">{`${this.state.user.first_name} ${this.state.user.last_name}`}</Typography>
 											</Link>
 										}
-										subheader={photo.date_time} sx={{ backgroundColor: "#F7c8e0" }} />
+										subheader={
+											<Typography variant="h7">
+												{`${photo.date_time}`}
+											</Typography>
+										} 
+										sx={{ backgroundColor: "#F7c8e0" }} />
 									{/* image */}
 									<CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} />
 									{/* scroll images */}
@@ -149,9 +154,12 @@ class UserPhotos extends React.Component {
 															</ListItemAvatar>
 														</Link>
 														<ListItemText primary={(
-																		<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-																		<Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
-																		</Link>
+																			<div>
+																				<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+																					<Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
+																				</Link>
+																				<Typography variant="h7">{`${photo.date_time}`}</Typography>
+																			</div>
 																		)}
 																	secondary={(<Typography variant="body1">{comment.comment}</Typography>)}/>
 													</ListItem>

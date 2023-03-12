@@ -48,7 +48,13 @@ typography: {
         letterSpacing: ".1rem",
         color: "#FFF",
         fontSize: 18,
-        color: "#95BDFF",
+        color: "#95BDFF", // light green
+    },
+    h7: { // date time / subheading text
+        fontFamily: '"Itim", cursive',
+        fontWeight: 500,
+        fontSize: 12,
+        color: "#909399", // light grey
     },
 
     body1: {
