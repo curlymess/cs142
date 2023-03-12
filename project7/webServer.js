@@ -124,13 +124,14 @@ app.post('/admin/login', upload.any(), (req, res) => {
 app.post('/admin/logout', (req, res) => {
     console.log("log out button clicked");
     if (!req.session.loginName) {
-        res.status(401).send('The user is not currently logged in.');
-    } else {
+        res.status(400).send('The user is not logged in right now');
+        return;
+    }
         console.log(req.session.loginName + "logout!");
         req.session.loginName = '';
         req.session.loginId = '';
         res.status(200).send('The user logged out successfully!');
-    }
+    
 });
 /***************************************************** */
 
@@ -346,6 +347,11 @@ app.get('/user/list', function (request, response) {
  * URL /user/:id - Return the information for User (id)
  */
 app.get('/user/:id', function (request, response) {
+    if (!request.session.loginName) {
+        response.status(401).send('401: The user is not currently logged in.');
+        return;
+    }
+    
     const id = request.params.id;
     User.findById(id, function (err, user) {
         if (err) {
