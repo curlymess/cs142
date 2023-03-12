@@ -14,7 +14,7 @@ var _ = require("lodash");
 var cs142models = require("../modelData/photoApp.js").cs142models;
 
 var port = 3000;
-var host = "localhost";
+var host = "127.0.0.1";
 
 // Valid properties of a user list model
 var userListProperties = ["first_name", "last_name", "_id"];
