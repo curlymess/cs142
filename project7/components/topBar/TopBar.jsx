@@ -1,7 +1,10 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Container, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button, IconButton } from '@mui/material';
 import './TopBar.css';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
+import UploadIcon from '@mui/icons-material/Upload';
+import LogoutIcon from '@mui/icons-material/Logout';
+
 import axios from 'axios';
 
 /**
@@ -59,14 +62,20 @@ class TopBar extends React.Component {
                 Photo Application v{this.currVersion}
               </Typography>
 
-              {/* TO-DO: Make log in conditional and show log out */}
               {/* https://mui.com/material-ui/react-app-bar/ */}
               
                 {
                   this.props.loggedInUser ? 
-                  <Button variant="contained" color="secondary" >
-                    <Typography variant="h6" noWrap onClick={this.handleLogOutClick}>Log Out</Typography> 
-                  </Button>
+                  <div>
+                    <IconButton color="secondary" aria-label="upload picture">
+                      {/* <input hidden accept="image/*" type="file" /> */}
+                      <UploadIcon />
+                    </IconButton>
+                    <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
+                      {/* <input hidden accept="image/*" type="file" /> */}
+                      <LogoutIcon />
+                    </IconButton>
+                  </div>
                   : 
                   <Button variant="contained" color="secondary">
                     <Typography variant="h6" noWrap >Log In</Typography>
