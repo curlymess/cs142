@@ -241,45 +241,7 @@ app.post('/user', upload.any(), (req, res) => {
             res.status(400).json({ message: "Other error occured: " });
         });
 
-    // User.create(newUser, (err) => {
-    //     if (err) {
-    //         console.log("failed to register user");
-    //     } else {
-    //         console.log("registered!!");
-    //         res.status(200).send({ login_name: login_name, first_name: first_name });
-    //     }
-
-    // });
-
 });
-
-
-
-//     // only create a new user if it have not existed
-//     User.findOne({ login_name: newUser.loginName })
-//         .then(user => {
-//             if (!user) { // user not exists yet
-//                 console.log("User not found");
-//                 // create the user in the DB
-//                 User.create(newUser)
-//                     .then(() => console.log("New User created in the DB"))
-//                     .catch(e => console.log("Error creating new user ", e));
-//                 res.status(200).json({ message: "succesfull login!!"});
-//             } else { // user exists already
-//                 console.log("User already exists!");
-//                 console.log(user);
-//                 res.status(400).json({ message: "The login name already exists, please choose a different login name"});
-//             }
-//         })
-//         .catch(error => {
-//             console.log("Error: user found user error", error);
-//             res.status(400).json({ message: "Other error occured: " });
-//         });
-
-
-
-//     });
-
 
 /******************************************************* */
 
@@ -417,18 +379,22 @@ app.get('/photosOfUser/:id', function (request, response) {
             const allPhotos = JSON.parse(JSON.stringify(photos));
 
             allPhotos.forEach(photo => {
-                delete photo.__v;
-
+                delete photo.__v; // avoid extra prop err due to mongoDb auto adding
+                
                 async.eachOf(photo.comments, (comment, index, callback) => {
                     User.findById({ _id: comment.user_id }, (error, user) => {
+
                         if (!error) {
                             const jsUser = JSON.parse(JSON.stringify(user)); //js obj
-                            const { location, description, occupation, __v, ...rest } = jsUser;
+                            //remove props
+                            const { location, description, occupation, __v, login_name, password, ...rest } = jsUser;
                             photo.comments[index].user = rest;
-                            delete photo.comments[index].user_id;
+                            delete photo.comments[index].user_id; // avoid extra props
                         }
                         callback(error);
                     });
+
+
                 }, error => {
                     count += 1;
                     if (error) {

@@ -49,7 +49,6 @@ export default function NewPhoto() {
                     Select your new photo 
                 </DialogContentText>
                 <input type="file" accept="image/*" onChange={handleChange}/>
-                {/* <input type="file" accept="image/*" ref={(domFileRef) => { this.uploadInput = domFileRef; }} /> */}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
