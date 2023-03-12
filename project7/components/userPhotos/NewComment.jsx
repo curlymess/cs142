@@ -77,7 +77,7 @@ export default function NewComment(props) {
                         width: 'auto',
                     }}
                     image={`/images/${props.currPhotoFileName}`} />
-            </Card>
+          </Card>
 
             <TextField
               autoFocus

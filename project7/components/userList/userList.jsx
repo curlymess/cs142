@@ -19,23 +19,23 @@ class UserList extends React.Component {
 
   }
 
-  fetchData(){
-      axios.get('user/list')
+  fetchData() {
+    axios.get('user/list')
       .then((response) => {
         this.setState({ users: response.data });
       })
       .catch((e) => {
         console.log(e);
       });
-    
+
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchData();
   }
 
-  componentDidUpdate(prevProps){
-    if(!this.state.users || prevProps !== this.props){
+  componentDidUpdate(prevProps) {
+    if (!this.state.users || prevProps !== this.props) {
       this.fetchData();
     }
   }
@@ -47,33 +47,34 @@ class UserList extends React.Component {
           User List
         </Typography>
 
-        { 
-        this.props.loggedInUser ?
-          <List component="nav">
-          {this.state.users.map((user) => (
-            <ListItem divider={true} key={user._id}>
+        {
+          this.props.loggedInUser ?
+            (
+            <List component="nav">
+              {this.state.users.map((user) => (
+                <ListItem divider={true} key={user._id}>
 
-              <ListItemIcon sx={{display: { xs: 'none', lg:'flex'}}}>
-                <Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
-              </ListItemIcon>
-              <Link to={`/users/${user._id}`} style={{ textDecoration: 'none' }}>
-                <ListItemText primary={
-                  (
-                  <Typography variant="h4">
-                    {`${user.first_name} ${user.last_name}`}
-                  </Typography>
-                  )
-                } 
-                />
-              </Link>
+                  <ListItemIcon sx={{ display: { xs: 'none', lg: 'flex' } }}>
+                    <Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
+                  </ListItemIcon>
+                  <Link to={`/users/${user._id}`} style={{ textDecoration: 'none' }}>
+                    <ListItemText primary={
+                      (
+                        <Typography variant="h4">
+                          {`${user.first_name} ${user.last_name}`}
+                        </Typography>
+                      )
+                    }
+                    />
+                  </Link>
 
-            </ListItem>
-          ))}
-        </List>
-        :
-        <Typography variant="body1">you need an account to view!</Typography>
+                </ListItem>
+              ))}
+            </List>
+            ) :
+            <Typography variant="body1">you need an account to view!</Typography>
         }
-        
+
 
       </div>
     );

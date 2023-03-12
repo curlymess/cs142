@@ -49,6 +49,7 @@ var async = require('async');
 // expressJS App
 var express = require('express');
 var app = express();
+const fs = require("fs");
 
 // Load the Mongoose schema for User, Photo, and SchemaInfo
 var User = require('./schema/user.js');
@@ -169,7 +170,6 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
 /******************************************************* */
 
 const processFormBody = multer({ storage: multer.memoryStorage() }).single('uploadedphoto');
-const fs = require("fs");
 
 /* problem 3 */
 // new photo upload
@@ -188,8 +188,8 @@ app.post('/photos/new', (req, res) => {
         const timestamp = new Date().valueOf();
         const filename = 'U' + String(timestamp) + req.file.originalname;
 
-        fs.writeFile("./images/" + filename, req.file.buffer, function (err) {
-            if (err) {
+        fs.writeFile("./images/" + filename, req.file.buffer, function (err1) {
+            if (err1) {
                 console.log("issue with writing image into img directory ...");
             } else {
                 console.log("image saved in directory!!");
@@ -198,7 +198,7 @@ app.post('/photos/new', (req, res) => {
 
         Photo.create({ file_name: filename, date_time: timestamp, user_id: req.session.loginId })
             .then(() => console.log("yayyy photo made it to the db finally"))
-            .catch((err) => console.log("err saving photo in the db ...." + err));
+            .catch((err2) => console.log("err saving photo in the db ...." + err2));
 
         // res.status(500).send();
 
@@ -209,7 +209,7 @@ app.post('/photos/new', (req, res) => {
 /* problem 4 */
 // new user registration
 app.post('/user', upload.any(), (req, res) => {
-    let { login_name, password, first_name, last_name, occupation, location, description } = req.body;
+    let { login_name, first_name } = req.body;
     let newUser = req.body;
     req.session.loginName = login_name;
 

@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Button,
-  Box,
-  Input,
-  FormControl,
-  InputLabel,
-  Typography,
-  Grid,
-  DialogContent, Dialog, DialogActions,
+  Button, Input, FormControl, InputLabel,
+  Typography, Grid, DialogContent, Dialog,
   AppBar, Toolbar, IconButton, FormLabel
 } from '@mui/material';
 
@@ -15,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import axios from 'axios';
 
-const RegisterNewUserForm = (props) => {
+function RegisterNewUserForm (props) {
   const defaultValues = {
     login_name: '',
     password: '',
@@ -60,7 +54,6 @@ const RegisterNewUserForm = (props) => {
 
     axios.post('/user', formValues, { cancelToken: source.token })
       .then(res => {
-        console.log(res.data)
           props.handler(res.data.first_name);
           props.history.push(`/`);
         console.log("successfull registration!");
@@ -76,7 +69,7 @@ const RegisterNewUserForm = (props) => {
   return (
     <div>
       <Button onClick={handleClickOpen}>
-        <Typography variant="h7" sx={{ textDecoration: 'underline' }}>Don't have an account? Register now!</Typography>
+        <Typography variant="h7" sx={{ textDecoration: 'underline' }}>Need an account? Register now!</Typography>
       </Button>
 
       <Dialog
@@ -106,7 +99,7 @@ const RegisterNewUserForm = (props) => {
             <Grid container spacing={3} alignItems="center" justify="center" direction="column">
               {/* Register Form */}
               <Grid item sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <FormLabel>What's your name?</FormLabel>
+                <FormLabel>What is your name?</FormLabel>
                 <FormControl variant="standard" sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'space-around' }}>
                   <InputLabel htmlFor="first_name">First Name</InputLabel>
                   <Input id="first_name" name='first_name' value={formValues.first_name} onChange={handleInputChange} />
@@ -165,10 +158,9 @@ const RegisterNewUserForm = (props) => {
     </div>
 
   );
-};
+}
 export default RegisterNewUserForm;
 
-/////////////////////////////////////////////
 
 
 

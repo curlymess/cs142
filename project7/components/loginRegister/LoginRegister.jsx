@@ -16,19 +16,11 @@ class LoginRegister extends React.Component {
         super(props);
         this.state = {
             loginName: '',
-            registerName: '',
             loginPassword: '',
-            registerPassword: '',
-            registerPassword2: '',
-            firstName: '',
-            lastName: '',
-            occupation: '',
-            location: '',
-            description: ''
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleLoginButtonClick = this.handleLoginButtonClick.bind(this);
-		this.source = axios.CancelToken.source();
+        this.source = axios.CancelToken.source();
     }
 
     handleLoginButtonClick() {
@@ -58,20 +50,20 @@ class LoginRegister extends React.Component {
     }
 
     componentWillUnmount() {
-		this.source.cancel("cancelled by user in userphotos");
-	}
+        this.source.cancel("cancelled by user in userphotos");
+    }
 
     render() {
         return (
-            <Grid container spacing={1} sx={{ width:'100%', display:'flex', flexDirection:'column', alignItems:'center'}} >  
-            {/* log in */}
+            <Grid container spacing={1} sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+                {/* log in */}
                 {/* form */}
                 <Grid item >
 
                     <Grid item >
                         <Typography variant="h4">Welcome back!</Typography>
                     </Grid>
-                    
+
                     <Grid item>
                         <FormControl variant="standard" >
                             <InputLabel htmlFor="login-name">Login Name</InputLabel>
@@ -80,9 +72,9 @@ class LoginRegister extends React.Component {
                     </Grid>
                     <Grid item>
                         <FormControl variant="standard" >
-                        <InputLabel htmlFor="loginPassword">Password</InputLabel>
-                        <Input id="loginPassword" name='loginPassword' type='password' value={this.state.loginPassword} onChange={this.handleInputChange} />
-                    </FormControl>
+                            <InputLabel htmlFor="loginPassword">Password</InputLabel>
+                            <Input id="loginPassword" name='loginPassword' type='password' value={this.state.loginPassword} onChange={this.handleInputChange} />
+                        </FormControl>
                     </Grid>
                 </Grid>
                 {/* button */}
@@ -92,9 +84,9 @@ class LoginRegister extends React.Component {
                     </Button>
                 </Grid>
 
-            {/* register */}
+                {/* register */}
                 <Grid item >
-                    <RegisterNewUserForm handler={this.props.handler} history={this.props.history}/>
+                    <RegisterNewUserForm handler={this.props.handler} history={this.props.history} />
                 </Grid>
 
             </Grid>

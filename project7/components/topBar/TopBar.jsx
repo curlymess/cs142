@@ -2,11 +2,9 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Container, Button, IconButton } from '@mui/material';
 import './TopBar.css';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
-import NewPhoto from '../NewPhoto/newPhoto';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import NewPhoto from '../newPhoto/newPhoto';
 
 /**
  * Define TopBar, a React componment of CS142 project #5
@@ -25,85 +23,84 @@ class TopBar extends React.Component {
       })
       .catch((err) => {
         console.log(err);
-      });  
+      });
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.source.cancel("cancelled by topbar");
   }
 
-  handleLogOutClick () {
-    axios.post('admin/logout' )
-    .then(( res ) => {
-      if(res.status === 200){
-        this.props.handler(null);
-        this.useHistory().push('/login-register');
-        console.log("fully logged out");
-      }
-    })
-    .catch(err => console.log(err));
+  handleLogOutClick() {
+    axios.post('admin/logout')
+      .then((res) => {
+        if (res.status === 200) {
+          this.props.handler(null);
+          this.useHistory().push('/login-register');
+          console.log("fully logged out");
+        }
+      })
+      .catch(err => console.log(err));
   }
-
-
-
   render() {
     return (
       <AppBar className="cs142-topbar-appBar">
         <Container maxWidth="xl">
           <Toolbar disableGutters className='bar1'>
-            
-              <div className='logo'> 
-                <LocalFloristIcon />
-                <Typography variant="h3" noWrap>  
-                  Noor Fakih 
-                </Typography>
-              </div>
 
-              <Typography variant="h1" noWrap >
-                Photo Application v{this.currVersion}
+            <div className='logo'>
+              <LocalFloristIcon />
+              <Typography variant="h3" noWrap>
+                Noor Fakih
               </Typography>
+            </div>
 
-              {/* https://mui.com/material-ui/react-app-bar/ */}
-              
-                {
-                  this.props.loggedInUser ? 
-                  <div>
-                    <NewPhoto />
-                    <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
-                      <LogoutIcon />
-                    </IconButton>
-                  </div>
-                  : 
-                  <Button variant="contained" color="secondary">
-                    <Typography variant="h6" noWrap >Log In</Typography>
-                  </Button>
-                }
-              
+            <Typography variant="h1" noWrap >
+              Photo Application v{this.currVersion}
+            </Typography>
 
-          </Toolbar>    
+            {/* https://mui.com/material-ui/react-app-bar/ */}
+
+            {
+              this.props.loggedInUser ?
+                (
+                <div>
+                  <NewPhoto />
+                  <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
+                    <LogoutIcon />
+                  </IconButton>
+                </div>
+                ) : (
+                <Button variant="contained" color="secondary">
+                  <Typography variant="h6" noWrap >Log In</Typography>
+                </Button>
+                )
+            }
+
+
+          </Toolbar>
         </Container>
         <Container maxWidth="xl" className='bar2Container'>
           <div className='bar2'>
-          {
-            this.props.loggedInUser ? 
-            <div className='bar2LoggedIn'>
+            {
+              this.props.loggedInUser ?
+                (
+                <div className='bar2LoggedIn'>
+                  <Typography variant="h2" noWrap >
+                    hello there, &nbsp;
+                    {this.props.loggedInUser ? this.props.loggedInUser : 'no one'}
+                  </Typography>
 
-              <Typography variant="h2" noWrap > 
-                hello there, &nbsp; 
-                { this.props.loggedInUser ? this.props.loggedInUser : 'no one' }
-              </Typography>
-
-              <Typography variant="h2" noWrap> 
-                currently viewing &nbsp; 
-                { this.props.currUser ? this.props.currUser : 'no one' }
-              </Typography>
-
-            </div>
-            : 
-            <Typography className='bar2SignedOut'> 
-              why don't you log in? 
-            </Typography>
-          }
+                  <Typography variant="h2" noWrap>
+                    currently viewing &nbsp;
+                    {this.props.currUser ? this.props.currUser : 'no one'}
+                  </Typography>
+                </div>
+                ) : (
+                <Typography className='bar2SignedOut'>
+                  how about logging in?
+                </Typography>
+                )
+            }
           </div>
         </Container>
       </AppBar>

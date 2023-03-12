@@ -27,75 +27,79 @@ class PhotoShare extends React.Component {
   }
 
   handleCurrUserChange = currUser => {
-    this.setState({currUser: currUser});
+    this.setState({ currUser: currUser });
   };
 
   handleLoggedInUserChange = loggedInUser => {
-    this.setState({loggedInUser: loggedInUser});
+    this.setState({ loggedInUser: loggedInUser });
   };
 
   render() {
     return (
       <HashRouter>
-      <div>
-      <Grid container spacing={8}>
-        <Grid item xs={12}>
-          <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser} handler={this.handleLoggedInUserChange}/>
-        </Grid>
-        <div className="cs142-main-topbar-buffer"/>
-        
-        <Grid item sm={3}>
-          <Paper className="user-list">
-            <UserList loggedInUser={this.state.loggedInUser} />
-          </Paper>
-        </Grid>
+        <div>
+          <Grid container spacing={8}>
+            <Grid item xs={12}>
+              <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser} handler={this.handleLoggedInUserChange} />
+            </Grid>
+            <div className="cs142-main-topbar-buffer" />
 
-        <Grid item sm={9}>
-          <Paper className="user-photos">
-            <Switch>
-              
+            <Grid item sm={3}>
+              <Paper className="user-list">
+                <UserList loggedInUser={this.state.loggedInUser} />
+              </Paper>
+            </Grid>
 
-              <Route path="/login-register"
-                render={( (props) => <LoginRegister {...props} handler={this.handleLoggedInUserChange} loggedInUser={this.loggedInUser}/> )}
-              />
+            <Grid item sm={9}>
+              <Paper className="user-photos">
+                <Switch>
 
-              { this.state.loggedInUser ? 
-                <Route path="/users/:userId"
-                  render={( (props) => <UserDetail {...props} handler={this.handleCurrUserChange}/> )}
-                /> 
-                :
-                <Redirect path="/users/:userId" to="/login-register" />
-              }
 
-              { this.state.loggedInUser ? 
-                <Route path="/photos/:userId"
-                render ={( (props) => <UserPhotos {...props} handler={this.handleCurrUserChange} /> )}
-                /> 
-                :
-                <Redirect path="/photos/:userID" to="/login-register" />
-              }
-              
-              { this.state.loggedInUser ? 
-                <Route path="/users">
-                  <UserList loggedInUser={this.state.loggedInUser} />
-                </Route> 
-                :
-                <Redirect path="/users" to="/login-register" />
-              }
+                  <Route path="/login-register"
+                    render={((props) => <LoginRegister {...props} handler={this.handleLoggedInUserChange} loggedInUser={this.loggedInUser} />)}
+                  />
 
-              { this.state.loggedInUser ?
-                <Route path="/">
-                  <Typography variant="h3">Welcome to my photosharing app!</Typography>
-                </Route>
-                :
-                <Redirect path="/" to="/login-register" />
-              }
-              
-            </Switch>
-          </Paper>
-        </Grid>
-      </Grid>
-      </div>
+                  {this.state.loggedInUser ?
+                    (
+                      <Route path="/users/:userId"
+                        render={((props) => <UserDetail {...props} handler={this.handleCurrUserChange} />)}
+                      />
+                    ) : (
+                      <Redirect path="/users/:userId" to="/login-register" />
+                    )}
+
+                  {this.state.loggedInUser ?
+                    (
+                      <Route path="/photos/:userId"
+                        render={((props) => <UserPhotos {...props} handler={this.handleCurrUserChange} />)}
+                      />
+                    ) : (
+                      <Redirect path="/photos/:userID" to="/login-register" />
+                    )}
+
+                  {this.state.loggedInUser ?
+                    (
+                      <Route path="/users">
+                        <UserList loggedInUser={this.state.loggedInUser} />
+                      </Route>
+                    ) : (
+                      <Redirect path="/users" to="/login-register" />
+                    )}
+
+                  {this.state.loggedInUser ?
+                    (
+                      <Route path="/">
+                        <Typography variant="h3">Welcome to my photosharing app!</Typography>
+                      </Route>
+                    ) : (
+                      <Redirect path="/" to="/login-register" />
+                    )}
+
+                </Switch>
+              </Paper>
+            </Grid>
+          </Grid>
+        </div>
       </HashRouter>
     );
   }
