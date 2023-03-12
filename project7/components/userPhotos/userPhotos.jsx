@@ -57,6 +57,17 @@ class UserPhotos extends React.Component {
 		}
 	}
 
+	// for new comments to be displayed
+	componentDidUpdate(){
+		axios(`/photosOfUser/${this.props.match.params.userId}`, { cancelToken: this.source.token })
+			.then((response) => {
+				this.setState({ userPhotos: response.data });
+			})
+			.catch((e) => {
+				console.log(e);
+			});
+	}
+
 	componentWillUnmount() {
 		this.source.cancel("cancelled by user in userphotos");
 	  }
