@@ -158,9 +158,11 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
                 comment: req.body.comment,
                 user_id: req.session.loginId
             }]
-        },
-            e => res.status(500).send(JSON.stringify(e))
-        );
+        }) 
+        // e => res.status(500).send(JSON.stringify(e))
+       // );
+       .then( res.status(200).send())
+       .catch( e => res.status(500).send(e));
 
     });
 
