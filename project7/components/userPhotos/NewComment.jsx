@@ -29,7 +29,7 @@ export default function NewComment(props) {
     const formData = new FormData();
     formData.append('comment', newComment);
 
-    axios.post(`/commentsOfPhoto/${props.photoId}`, formData)
+    axios.post(`/commentsOfPhoto/${props.currPhotoId}`, formData)
     .catch(err => {
         console.log(err);
         setNewComment('');
@@ -83,7 +83,7 @@ export default function NewComment(props) {
               autoFocus
               margin="dense"
               id="newCommentText"
-              label="Your Comment"
+              label="Type your comment"
               fullWidth
               variant="standard"
               value={newComment}

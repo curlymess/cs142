@@ -113,7 +113,7 @@ class UserPhotos extends React.Component {
 									{/* action bar */}
 									<CardActions sx={{display: "flex", justifyContent: "space-between"}}>
 										<Button size="small"><FavoriteIcon /></Button>
-										<NewComment currPhotoId={photo._id}/>
+										<NewComment currPhotoId={photo._id} currPhotoFileName={photo.file_name} currUser={this.state.user.first_name + ' ' + this.state.user.last_name}/>
 									</CardActions>
 									{/* the comments */}
 									{photo.comments ? 

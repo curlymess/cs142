@@ -85,7 +85,7 @@ app.post('/admin/login', upload.any(), (req, res) => {
         }
 
         req.session.loginName = loginName; // store in express sessison
-
+        req.session.loginId = user[0]._id; // store in express sessison
         let resData = {
             _id: user[0]._id,
             first_name: user[0].first_name
@@ -112,25 +112,48 @@ app.post('/admin/logout', (req, res) => {
 /* problem 2 */
 // new comments
 app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
-    if (!req.session.loginUser) {
+    if (!req.session.loginName) {
         res.status(401).send('The user is not currently logged in.');
+        return;
+    }
+
+    if((req.body.comment).length === 0){
+        res.status(400).send("400: empty comment forbidden");
         return;
     }
 
     Photo.findById(req.params.photo_id, (err , photo) => {
         if(err) {
-            res.status(404).send('Found no photo with this id');
+            res.status(404).send('photo not found :/');
             return;
         }
 
         Photo.findByIdAndUpdate(req.params.photo_id, {
                 comments : [...photo.comments, {
                     comment: req.body.comment,
-                    user_id: req.session.loginUser
+                    user_id: req.session.loginId
                 }]
             },
             e => res.status(500).send(JSON.stringify(e))
         );
+
+        // res.status(200).send("yayyy!");
+
+        // const newComment = {
+        //     comment: req.body.comment,
+        //     date_time: new Date().toISOString(),
+        //     user_id: req.session.id,
+        // };
+
+        // if (!photo.comments){
+        //     photo.comments = [newComment];
+        // } else {
+        //     photo.comments.push(newComment);
+        // }
+
+        // photo.save();
+        // res.status(200).json(newComment);
+
 
     });
 
