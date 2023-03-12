@@ -206,13 +206,16 @@ app.post('/user', upload.any(), (req, res) => {
         res.status(400).json({ message: "The first_name, last_name, and password must be non-empty strings" });
         return;
     }
-
-
         // only create a new user if it have not existed
     User.findOne({ login_name: newUser.login_name })
         .then(user => {
             if (!user) { // user not exists yet
-                console.log("User not found");
+                console.log("User not found therefore unique!");
+                
+                var passwordSecure = cs142password.makePasswordEntry(newUser.password);
+                newUser.password_digest = passwordSecure.hash;
+                newUser.salt = passwordSecure.salt;
+
                 // create the user in the DB
                 User.create(newUser)
                     .then(() => console.log("New User created in the DB"))
