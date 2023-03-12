@@ -4,7 +4,7 @@ import './TopBar.css';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import UploadIcon from '@mui/icons-material/Upload';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import NewPhoto from '../NewPhoto/newPhoto';
 import axios from 'axios';
 
 /**
@@ -67,12 +67,8 @@ class TopBar extends React.Component {
                 {
                   this.props.loggedInUser ? 
                   <div>
-                    <IconButton color="secondary" aria-label="upload picture">
-                      {/* <input hidden accept="image/*" type="file" /> */}
-                      <UploadIcon />
-                    </IconButton>
+                    <NewPhoto />
                     <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
-                      {/* <input hidden accept="image/*" type="file" /> */}
                       <LogoutIcon />
                     </IconButton>
                   </div>
