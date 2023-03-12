@@ -92,12 +92,18 @@ const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 //     });
 // });
 app.post('/admin/login', upload.any(), (req, res) => {
-    let {loginName} = req.body;
+    let {loginName, loginPassword} = req.body;
 
     User.findOne({ login_name : loginName })
         .then( user => {
             if ( !user || user.length === 0 ) {
                 res.status(400).send('not a valid account');
+                return;
+            }
+            if ( user.password !== loginPassword ){
+                console.log(loginPassword + " is a wrong pass ");
+                console.log(user.password + " is a right pass ");
+                res.status(400).json({ message: `Password is not correct, please try again` });
                 return;
             } 
 
@@ -108,7 +114,8 @@ app.post('/admin/login', upload.any(), (req, res) => {
             res.status(200).json({first_name: user.first_name, _id: user._id});
         })
         .catch( err => {
-            console.error(" ERROR :" + err);
+            console.error(" LOGIN ERROR :" + err);
+            res.status(400).json({ message: "some err occurred."});
         });
 });
 
