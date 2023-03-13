@@ -63,7 +63,7 @@ class TopBar extends React.Component {
             {
               this.props.loggedInUser ?
                 (
-                <div>
+                <div className="actionButtons">
                   <NewPhoto />
                   <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
                     <LogoutIcon />
