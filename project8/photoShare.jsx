@@ -4,7 +4,7 @@ import {
   HashRouter, Route, Switch, Redirect
 } from 'react-router-dom';
 import {
-  Grid, Paper, ThemeProvider, Typography
+  Grid, Paper, ThemeProvider,
 } from '@mui/material';
 import './styles/main.css';
 
@@ -22,8 +22,8 @@ class PhotoShare extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currUser: localStorage.getItem('currUser'),
-      loggedInUser: localStorage.getItem('loggedInUser'),
+      currUser: localStorage.getItem("currUser"),
+      loggedInUser: localStorage.getItem("loggedInUser"),
     };
   }
 
@@ -56,11 +56,10 @@ class PhotoShare extends React.Component {
             <Grid item sm={9}>
               <Paper className="user-photos">
                 <Switch>
-
-
                   <Route path="/login-register"
                     render={((props) => <LoginRegister {...props} handler={this.handleLoggedInUserChange} loggedInUser={this.loggedInUser} />)}
                   />
+
 
                   {this.state.loggedInUser ?
                     (
@@ -89,28 +88,21 @@ class PhotoShare extends React.Component {
                       <Redirect path="/users" to="/login-register" />
                     )}
 
-                  {/* {this.state.loggedInUser ?
-                    (
-                      <Route path="/">
-                        <Typography variant="h3">Welcome to my photosharing app!</Typography>
-                      </Route>
-                    ) : (
-                      <Redirect path="/" to="/login-register" />
-                    )} */}
+                  <Route path="/">
+                    <Redirect path="/" to="/login-register" />
+                  </Route>
 
 
-                      <Route path="/">
-                        <Redirect path="/" to="/login-register" />
-                      </Route>
-
-                    {this.state.loggedInUser ?
-                    (
+                  {
+                    this.state.loggedInUser ?
                       <Route path="/favorites"
-                        render={((props) => <Favorites {...props} />)}
+                             render={props => <Favorites {...props}  />}
                       />
-                    ) : (
-                      <Redirect path="/favorites" to="/login-register" />
-                    )}  
+                      :
+                      <Redirect path="/users/:id" to="/login-register" />
+                  }
+
+
 
                 </Switch>
               </Paper>

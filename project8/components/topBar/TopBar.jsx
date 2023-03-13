@@ -1,6 +1,7 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Container, Button, IconButton, Link } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button, IconButton } from '@mui/material';
 import './TopBar.css';
+import { Link } from 'react-router-dom';
 
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -39,6 +40,8 @@ class TopBar extends React.Component {
         if (res.status === 200) {
           this.props.handler("");
           this.props.currUserHandler("");
+          localStorage.removeItem("currUser");
+          localStorage.removeItem("loggedInUser");
           this.useHistory().push('/login-register');
           console.log("fully logged out");
         }
@@ -69,9 +72,13 @@ class TopBar extends React.Component {
               this.props.loggedInUser ?
                 (
                 <div className="actionButtons">
-                  <IconButton color="secondary" aria-label="favorites" component={Link} to="/favorites">
-                    <BookmarksIcon />
-                  </IconButton>
+                  <Link to={`/favorites`}>
+                    <IconButton color="secondary" aria-label="favorites" >
+                      <BookmarksIcon />
+                    </IconButton>
+                    <Typography>Fav</Typography>
+                  </Link>
+                  
                   <NewPhoto />
                   <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
                     <LogoutIcon />
