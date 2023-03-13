@@ -4,7 +4,7 @@ import {
   HashRouter, Route, Switch, Redirect
 } from 'react-router-dom';
 import {
-  Grid, Paper, ThemeProvider,
+  Grid, Paper, ThemeProvider, Typography,
 } from '@mui/material';
 import './styles/main.css';
 
@@ -16,7 +16,7 @@ import UserDetail from './components/userDetail/userDetail';
 import UserList from './components/userList/userList';
 import UserPhotos from './components/userPhotos/userPhotos';
 import LoginRegister from './components/loginRegister/LoginRegister';
-import Favorites from './components/favorites/favorites';
+import FavoritesPage from './components/favorites/favoritesPage';
 
 class PhotoShare extends React.Component {
   constructor(props) {
@@ -88,19 +88,19 @@ class PhotoShare extends React.Component {
                       <Redirect path="/users" to="/login-register" />
                     )}
 
+                  {this.state.loggedInUser ?
+                    (
+                      <Route path="/favorites"
+                        render={((props) => <FavoritesPage {...props} loggedInUser={this.state.loggedInUser} />)}
+                      />
+                    ) : (
+                      <Redirect path="/favorites" to="/login-register" />
+                    )}
+
                   <Route path="/">
                     <Redirect path="/" to="/login-register" />
                   </Route>
 
-
-                  {
-                    this.state.loggedInUser ?
-                      <Route path="/favorites"
-                             render={props => <Favorites {...props}  />}
-                      />
-                      :
-                      <Redirect path="/users/:id" to="/login-register" />
-                  }
 
 
 

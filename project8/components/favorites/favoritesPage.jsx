@@ -9,7 +9,7 @@ import {
 
 // import axios from 'axios';
 
-class Favorites extends React.Component {
+class favoritesPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -43,4 +43,4 @@ class Favorites extends React.Component {
 
 }
 
-export default Favorites;
+export default favoritesPage;

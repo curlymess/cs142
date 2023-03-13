@@ -38,8 +38,8 @@ class TopBar extends React.Component {
     axios.post('admin/logout')
       .then((res) => {
         if (res.status === 200) {
-          this.props.handler("");
-          this.props.currUserHandler("");
+          this.props.handler(null);
+          this.props.currUserHandler(null);
           localStorage.removeItem("currUser");
           localStorage.removeItem("loggedInUser");
           this.useHistory().push('/login-register');
@@ -76,7 +76,6 @@ class TopBar extends React.Component {
                     <IconButton color="secondary" aria-label="favorites" >
                       <BookmarksIcon />
                     </IconButton>
-                    <Typography>Fav</Typography>
                   </Link>
                   
                   <NewPhoto />

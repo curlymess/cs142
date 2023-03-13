@@ -72,7 +72,7 @@ app.get('/', function (request, response) {
     response.send('Simple web server of files from ' + __dirname);
 });
 
-/* problem 1 */
+/* proj7 problem 1 */
 // Log-In
 const upload = multer({ dest: 'uploads/' });// for parsing multipart/form-data
 
@@ -120,7 +120,7 @@ app.post('/admin/logout', (req, res) => {
 });
 /***************************************************** */
 
-/* problem 2 */
+/* proj7 problem 2 */
 // new comments
 app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
     if (!req.session.loginName) {
@@ -159,7 +159,7 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
 
 const processFormBody = multer({ storage: multer.memoryStorage() }).single('uploadedphoto');
 
-/* problem 3 */
+/* proj7 problem 3 */
 // new photo upload
 app.post('/photos/new', (req, res) => {
     processFormBody(req, res, err => {
@@ -195,7 +195,7 @@ app.post('/photos/new', (req, res) => {
 });
 
 /******************************************************* */
-/* problem 4 */
+/* proj7 problem 4 */
 // new user registration
 app.post('/user', upload.any(), (req, res) => {
     let { login_name, first_name } = req.body;
@@ -234,6 +234,62 @@ app.post('/user', upload.any(), (req, res) => {
         });
 
 });
+
+/******************************************************* */
+/* proj8 favorites */
+
+app.get('/favorites', function(request, response) {
+    if (!request.session.loginId) {
+      response.status(401).send('Current user is not logged in');
+      return;
+    }
+    let user_id = request.session.loginId;
+    User.findOne({_id: user_id}).exec()
+      .then(user => {
+        if (user === null) {
+          console.log('User with _id:' + user_id + ' not found.');
+          response.status(400).send('Not found');
+          return;
+        }
+        if (!user.favorites || user.favorites.length === 0) {
+          response.status(200).send(user.favorites);
+          return;
+        }
+        let favoriteList = [];
+        async.each(user.favorites, function(photoId, done_callback) {
+          Photo.findOne({"_id": photoId}).exec()
+            .then(photo => {
+              if (photo === null) {
+                console.log('Photo with _id:' + photoId + ' not found.');
+                response.status(400).send('Not found');
+                return;
+              }
+              let newPhoto = JSON.parse(JSON.stringify(photo));
+              delete newPhoto.comments;
+              delete newPhoto.mentions;
+              favoriteList.push(newPhoto);
+              done_callback();
+            })
+            .catch(err => {
+              console.error('find photo with _id ' + photoId + 'error:', err);
+              response.status(500).send(JSON.stringify(err));
+              done_callback(err);
+            });
+        }, function(err) {
+          if (err) {
+            response.status(400).send(JSON.stringify(err));
+            return;
+          }
+          response.status(200).send(favoriteList);
+        });
+      })
+      .catch(err => {
+        console.error('Doing /favorites error:', err);
+        response.status(500).send(err);
+      });
+  });
+
+/******************************************************* */
 
 /******************************************************* */
 

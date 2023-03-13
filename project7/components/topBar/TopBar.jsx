@@ -1,8 +1,10 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Container, Button, IconButton } from '@mui/material';
 import './TopBar.css';
+
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import LogoutIcon from '@mui/icons-material/Logout';
+
 import axios from 'axios';
 import NewPhoto from '../newPhoto/newPhoto';
 
@@ -65,7 +67,7 @@ class TopBar extends React.Component {
                 (
                 <div className="actionButtons">
                   <NewPhoto />
-                  <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
+                  <IconButton color="secondary" aria-label="logout" onClick={this.handleLogOutClick}>
                     <LogoutIcon />
                   </IconButton>
                 </div>
@@ -75,7 +77,6 @@ class TopBar extends React.Component {
                 </Button>
                 )
             }
-
 
           </Toolbar>
         </Container>

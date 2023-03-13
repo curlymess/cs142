@@ -15,6 +15,7 @@ var userSchema = new mongoose.Schema({
   login_name: String,
   password_digest: String,
   salt: String,
+  favorites: [mongoose.Schema.Types.ObjectId],
 });
 
 /**
