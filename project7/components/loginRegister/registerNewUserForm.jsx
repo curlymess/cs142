@@ -149,10 +149,9 @@ function RegisterNewUserForm (props) {
                     </Typography>
                   ) : (
                     <Typography style={{ color: "red" }}>
-                      Passwords don't match...
+                      Passwords do not match...
                     </Typography>
-                  )
-                }
+                  )}
                 
               </Grid>
 
