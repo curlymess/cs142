@@ -1,8 +1,11 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Container, Button, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button, IconButton, Link } from '@mui/material';
 import './TopBar.css';
+
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import LogoutIcon from '@mui/icons-material/Logout';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+
 import axios from 'axios';
 import NewPhoto from '../newPhoto/newPhoto';
 
@@ -35,12 +38,14 @@ class TopBar extends React.Component {
       .then((res) => {
         if (res.status === 200) {
           this.props.handler("");
+          this.props.currUserHandler("");
           this.useHistory().push('/login-register');
           console.log("fully logged out");
         }
       })
       .catch(err => console.log(err));
   }
+
   render() {
     return (
       <AppBar className="cs142-topbar-appBar">
@@ -64,6 +69,9 @@ class TopBar extends React.Component {
               this.props.loggedInUser ?
                 (
                 <div className="actionButtons">
+                  <IconButton color="secondary" aria-label="favorites" component={Link} to="/favorites">
+                    <BookmarksIcon />
+                  </IconButton>
                   <NewPhoto />
                   <IconButton color="secondary" aria-label="log out" onClick={this.handleLogOutClick}>
                     <LogoutIcon />
