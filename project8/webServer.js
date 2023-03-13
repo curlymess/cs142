@@ -252,7 +252,8 @@ app.get('/favorites', function(request, response) {
           return;
         }
         if (!user.favorites || user.favorites.length === 0) {
-          response.status(200).send(user.favorites);
+            console.log("the user has no favs");
+          response.status(200).send();
           return;
         }
         let favoriteList = [];
@@ -289,6 +290,65 @@ app.get('/favorites', function(request, response) {
       });
   });
 
+  // add new fav photo
+  app.post('/favorite/:photo_id', function(request, response) {
+    if (!request.session.loginId) {
+      response.status(401).send('Current user is not logged in');
+      return;
+    }
+    let photo_id = request.params.photo_id;
+    let user_id = request.session.loginId;
+    User.findOne({_id: user_id}).exec()
+      .then(user => {
+        if (user === null) {
+          console.log('User with _id:' + user_id + ' not found.');
+          response.status(400).send('Not found');
+          return;
+        }
+        if (user.favorites.indexOf(photo_id) !== -1) {
+          response.status(400).send(`Add photo with _id: ${photo_id} twice`);
+          return;
+        }
+        user.favorites.push(photo_id);
+        user.save();
+        response.status(200).send('Add favorite photo to the logged in user successfully');
+      })
+      .catch(err => {
+        console.error('Doing post /favorite/:photo_id error:', err);
+        response.status(500).send(err);
+      });
+  });
+
+  // remove fav photo
+  app.delete('/favorite/:photo_id', function(request, response) {
+    if (!request.session.loginId) {
+      response.status(401).send('Current user is not logged in');
+      return;
+    }
+    let photo_id = request.params.photo_id;
+    let user_id = request.session.loginId;
+    User.findOne({_id: user_id}).exec()
+      .then(user => {
+        if (user === null) {
+          console.log('User with _id:' + user_id + ' not found.');
+          response.status(400).send('Not found');
+          return;
+        }
+        let index = user.favorites.indexOf(photo_id);
+        if (index === -1) {
+          response.status(400).send(`No photo with _id: ${photo_id}, already deleted or never liked`);
+          return;
+        }
+        user.favorites.splice(index, 1);
+        user.save();
+        response.status(200).send('Delete liked photo of logged in user successfully');
+      })
+      .catch(err => {
+        console.error('Doing delete /favorite/:photo_id error:', err);
+        response.status(500).send(err);
+      });
+  });
+  
 /******************************************************* */
 
 /******************************************************* */

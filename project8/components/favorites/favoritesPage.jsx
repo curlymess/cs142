@@ -1,24 +1,82 @@
 import React from 'react';
 import {
-    Typography,
+    Typography, List,
     //ImageList, ImageListItem,
 } from '@mui/material';
 
 // icons
 
 
-// import axios from 'axios';
+import axios from 'axios';
 
-class favoritesPage extends React.Component {
+class FavoritesPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            login_name: '',
-            password: '',
+            favorites: null,
+            fileName: "",
+            loginId: "",
+            message: "",
         };
 
     }
 
+    componentDidMount() {
+        if (this.props.loggedInUser) {
+            console.log("loggedInUSer mounted: " + this.props.loggedInUser);
+        }
+        this.fetchData();
+    }
+
+    fetchData() {
+        axios.get(`/favorites`).then(response => {
+            console.log("response fata her is " + response.data);
+            this.setState({
+                favorites: response.data,
+            });
+        }).catch(error => {
+            console.log(error.response.data);
+        });
+    }
+
+    displayFavoriteList() {
+        if (this.state.favorites === null) {
+            return null;
+        } else if (this.state.favorites.length === 0) {
+            return (
+                <Typography variant="body2" color="textPrimary">
+                    no favorites yet
+                </Typography>
+            );
+        }
+        return this.state.favorites.map((photo, index) => {
+            return (
+                <div key={index}>
+                    <ListItem>
+                        <Avatar
+                            alt={photo.file_name}
+                            src={"../../images/" + photo.file_name}
+                            onClick={() => {
+                                this.openModal(photo.file_name, photo.date_time, photo.user_id);
+                            }}
+                        />
+                        <Typography variant="body2" color="inherit" style={{ marginLeft: "10px" }}>
+                            {photo.file_name}
+                        </Typography>
+                        <IconButton
+                            aria-label="Delete favorites"
+                        //   onClick = {() => {
+                        //     this.handleDeleteBtn(photo);
+                        //   }}
+                        >
+                            <DeleteIcon fontSize="small" />
+                        </IconButton>
+                    </ListItem>
+                    <Divider />
+                </div>
+            );
+        });
+    }
 
     render() {
         console.log("here in fav");
@@ -36,11 +94,15 @@ class favoritesPage extends React.Component {
             //     ))}
             //   </ImageList>
 
-            <Typography>this is your fav page</Typography>
+            <div>
+                <Typography>this is your fav page</Typography>
+
+                <List component="nav">
+                    {this.displayFavoriteList()}
+                </List>
+            </div>
         );
     }
-
-
 }
 
-export default favoritesPage;
+export default FavoritesPage;
