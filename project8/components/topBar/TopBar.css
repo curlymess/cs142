@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Itim&display=swap');
+
+.cs142-topbar-appBar {
+  height: 100;
+  font-family: 'Itim', cursive;
+}
+
+.logo {
+  display: flex;
+}
+
+.bar2Container {
+  background-color: #DFFFD8;
+  color: #1976d2;
+}
+
+.bar1 {
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.bar2 {
+  padding-bottom: 5px;
+}
+
+.bar2LoggedIn {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+
+.bar2SignedOut {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: row;
+}
