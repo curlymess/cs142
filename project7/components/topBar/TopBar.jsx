@@ -34,7 +34,7 @@ class TopBar extends React.Component {
     axios.post('admin/logout')
       .then((res) => {
         if (res.status === 200) {
-          this.props.handler(null);
+          this.props.handler("");
           this.useHistory().push('/login-register');
           console.log("fully logged out");
         }
@@ -82,7 +82,7 @@ class TopBar extends React.Component {
         <Container maxWidth="xl" className='bar2Container'>
           <div className='bar2'>
             {
-              this.props.loggedInUser ?
+              (this.props.loggedInUser && this.props.loggedInUser !== null) ?
                 (
                 <div className='bar2LoggedIn'>
                   <Typography variant="h2" noWrap >

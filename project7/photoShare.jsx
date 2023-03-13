@@ -21,17 +21,19 @@ class PhotoShare extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currUser: null,
-      loggedInUser: null,
+      currUser: localStorage.getItem('currUser'),
+      loggedInUser: localStorage.getItem('loggedInUser'),
     };
   }
 
   handleCurrUserChange = currUser => {
     this.setState({ currUser: currUser });
+    localStorage.setItem('currUser', currUser);
   };
 
   handleLoggedInUserChange = loggedInUser => {
     this.setState({ loggedInUser: loggedInUser });
+    localStorage.setItem('loggedInUser', loggedInUser);
   };
 
   render() {
@@ -40,7 +42,7 @@ class PhotoShare extends React.Component {
         <div>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser} handler={this.handleLoggedInUserChange} />
+              <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser} handler={this.handleLoggedInUserChange} currUserHandler={this.handleCurrUserChange} />
             </Grid>
             <div className="cs142-main-topbar-buffer" />
 
