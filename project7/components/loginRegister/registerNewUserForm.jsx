@@ -141,6 +141,19 @@ function RegisterNewUserForm (props) {
                   <InputLabel htmlFor="registerPassword2">Type your password again</InputLabel>
                   <Input id="registerPassword2" name='registerPassword2' type='password' value={formValues.registerPassword2} onChange={handleInputChange} />
                 </FormControl>
+
+                { ( formValues.password === formValues.registerPassword2 ) ? 
+                  (
+                    <Typography style={{ color: "green" }}>
+                      Passwords match!
+                    </Typography>
+                  ) : (
+                    <Typography style={{ color: "red" }}>
+                      Passwords don't match...
+                    </Typography>
+                  )
+                }
+                
               </Grid>
 
               {/* end of registration form */}
