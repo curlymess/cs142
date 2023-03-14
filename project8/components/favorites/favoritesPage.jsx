@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import {
     Typography, List, ListItem, Avatar, IconButton, Divider, Button,
-    //ImageList, ImageListItem,
+    ImageList, ImageListItem,
 } from '@mui/material';
 
 
@@ -82,28 +82,55 @@ class FavoritesPage extends React.Component {
         });
     }
 
+    displayFavList() {
+        if (this.state.favorites === null) {
+            return null;
+        } else if (this.state.favorites.length === 0) {
+            return (
+                <Typography variant="body2" color="textPrimary">
+                    no favorites yet
+                </Typography>
+            );
+        }
+        return this.state.favorites.map((photo, index) => {
+            return (
+                    <ImageListItem key={photo._id}>
+                        <img
+                            alt={photo.file_name}
+                            loading="lazy"
+                            src={"../../images/" + photo.file_name + "?w=164&h=164&fit=crop&auto=format"}
+                            srcSet={"../../images/" + photo.file_name +`?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                            onClick={() => {
+                                this.openModal(photo.file_name, photo.date_time, photo.user_id);
+                            }}
+                        />
+                        <Typography variant="body2" color="inherit" style={{ marginLeft: "10px" }}>
+                            {photo.file_name}
+                        </Typography>
+                        <IconButton
+                            aria-label="Delete favorites"
+                        //   onClick = {() => {
+                        //     this.handleDeleteBtn(photo);
+                        //   }}
+                        >
+                            <DeleteIcon fontSize="small" />
+                        </IconButton>
+                    </ImageListItem>
+                    // <Divider />
+            );
+        });
+    }
+
     render() {
         console.log("here in fav");
         return (
-            //   <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-            //     {itemData.map((item) => (
-            //       <ImageListItem key={item.img}>
-            //         <img
-            //           src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-            //           srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            //           alt={item.title}
-            //           loading="lazy"
-            //         />
-            //       </ImageListItem>
-            //     ))}
-            //   </ImageList>
-
             <div>
-                <Typography>this is your fav page</Typography>
+                <Typography variant="h2">Your Bookmarked Pictures</Typography>
 
-                <List component="nav">
-                    {this.displayFavoriteList()}
-                </List>
+                <ImageList component="nav" sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+                    {this.displayFavList()}
+                </ImageList>
+
             </div>
         );
     }
