@@ -18,21 +18,22 @@ class TopBar extends React.Component {
     super(props);
     this.state = {
       currVersion: 0,
-      firstName: localStorage.getItem("loggedInFirstName"),
+      firstName: null,
     };
 
     this.source = axios.CancelToken.source();
     axios.get('/test/info', { cancelToken: this.source.token })
       .then((response) => {
         console.log("curr version " + response.data.version);
-        this.setState = {
+        this.setState({
           currVersion: response.data.version,
-        }
+        });
       })
       .catch((err) => {
         console.log(err);
       });
   }
+
   componentWillUnmount() {
     this.source.cancel("cancelled by topbar");
   }
@@ -52,7 +53,7 @@ class TopBar extends React.Component {
             </div>
 
             <Typography variant="h1" noWrap >
-              Photo Application v{this.currVersion}
+              Photo Application v{this.state.currVersion}
             </Typography>
 
             {/* https://mui.com/material-ui/react-app-bar/ */}
@@ -91,7 +92,7 @@ class TopBar extends React.Component {
                
                   <Typography variant="h2" noWrap >
                     hello there, &nbsp;
-                    {this.props.isLoggedIn ? this.state.firstName : 'no one'}
+                    {this.props.isLoggedIn ? this.props.firstName : 'no one'}
                   </Typography>
 
                   <Typography variant="h2" noWrap>

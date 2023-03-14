@@ -26,6 +26,7 @@ class PhotoShare extends React.Component {
     this.state = {
       currUser: null,
       loggedInUser: localStorage.getItem("loggedInUser"),
+      loggedInFirstName: localStorage.getItem("loggedInFirstName"),
       isLoggedIn: Boolean(localStorage.getItem("loggedInUser")),
     };
   }
@@ -39,12 +40,12 @@ class PhotoShare extends React.Component {
     this.setState({
       loggedInUser: loginData,
       isLoggedIn: true,
-      loginId: loginData._id,
+      loggedInFirstName: loginData.first_name,
     });
     console.log("loginData" + loginData);
-    console.log("first name: " + loginData.first_name);
+    console.log("first name: " + loginData.first_name)
     localStorage.setItem('loggedInUser', loginData);
-    localStorage.setItem('loginId', loginData._id);
+    localStorage.setItem('loggedInFirstName', this.state.loggedInFirstName);
     localStorage.setItem('isLoggedIn', true);
   };
 
@@ -53,13 +54,14 @@ class PhotoShare extends React.Component {
     .then(res => {
       localStorage.removeItem("currUser");
       localStorage.removeItem("loggedInUser");
-      localStorage.removeItem("loginId");
+      localStorage.removeItem("loggedInFirstName");
       localStorage.removeItem('isLoggedIn');
 
       this.setState({
         loggedInUser: null,
         isLoggedIn: false,
         currUser: null,
+        loggedInFirstName: null,
       });
     })
     .catch(error => {
@@ -73,7 +75,7 @@ class PhotoShare extends React.Component {
         <div>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} loggedInFirstName={this.state.loggedInFirstName} handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange} />
+              <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} firstName={this.state.loggedInFirstName} handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange} />
             </Grid>
             <div className="cs142-main-topbar-buffer" />
 
