@@ -8,7 +8,10 @@ palette: {
     },
     secondary: {
         main: '#DFFFD8' // green
-    }
+    },
+    third: {
+        main: "#95BDFF"
+    },
 },
 
 typography: {
@@ -48,7 +51,7 @@ typography: {
         letterSpacing: ".1rem",
         color: "#FFF",
         fontSize: 18,
-        color: "#95BDFF", // light green
+        color: "#95BDFF", // light blue
     },
     h7: { // date time / subheading text
         fontFamily: '"Itim", cursive',

@@ -128,7 +128,7 @@ class FavoritesPage extends React.Component {
 
                     <ImageListItemBar
                         title={photo.file_name}
-                        subtitle={"posted " + photo.date_time}
+                        subtitle={photo.date_time}
                         actionIcon={
                             <IconButton
                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}

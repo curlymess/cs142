@@ -1,6 +1,12 @@
 import React from 'react';
-import {  Button } from '@mui/material';
+import {  Button, Typography } from '@mui/material';
 import './userDetail.css';
+
+//icons
+import WorkIcon from '@mui/icons-material/Work';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import StarIcon from '@mui/icons-material/Star';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -53,22 +59,34 @@ constructor(props) {
 				<h1>{this.state.user.first_name} {this.state.user.last_name}</h1>
 				
 				<div className='info-box'>
-					<p>Description</p>
-					<p className='status'>{this.state.user.description}</p>
+					<StarIcon color="third" />
+					<div className='info-text'>
+						<p>Description</p>
+						<p className='status'>{this.state.user.description}</p>
+					</div>
 				</div>
 
 				<div className='info-box'>
-					<p>Work</p>
-					<p className='status'>{this.state.user.occupation}</p>
+					<WorkIcon color="third" />
+					<div className='info-text'>
+						<p>Work</p>
+						<p className='status'>{this.state.user.occupation}</p>
+					</div>
 				</div>
 				
 				<div className='info-box'>
-					<p>Location</p>
-					<p className='status'>{this.state.user.location}</p>
+					<LocationOnIcon color="third" />
+					<div className='info-text'>
+						<p>Location</p>
+						<p className='status'>{this.state.user.location}</p>
+					</div>
 				</div>
-				<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none' }}>
+				<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none',  }}>
 					<Button variant='contained' color='secondary' disableElevation>
-						View Photos
+						<PhotoLibraryIcon color="third"  sx={{paddingRight: "5px"}}/>
+						<Typography variant='h6' noWrap>
+							View Photos
+						</Typography>
 					</Button>
 				</Link>
 			</div>
