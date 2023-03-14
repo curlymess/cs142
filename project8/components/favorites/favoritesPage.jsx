@@ -51,6 +51,14 @@ class FavoritesPage extends React.Component {
         });
     };
 
+    convertTime(time) {
+        let pos = time.indexOf('.');
+        let replaced = time.replace(/[A-Z]/g, function () {
+            return " ";
+        });
+        return replaced.slice(0, pos);
+    }
+
 
     fetchData() {
         axios.get(`/favorites`).then(response => {
@@ -110,7 +118,7 @@ class FavoritesPage extends React.Component {
                             <IconButton
                                 sx={{ color: 'white' }}
                                 aria-label={`BookMarkRemoveIcon ${photo.file_name}`}
-                                // onClick={this.removeBookmarkClick(photo)}
+                            // onClick={this.removeBookmarkClick(photo)}
                             >
                                 <BookmarkRemoveIcon />
                             </IconButton>
@@ -154,7 +162,27 @@ class FavoritesPage extends React.Component {
                     onClose={this.handleClose}
                 >
                     <Box>
-                        <Typography>hi</Typography>
+                        <h2 ref={_subtitle => (this.subtitle = _subtitle)}>{this.state.fileName}</h2>
+                        <img alt={this.state.fileName} src={"../../images/" + this.state.fileName}  />
+
+                        <Typography variant="body2" color="textPrimary" className="cs142-modal-time">
+                            {`Posted on ${this.convertTime(this.state.dateTime)}`}
+                        </Typography>
+                        <div className="cs142-modal-container">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                component={Link}
+                                to={`/photos/${this.state.fileId}`}
+                            >
+                                Photo Detail
+                            </Button>
+                            <Button variant="outlined" color="primary"
+                                onClick={this.handleClose}
+                            >
+                                close
+                            </Button>
+                        </div>
                     </Box>
 
                 </Modal>

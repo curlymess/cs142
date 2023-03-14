@@ -85,7 +85,7 @@ class PhotoCard extends React.Component {
         const index = this.props.userPhotoIndex;
         // userPhotos
         return (
-            <Card >
+            <Card style={{maxWidth: "600px"}}>
                 {Math.abs(step - index) < 1 ? (
                     // start of card
                     <div>
@@ -104,7 +104,7 @@ class PhotoCard extends React.Component {
                             )}
                             sx={{ backgroundColor: "#F7c8e0" }} />
                         {/* image */}
-                        <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} />
+                        <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id}  style={{ maxHeight: "300px", width: "auto", height: "auto" }}/>
                         {/* scroll images */}
                         <MobileStepper
                             steps={userPhotosLength}
