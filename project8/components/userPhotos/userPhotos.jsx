@@ -148,7 +148,6 @@ handleFavoriteClick = (photo_id) => {
 
 
 render() {
-	
 	return (
 		<Grid>
 			{(this.state.userPhotos.map(

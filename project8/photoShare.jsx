@@ -18,12 +18,15 @@ import UserPhotos from './components/userPhotos/userPhotos';
 import LoginRegister from './components/loginRegister/LoginRegister';
 import FavoritesPage from './components/favorites/favoritesPage';
 
+import axios from 'axios';
+
 class PhotoShare extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currUser: localStorage.getItem("currUser"),
+      currUser: null,
       loggedInUser: localStorage.getItem("loggedInUser"),
+      isLoggedIn: Boolean(localStorage.getItem("loggedInUser")),
     };
   }
 
@@ -32,9 +35,36 @@ class PhotoShare extends React.Component {
     localStorage.setItem('currUser', currUser);
   };
 
-  handleLoggedInUserChange = loggedInUser => {
-    this.setState({ loggedInUser: loggedInUser });
-    localStorage.setItem('loggedInUser', loggedInUser);
+  handleLogIn = (loginData) => {
+    this.setState({
+      loggedInUser: loginData,
+      isLoggedIn: true,
+      loginId: loginData._id,
+    });
+    console.log("loginData" + loginData);
+    console.log("first name: " + loginData.first_name);
+    localStorage.setItem('loggedInUser', loginData);
+    localStorage.setItem('loginId', loginData._id);
+    localStorage.setItem('isLoggedIn', true);
+  };
+
+  handleLogOut = () => {
+    axios.post("/admin/logout", {})
+    .then(res => {
+      localStorage.removeItem("currUser");
+      localStorage.removeItem("loggedInUser");
+      localStorage.removeItem("loginId");
+      localStorage.removeItem('isLoggedIn');
+
+      this.setState({
+        loggedInUser: null,
+        isLoggedIn: false,
+        currUser: null,
+      });
+    })
+    .catch(error => {
+      console.log(error.message);
+    });
   };
 
   render() {
@@ -43,7 +73,7 @@ class PhotoShare extends React.Component {
         <div>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <TopBar currUser={this.state.currUser} loggedInUser={this.state.loggedInUser} handler={this.handleLoggedInUserChange} currUserHandler={this.handleCurrUserChange} />
+              <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} loggedInFirstName={this.state.loggedInFirstName} handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange} />
             </Grid>
             <div className="cs142-main-topbar-buffer" />
 
@@ -57,11 +87,11 @@ class PhotoShare extends React.Component {
               <Paper className="user-photos">
                 <Switch>
                   <Route path="/login-register"
-                    render={((props) => <LoginRegister {...props} handler={this.handleLoggedInUserChange} loggedInUser={this.loggedInUser} />)}
+                    render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn} loggedInUser={this.loggedInUser} />)}
                   />
 
 
-                  {this.state.loggedInUser ?
+                  {this.state.isLoggedIn ?
                     (
                       <Route path="/users/:userId"
                         render={((props) => <UserDetail {...props} handler={this.handleCurrUserChange} />)}
@@ -70,7 +100,7 @@ class PhotoShare extends React.Component {
                       <Redirect path="/users/:userId" to="/login-register" />
                     )}
 
-                  {this.state.loggedInUser ?
+                  {this.state.isLoggedIn ?
                     (
                       <Route path="/photos/:userId"
                         render={((props) => <UserPhotos {...props} handler={this.handleCurrUserChange} />)}
@@ -79,7 +109,7 @@ class PhotoShare extends React.Component {
                       <Redirect path="/photos/:userID" to="/login-register" />
                     )}
 
-                  {this.state.loggedInUser ?
+                  {this.state.isLoggedIn ?
                     (
                       <Route path="/users">
                         <UserList loggedInUser={this.state.loggedInUser} />
@@ -88,7 +118,7 @@ class PhotoShare extends React.Component {
                       <Redirect path="/users" to="/login-register" />
                     )}
 
-                  {this.state.loggedInUser ?
+                  {this.state.isLoggedIn ?
                     (
                       <Route path="/favorites"
                         render={((props) => <FavoritesPage {...props} loggedInUser={this.state.loggedInUser} />)}

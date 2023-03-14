@@ -96,8 +96,12 @@ app.post('/admin/login', upload.any(), (req, res) => {
             req.session.loginName = login_name; // store in express sessison
             req.session.loginId = user._id; // store in express sessison
 
+            // for security improvement
+            delete user.password_digest;
+            delete user.salt;
+
             console.log("logged in!");
-            res.status(200).json({ first_name: user.first_name, _id: user._id });
+            res.status(200).json(user);
         })
         .catch(err => {
             console.error(" LOGIN ERROR :" + err);
@@ -112,11 +116,16 @@ app.post('/admin/logout', (req, res) => {
         res.status(400).send('The user is not logged in right now');
         return;
     }
-        console.log(req.session.loginName + "logout!");
-        req.session.loginName = '';
-        req.session.loginId = '';
-        res.status(200).send('The user logged out successfully!');
-    
+    req.session.destroy(err => {
+        if(err){
+            console.log(err + "failled to destroy :/");
+            res.status(500).send(err);
+        } else {
+            // req.session.loginName = '';
+            // req.session.loginId = '';
+            res.status(200).send('The user logged out successfully!');
+        }
+    });
 });
 /***************************************************** */
 

@@ -21,8 +21,6 @@ class LoginRegister extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleLoginButtonClick = this.handleLoginButtonClick.bind(this);
         this.source = axios.CancelToken.source();
-
-        
     }
 
     handleLoginButtonClick() {
@@ -32,8 +30,9 @@ class LoginRegister extends React.Component {
 
         axios.post('/admin/login', formData, { cancelToken: this.source.token })
             .then(res => {
-                this.props.handler(res.data.first_name);
-                this.props.history.push(`/users/${res.data._id}`);
+                const user = res.data;
+                this.props.handleLogIn(res.data);
+                this.props.history.push(`/users/${user._id}`);
             })
             .catch(err => {
                 console.log("handleCLick Log IN err" + err);
@@ -88,7 +87,7 @@ class LoginRegister extends React.Component {
 
                 {/* register */}
                 <Grid item >
-                    <RegisterNewUserForm handler={this.props.handler} history={this.props.history} />
+                    <RegisterNewUserForm handler={this.props.handleLogIn} history={this.props.history} />
                 </Grid>
 
             </Grid>
