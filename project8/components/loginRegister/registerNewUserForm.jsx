@@ -49,6 +49,7 @@ function RegisterNewUserForm (props) {
     // verify password entered correctly both times
     if (formValues.password !== formValues.registerPassword2) {
       // isnert message that password dont match
+      alert("passwords do not match, try again");
       return;
     }
 
@@ -58,10 +59,13 @@ function RegisterNewUserForm (props) {
           props.history.push(`/`);
         console.log("successfull registration!");
         handleClose();
+        alert("successfully registered! now log in :)");
+
       })
       .catch(err => {
         console.log("registration fail: " + err);
           setFormValues(defaultValues);
+
       });
   };
 

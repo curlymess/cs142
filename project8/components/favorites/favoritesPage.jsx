@@ -1,15 +1,15 @@
-import React, { lazy } from 'react';
+import React from 'react';
 import {
     Typography, List, ListItem, Avatar, IconButton, Divider, Button,
-    ImageList, ImageListItem,
+    ImageList, ImageListItem, ImageListItemBar, ListSubheader,
+    Modal, Box
 } from '@mui/material';
-
 
 import { Link } from "react-router-dom";
 
 // icons
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
+import InfoIcon from '@mui/icons-material/Info';
 
 import axios from 'axios';
 
@@ -19,18 +19,38 @@ class FavoritesPage extends React.Component {
         this.state = {
             favorites: null,
             fileName: "",
-            loginId: "",
-            message: "",
+            fileId: "",
+            dateTime: "",
+            isOpen: false,
         };
+
+        this.handleClose = this.handleClose.bind(this);
 
     }
 
     componentDidMount() {
+        // Modal.setAppElement('body');
         if (this.props.loggedInUser) {
-            console.log("loggedInUSer mounted: " + this.props.loggedInUser);
+            console.log("loggedInUser mounted: " + this.props.loggedInUser);
         }
         this.fetchData();
     }
+
+    handleOpen = (fileName, dateTime, fileId) => {
+        this.setState({
+            isOpen: true,
+            fileName: fileName,
+            dateTime: dateTime,
+            fileId: fileId,
+        });
+    };
+
+    handleClose = () => {
+        this.setState({
+            isOpen: false,
+        });
+    };
+
 
     fetchData() {
         axios.get(`/favorites`).then(response => {
@@ -43,44 +63,18 @@ class FavoritesPage extends React.Component {
         });
     }
 
-    displayFavoriteList() {
-        if (this.state.favorites === null) {
-            return null;
-        } else if (this.state.favorites.length === 0) {
-            return (
-                <Typography variant="body2" color="textPrimary">
-                    no favorites yet
-                </Typography>
-            );
-        }
-        return this.state.favorites.map((photo, index) => {
-            return (
-                <div key={index}>
-                    <ListItem>
-                        <Avatar
-                            alt={photo.file_name}
-                            src={"../../images/" + photo.file_name}
-                            onClick={() => {
-                                this.openModal(photo.file_name, photo.date_time, photo.user_id);
-                            }}
-                        />
-                        <Typography variant="body2" color="inherit" style={{ marginLeft: "10px" }}>
-                            {photo.file_name}
-                        </Typography>
-                        <IconButton
-                            aria-label="Delete favorites"
-                        //   onClick = {() => {
-                        //     this.handleDeleteBtn(photo);
-                        //   }}
-                        >
-                            <DeleteIcon fontSize="small" />
-                        </IconButton>
-                    </ListItem>
-                    <Divider />
-                </div>
-            );
+    // TO-DO: add more alerts
+
+    removeBookmarkClick = (photo) => {
+        axios.delete(`/favorite/${photo._id}`).then(response => {
+            console.log(response.data);
+            this.fetchData();
+            alert("successfully delete photo");
+        }).catch(error => {
+            alert("failed to delete photo");
+            console.log(error.response.data);
         });
-    }
+    };
 
     displayFavList() {
         if (this.state.favorites === null) {
@@ -94,29 +88,53 @@ class FavoritesPage extends React.Component {
         }
         return this.state.favorites.map((photo, index) => {
             return (
-                    <ImageListItem key={photo._id}>
-                        <img
-                            alt={photo.file_name}
-                            loading="lazy"
-                            src={"../../images/" + photo.file_name + "?w=164&h=164&fit=crop&auto=format"}
-                            srcSet={"../../images/" + photo.file_name +`?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                            onClick={() => {
-                                this.openModal(photo.file_name, photo.date_time, photo.user_id);
-                            }}
-                        />
-                        <Typography variant="body2" color="inherit" style={{ marginLeft: "10px" }}>
-                            {photo.file_name}
-                        </Typography>
-                        <IconButton
-                            aria-label="Delete favorites"
-                        //   onClick = {() => {
-                        //     this.handleDeleteBtn(photo);
-                        //   }}
-                        >
-                            <DeleteIcon fontSize="small" />
-                        </IconButton>
-                    </ImageListItem>
-                    // <Divider />
+                <ImageListItem key={photo._id}>
+                    <img
+                        alt={photo.file_name}
+                        loading="lazy"
+                        src={"../../images/" + photo.file_name + "?w=164&h=164&fit=crop&auto=format"}
+                        srcSet={"../../images/" + photo.file_name + `?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                        onClick={() => {
+                            this.handleOpen(photo.file_name, photo.date_time, photo.user_id);
+                        }}
+                    />
+
+                    <ImageListItemBar
+                        sx={{
+                            background:
+                                'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
+                                'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+                        }}
+                        position="top"
+                        actionIcon={
+                            <IconButton
+                                sx={{ color: 'white' }}
+                                aria-label={`BookMarkRemoveIcon ${photo.file_name}`}
+                                // onClick={this.removeBookmarkClick(photo)}
+                            >
+                                <BookmarkRemoveIcon />
+                            </IconButton>
+                        }
+                        actionPosition="left"
+                    />
+
+                    <ImageListItemBar
+                        title={photo.file_name}
+                        subtitle={"posted " + photo.date_time}
+                        actionIcon={
+                            <IconButton
+                                sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                                aria-label={`info about ${photo.file_name}`}
+                                onClick={() => {
+                                    this.handleOpen(photo.file_name, photo.date_time, photo.user_id);
+                                }}
+                            >
+                                <InfoIcon />
+                            </IconButton>
+                        }
+                    />
+                </ImageListItem>
+                // <Divider />
             );
         });
     }
@@ -131,6 +149,15 @@ class FavoritesPage extends React.Component {
                     {this.displayFavList()}
                 </ImageList>
 
+                <Modal
+                    open={this.state.isOpen}
+                    onClose={this.handleClose}
+                >
+                    <Box>
+                        <Typography>hi</Typography>
+                    </Box>
+
+                </Modal>
             </div>
         );
     }
