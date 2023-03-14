@@ -122,7 +122,7 @@ class PhotoCard extends React.Component {
 
                         {/* action bar */}
                         <CardActions sx={{ display: "flex", justifyContent: "space-between" }}>
-                            { false ?
+                            { this.state.isFav ?
                                 <Button size="small" >
                                     <BookmarkIcon onClick={this.handleFavoriteClick} />
                                 </Button>
