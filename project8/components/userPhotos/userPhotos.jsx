@@ -222,7 +222,7 @@ class UserPhotos extends React.Component {
 														}}
 													>
 														{photo.comments.map((comment) => (
-															<ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection:'row' }}>
+															<ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection:'column', alignItems:'flex-start' }}>
 																<div className="commentHeader">
 																	<Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
 																		<ListItemAvatar sx={{ display: { xs: 'none', sm: 'flex' } }}>
