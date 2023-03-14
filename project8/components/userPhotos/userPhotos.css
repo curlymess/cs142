@@ -2,5 +2,9 @@
     font-family: 'Itim', cursive;
 }
 
+.commentHeader {
+    display: flex;
+    flex-direction: row;
+}
 
 
