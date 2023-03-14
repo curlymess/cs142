@@ -51,10 +51,10 @@ class PhotoCard extends React.Component {
         return replaced.slice(0, pos);
     }
 
-    handleFavoriteClick() {
-        let photo_id = this.props.photo._id;
+    handleFavoriteClick= () => {
+        let photo = this.props.photo;
         if (this.state.isFav) {
-            axios.delete(`/favorite/${photo_id}`, {})
+            axios.delete(`/favorite/${photo._id}`, {})
                 .then(response => {
                     this.setState({
                         isFav: false,
@@ -64,7 +64,7 @@ class PhotoCard extends React.Component {
                     console.log(error.response.data);
                 });
         } else {
-            axios.post(`/favorite/${photo_id}`)
+            axios.post(`/favorite/${photo._id}`)
                 .then(response => {
                     this.setState({
                         isFav: true,
