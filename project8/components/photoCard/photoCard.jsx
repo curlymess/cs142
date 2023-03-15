@@ -25,19 +25,20 @@ class PhotoCard extends React.Component {
         super(props);
         this.state = {
             isFav: false,
-            isLike: false,
             likeList: [],
         };
-
         this.source = axios.CancelToken.source();
+        this.fetchLikes();
     }
 
     fetchLikes() {
         axios(`/likes/${this.props.photo._id}`, { cancelToken: this.source.token })
             .then((response) => {
                 console.log("retrieved likes and here they are : " + JSON.stringify(response.data));
-                this.setState({ likeList: response.data });
-                // this.props.handleLikesChange(response.data);
+                const list = response.data;
+                this.setState({
+                    likeList: list,
+                });
             })
             .catch((e) => {
                 console.log(e);
@@ -46,10 +47,8 @@ class PhotoCard extends React.Component {
 
     componentDidMount() {
         this.fetchLikes();
-        // const isLiked = this.state.likeList.includes(this.props.user._id);
         this.setState({
             isFav: this.props.isFav,
-            isLike: this.state.likeList.includes(this.props.user._id),
         });
     }
 
@@ -60,14 +59,9 @@ class PhotoCard extends React.Component {
                 isFav: this.props.isFav,
             });
         }
-        // if (prevProps !== this.props) {
-        //     this.fetchLikes();
-        //     const isLiked = this.state.likeList.includes(this.props.user._id);
-        //     this.setState({
-        //         isLike: isLiked,
-        //     });
-            // this.updateLike();
-        //}
+        if (prevProps.photo._id !== this.props.photo._id) {
+            this.fetchLikes();
+        }
     }
 
     convertTime(time) {
@@ -105,53 +99,17 @@ class PhotoCard extends React.Component {
     };
 
     handleLikeClick(event) {
-
         event.preventDefault();
-
         let photo = this.props.photo;
-        if (this.state.likeList.includes(this.props.user._id)) {
-            axios.post(`/likes/${photo._id}`, {})
-                .then(response => {
-                    this.setState({
-                        isLike: false,
-                    });
-                    this.fetchLikes();
-                    console.log("unliked handled");
-                    console.log("like list after unlike: " + this.state.likeList)
-                })
-                .catch(error => {
-                    console.log(error.response.data);
-                    console.log("unliked failed");
-                });
-        } else {
-            axios.post(`/likes/${photo._id}`)
-                .then(response => {
-                    this.setState({
-                        isLike: true,
-                    });
-                    // this.updateLike();
-                    this.fetchLikes();
-                    console.log("like list after like: " + this.state.likeList)
-                    console.log("like handled");
-                })
-                .catch(error => {
-                    console.log(error.response.data);
-                    console.log("like failed");
-                });
-        }
-    };
+        axios.post(`/likes/${photo._id}`, {})
+            .then(response => {
+                this.fetchLikes();
+            })
+            .catch(error => {
+                console.log("like/unlike failed: " + error.response.data);
+            });
 
-    // updateLike = () => {
-    //     console.log("in updeateLike");
-    //     let photo = this.props.photo;
-    //     axios.get(`/likes/${photo._id}`).then(response => {
-    //         console.log("UPDATTETETET" + JSON.stringify(response.data));
-    //         // const list = response.data;
-    //         // this.handleLikesChange(list);
-    //     }).catch(error => {
-    //         console.log(error.response.data);
-    //     });
-    // }
+    };
 
     showCards() {
         const photo = this.props.photo;
@@ -159,7 +117,7 @@ class PhotoCard extends React.Component {
         const step = this.props.step;
         const userPhotosLength = this.props.userPhotos.length;
         const index = this.props.userPhotoIndex;
-        
+
         // userPhotos
         return (
             <Card style={{ maxWidth: "600px" }}>
