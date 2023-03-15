@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-    Grid, Card, CardHeader, CardMedia, CardActions,
+    Card, CardHeader, CardMedia, CardActions,
     List, ListItem, ListItemText, ListItemAvatar,
     Avatar, Typography, MobileStepper, Button, IconButton,
 } from '@mui/material';
@@ -53,7 +53,6 @@ class PhotoCard extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-
         if (prevProps.isFav !== this.props.isFav) {
             this.setState({
                 isFav: this.props.isFav,
@@ -110,6 +109,19 @@ class PhotoCard extends React.Component {
             });
 
     };
+
+    handleDeleteCommentClick(event, commentId, commentIndex){
+        event.preventDefault();
+        let photo = this.props.photo;
+
+        axios.post("delete/comment", {commentId: commentId, commentIndex: commentIndex, photoId: photo._id})
+        .then(res =>{
+            console.log("delete comment done");
+        })
+        .catch( err => {
+            console.log("delete comment error: " + err);
+        })
+    }
 
     showCards() {
         const photo = this.props.photo;
@@ -186,7 +198,7 @@ class PhotoCard extends React.Component {
                                 <div>
                                     <Typography variant='h4' sx={{ paddingLeft: "5px" }}>Comment Section</Typography>
                                     <List sx={{ width: '100%', bgcolor: 'background.paper', position: 'relative', overflow: 'auto', maxHeight: 200, }} >
-                                        {photo.comments.map((comment) => (
+                                        {photo.comments.map((comment, index) => (
                                             <ListItem divider={true} key={comment._id} sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                                 <div className='trashDiv'>
                                                     <div className='commentHeader'>
@@ -204,17 +216,11 @@ class PhotoCard extends React.Component {
                                                             </div>
                                                         )} />
                                                     </div>
-                                                    {/* <div> */} 
-                                                        <IconButton className='trashIcon'>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    {/* </div> */}
-
-
+                                                    <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, comment._id, index)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
                                                 </div>
-
                                                 <Typography variant="body1">{comment.comment}</Typography>
-
                                             </ListItem>
                                         ))}
                                     </List>

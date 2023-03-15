@@ -442,8 +442,27 @@ app.post('/delete/comment', function(req, res){
         return;
     }
 
-    console.log("within delete comment");
-
+    var commentId = req.body.commentId;
+    var commentIndex = req.body.commentIndex;
+    var photoId = req.body.photoId;
+    
+    Photo.findOne({ _id: photoId}).exec()
+        .then( photo => {
+            if (photo === null) {
+                console.log('Photo with _id:' + photo_id + ' not found.');
+                res.status(400).send('Not found');
+                return;
+            }
+            
+            photo.comments.splice(commentIndex, 1);
+            photo.save();
+            console.log(" deleted comment !! ");
+            res.status(200).send();
+        })
+        .catch( err => {
+            console.error('Doing delete /delete/:comment error:', err);
+            res.status(500).send(err);
+        });
 
 });
 
