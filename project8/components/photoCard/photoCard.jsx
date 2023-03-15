@@ -15,7 +15,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-
+import DeleteIcon from '@mui/icons-material/Delete'
 import NewComment from '../userPhotos/NewComment';
 
 import axios from 'axios';
@@ -114,7 +114,6 @@ class PhotoCard extends React.Component {
     showCards() {
         const photo = this.props.photo;
         const user = this.props.user;
-        console.log("The user in photocard user props is: " + this.props.loggedInUserId);
         const step = this.props.step;
         const userPhotosLength = this.props.userPhotos.length;
         const index = this.props.userPhotoIndex;
@@ -188,23 +187,34 @@ class PhotoCard extends React.Component {
                                     <Typography variant='h4' sx={{ paddingLeft: "5px" }}>Comment Section</Typography>
                                     <List sx={{ width: '100%', bgcolor: 'background.paper', position: 'relative', overflow: 'auto', maxHeight: 200, }} >
                                         {photo.comments.map((comment) => (
-                                            <ListItem divider={true} key={comment._id} className='comment-section' sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                                                <div className="commentHeader">
-                                                    <Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-                                                        <ListItemAvatar sx={{ display: { xs: 'none', sm: 'flex' } }}>
-                                                            <Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
-                                                        </ListItemAvatar>
-                                                    </Link>
-                                                    <ListItemText primary={(
-                                                        <div>
-                                                            <Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
-                                                                <Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
-                                                            </Link>
-                                                            <Typography variant="h7">{`${this.convertTime(photo.date_time)}`}</Typography>
-                                                        </div>
-                                                    )} />
+                                            <ListItem divider={true} key={comment._id} sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                                                <div className='trashDiv'>
+                                                    <div className='commentHeader'>
+                                                        <Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+                                                            <ListItemAvatar sx={{ display: { xs: 'none', sm: 'flex' } }}>
+                                                                <Avatar sx={{ backgroundColor: "#DFFFD8" }}> <Face2Icon sx={{ color: "#95BDFF" }} /> </Avatar>
+                                                            </ListItemAvatar>
+                                                        </Link>
+                                                        <ListItemText primary={(
+                                                            <div>
+                                                                <Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
+                                                                    <Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
+                                                                </Link>
+                                                                <Typography variant="h7">{`${this.convertTime(photo.date_time)}`}</Typography>
+                                                            </div>
+                                                        )} />
+                                                    </div>
+                                                    {/* <div> */} 
+                                                        <IconButton className='trashIcon'>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    {/* </div> */}
+
+
                                                 </div>
+
                                                 <Typography variant="body1">{comment.comment}</Typography>
+
                                             </ListItem>
                                         ))}
                                     </List>

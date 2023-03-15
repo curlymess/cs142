@@ -1,5 +1,31 @@
+.trashDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    
+}
+
+.commentHeader{
+    display: flex;
+    flex-direction: row;
+}
+
 .bttnRow{
     display: flex;
     flex-direction: row;
     align-items: center;
 }
+
+.trashIcon {
+    display: flex;
+    justify-self: flex-end;
+    align-self: center;
+}
+
+/* .commentBody{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+} */

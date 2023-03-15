@@ -90,7 +90,6 @@ class UserPhotos extends React.Component {
 							isFav = true;
 						}
 					}
-					console.log(this.props.loggedInUserId + " is the ide befor ephotocard");
 					return (
 						<PhotoCard key={photo._id} userPhotoIndex={index} isFav={isFav} 
 							handleBack={this.handleBack} handleNext={this.handleNext} step={this.state.step}

@@ -361,7 +361,6 @@ app.delete('/favorite/:photo_id', function (request, response) {
 /******************************************************* */
 /******************************************************* */
 /* proj8 likes */
-// very same flow as /favorites/
 
 // get likes of a photo
 app.get('/likes/:photo_id', function (request, response) {
@@ -386,38 +385,6 @@ app.get('/likes/:photo_id', function (request, response) {
                 return;
             }
             response.status(200).send(photo.likes);
-            
-            // async.each(photo.likes, function (userId, done_callback) {
-            //     User.findOne({ "_id": userId }).exec()
-            //         .then(user => {
-            //             if (user === null) {
-            //                 console.log('user with _id:' + userId + ' not found.');
-            //                 response.status(400).send('Not found');
-            //                 return;
-            //             }
-            //             let newUser = JSON.parse(JSON.stringify(user));
-
-            //             // security measure 
-            //             delete newUser.password_digest;
-            //             delete newUser.salt;
-
-            //             likesList.push(newUser._id);
-            //             done_callback();
-            //         })
-            //         .catch(err => {
-            //             console.error('find user with _id ' + userId + 'error:', err);
-            //             response.status(500).send(JSON.stringify(err));
-            //             done_callback(err);
-            //         });
-            // }, function (err) {
-            //     if (err) {
-            //         response.status(500).send(JSON.stringify(err));
-            //         return;
-            //     }
-            //     console.log("SUCCESSS IN GETTING LIKE LIST");
-            //     console.log(JSON.stringify(likesList));
-            //     response.status(200).send(likesList);
-            // });
         })
         .catch(err => {
             console.error('getting /likes error:', err);
@@ -464,41 +431,48 @@ app.post('/likes/:photo_id', function (req, res) {
 
 });
 
-// unlike 
-// app.delete('/likes/:photo_id', function (request, response) {
-//     console.log("delete asked ");
-//     if (!request.session.loginId) {
-//         response.status(401).send('Current user is not logged in');
-//         return;
-//     }
-//     let photo_id = request.params.photo_id;
-//     let user_id = request.session.loginId;
-//     Photo.findOne({ _id: photo_id }).exec()
-//         .then(photo => {
-//             if (photo === null) {
-//                 console.log('photo with _id:' + photo_id + ' not found.');
-//                 response.status(400).send('Not found');
-//                 return;
-//             }
-//             console.log("unlike before index");
-//             let index = photo.likes.indexOf(user_id);
-//             if (index === -1) {
-//                 response.status(400).send(`No user with _id: ${user_id}, already deleted or never liked`);
-//                 return;
-//             }
-//             console.log("unlike after index");
-//             photo.likes.splice(index, 1);
-//             photo.save();
-//             response.status(200).send('unliked photo!');
-//         })
-//         .catch(err => {
-//             console.error('Doing delete /likes/:photo_id error:', err);
-//             response.status(500).send(err);
-//         });
-// });
+/******************************************************* */
+/******************************************************* */
+/* proj8 delete stuff */
+
+// delete comment made by logged in user
+app.post('/delete/comment', function(req, res){
+    if (!req.session.loginId) {
+        res.status(401).send('Current user is not logged in');
+        return;
+    }
+
+    console.log("within delete comment");
+
+
+});
+
+// delete photo made by logged in user
+app.post('/delete/photo', function(req, res){
+    if (!req.session.loginId) {
+        res.status(401).send('Current user is not logged in');
+        return;
+    }
+    console.log("within delete photo");
+
+    
+});
+
+// delete account made by logged in user
+app.post('/delete/user', function(req, res){
+    if (!req.session.loginId) {
+        res.status(401).send('Current user is not logged in');
+        return;
+    }
+    console.log("within delete user");
+
+    
+});
 
 /******************************************************* */
 /******************************************************* */
+/* proj8 ** */
+
 /******************************************************* */
 
 /*

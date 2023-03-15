@@ -99,14 +99,14 @@ class PhotoShare extends React.Component {
                 <Switch>
                   {/* TO-DO: Realized i never passed it as this.state.log so see if it fixes things */}
                   
-                  { this.state.isLoggedIn ?
+                  {/* { this.state.isLoggedIn ?
                   (
                     <Redirect path="/login-register" to="/users/" />
-                  ) : (
+                  ) : ( */}
                     <Route path="/login-register" // take out loggedInUser={this.state.loggedInUser} 
                     render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn}  />)}
                   />
-                  )}
+                  {/* )} */}
 
                   {this.state.isLoggedIn ?
                     (
