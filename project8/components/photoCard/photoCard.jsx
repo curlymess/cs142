@@ -110,11 +110,11 @@ class PhotoCard extends React.Component {
 
     };
 
-    handleDeleteCommentClick(event, commentId, commentIndex){
+    handleDeleteCommentClick(event, commentIndex){
         event.preventDefault();
         let photo = this.props.photo;
 
-        axios.post("delete/comment", {commentId: commentId, commentIndex: commentIndex, photoId: photo._id})
+        axios.post("delete/comment", { commentIndex: commentIndex, photoId: photo._id})
         .then(res =>{
             console.log("delete comment done");
         })
@@ -216,9 +216,13 @@ class PhotoCard extends React.Component {
                                                             </div>
                                                         )} />
                                                     </div>
-                                                    <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, comment._id, index)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
+                                                    { comment.user._id === this.props.loggedInUserId ?
+                                                        (
+                                                        <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, index)}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                        ) : <></> 
+                                                    }
                                                 </div>
                                                 <Typography variant="body1">{comment.comment}</Typography>
                                             </ListItem>

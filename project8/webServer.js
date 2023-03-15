@@ -442,7 +442,6 @@ app.post('/delete/comment', function(req, res){
         return;
     }
 
-    var commentId = req.body.commentId;
     var commentIndex = req.body.commentIndex;
     var photoId = req.body.photoId;
     
