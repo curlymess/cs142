@@ -57,11 +57,12 @@ class UserPhotos extends React.Component {
 				.catch((e) => {
 					console.log(e);
 				});
+			
 		}
 	}
 
 	// for new comments to be displayed
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
 		axios(`/photosOfUser/${this.props.match.params.userId}`, { cancelToken: this.source.token })
 			.then((response) => {
 				this.setState({ userPhotos: response.data });
@@ -89,10 +90,12 @@ class UserPhotos extends React.Component {
 							isFav = true;
 						}
 					}
+					console.log(this.props.loggedInUserId + " is the ide befor ephotocard");
 					return (
 						<PhotoCard key={photo._id} userPhotoIndex={index} isFav={isFav} 
 							handleBack={this.handleBack} handleNext={this.handleNext} step={this.state.step}
 							photo={photo} photo_id={photo._id} user={this.state.user} userPhotos={this.state.userPhotos}
+							loggedInUserId={this.props.loggedInUserId}
 						/>
 					);
 

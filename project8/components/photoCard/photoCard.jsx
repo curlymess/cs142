@@ -114,6 +114,7 @@ class PhotoCard extends React.Component {
     showCards() {
         const photo = this.props.photo;
         const user = this.props.user;
+        console.log("The user in photocard user props is: " + this.props.loggedInUserId);
         const step = this.props.step;
         const userPhotosLength = this.props.userPhotos.length;
         const index = this.props.userPhotoIndex;
@@ -159,22 +160,20 @@ class PhotoCard extends React.Component {
                         <CardActions sx={{ display: "flex", justifyContent: "space-between", flexDirection: 'row' }}>
                             <div className='bttnRow'>
                                 <IconButton onClick={event => this.handleLikeClick(event)}>
-                                    {this.state.likeList.includes(this.props.user._id) ?
+                                    {this.state.likeList.includes(this.props.loggedInUserId) ?
                                         <FavoriteIcon />
                                         :
                                         <FavoriteBorderIcon />
                                     }
                                 </IconButton>
                                 <Typography>
-                                    0 likes
+                                    {this.state.likeList.length} likes
                                 </Typography>
                             </div>
                             <div className='bttnRow'>
                                 <IconButton onClick={this.handleBookmarkClick}>
                                     {this.state.isFav ?
-                                        <BookmarkIcon />
-                                        :
-                                        <BookmarkBorderIcon />
+                                        <BookmarkIcon /> : <BookmarkBorderIcon />
                                     }
                                 </IconButton>
                                 <NewComment currPhotoId={photo._id} currPhotoFileName={photo.file_name} currUser={user.first_name + ' ' + user.last_name} />

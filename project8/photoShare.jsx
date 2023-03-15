@@ -28,6 +28,7 @@ class PhotoShare extends React.Component {
       loggedInUser: localStorage.getItem("loggedInUser"),
       loggedInFirstName: localStorage.getItem("loggedInFirstName"),
       isLoggedIn: Boolean(localStorage.getItem("loggedInUser")),
+      loggedInUserId: localStorage.getItem('loggedInUserId'),
     };
   }
 
@@ -41,12 +42,17 @@ class PhotoShare extends React.Component {
       loggedInUser: loginData,
       isLoggedIn: true,
       loggedInFirstName: loginData.first_name,
+      loggedInUserId: loginData._id,
     });
     console.log("loginData" + loginData);
     console.log("first name: " + loginData.first_name)
+    console.log("id is: " + loginData._id)
     localStorage.setItem('loggedInUser', loginData);
     localStorage.setItem('loggedInFirstName', this.state.loggedInFirstName);
+    localStorage.setItem('loggedInUserId',  loginData._id);
     localStorage.setItem('isLoggedIn', true);
+    console.log("id before userphotos " + this.state.loggedInUserId);
+
   };
 
   handleLogOut = () => {
@@ -56,18 +62,21 @@ class PhotoShare extends React.Component {
       localStorage.removeItem("loggedInUser");
       localStorage.removeItem("loggedInFirstName");
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('loggedInUserId');
 
       this.setState({
         loggedInUser: null,
         isLoggedIn: false,
         currUser: null,
         loggedInFirstName: null,
+        loggedInUserId: null,
       });
     })
     .catch(error => {
       console.log(error.message);
     });
   };
+
 
   render() {
     return (
@@ -88,10 +97,16 @@ class PhotoShare extends React.Component {
             <Grid item sm={9}>
               <Paper className="user-photos">
                 <Switch>
-                  <Route path="/login-register"
-                    render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn} loggedInUser={this.loggedInUser} />)}
+                  {/* TO-DO: Realized i never passed it as this.state.log so see if it fixes things */}
+                  
+                  { this.state.isLoggedIn ?
+                  (
+                    <Redirect path="/login-register" to="/users/" />
+                  ) : (
+                    <Route path="/login-register" // take out loggedInUser={this.state.loggedInUser} 
+                    render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn}  />)}
                   />
-
+                  )}
 
                   {this.state.isLoggedIn ?
                     (
@@ -101,11 +116,10 @@ class PhotoShare extends React.Component {
                     ) : (
                       <Redirect path="/users/:userId" to="/login-register" />
                     )}
-
                   {this.state.isLoggedIn ?
                     (
                       <Route path="/photos/:userId"
-                        render={((props) => <UserPhotos {...props} handler={this.handleCurrUserChange} />)}
+                        render={((props) => <UserPhotos {...props} handler={this.handleCurrUserChange} loggedInUserId={this.state.loggedInUserId}/>)}
                       />
                     ) : (
                       <Redirect path="/photos/:userID" to="/login-register" />
