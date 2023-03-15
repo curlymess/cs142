@@ -117,7 +117,7 @@ app.post('/admin/logout', (req, res) => {
         return;
     }
     req.session.destroy(err => {
-        if(err){
+        if (err) {
             console.log(err + "failled to destroy :/");
             res.status(500).send(err);
         } else {
@@ -153,11 +153,11 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
                 comment: req.body.comment,
                 user_id: req.session.loginId
             }]
-        }) 
-        // e => res.status(500).send(JSON.stringify(e))
-       // );
-       .then( res.status(200).send())
-       .catch( e => res.status(500).send(e));
+        })
+            // e => res.status(500).send(JSON.stringify(e))
+            // );
+            .then(res.status(200).send())
+            .catch(e => res.status(500).send(e));
 
     });
 
@@ -198,7 +198,7 @@ app.post('/photos/new', (req, res) => {
             .then(() => console.log("yayyy photo made it to the db finally"))
             .catch((err2) => console.log("err saving photo in the db ...." + err2));
 
-         res.status(200).send();
+        res.status(200).send();
 
     });
 });
@@ -215,12 +215,12 @@ app.post('/user', upload.any(), (req, res) => {
         res.status(400).json({ message: "The first_name, last_name, and password must be non-empty strings" });
         return;
     }
-        // only create a new user if it have not existed
+    // only create a new user if it have not existed
     User.findOne({ login_name: newUser.login_name })
         .then(user => {
             if (!user) { // user not exists yet
                 console.log("User not found therefore unique!");
-                
+
                 var passwordSecure = cs142password.makePasswordEntry(newUser.password);
                 newUser.password_digest = passwordSecure.hash;
                 newUser.salt = passwordSecure.salt;
@@ -234,7 +234,7 @@ app.post('/user', upload.any(), (req, res) => {
             } else { // user exists already
                 console.log("User already exists!");
                 console.log(user);
-                res.status(400).json({ message: "The login name already exists, please choose a different login name"});
+                res.status(400).json({ message: "The login name already exists, please choose a different login name" });
             }
         })
         .catch(error => {
@@ -247,119 +247,258 @@ app.post('/user', upload.any(), (req, res) => {
 /******************************************************* */
 /* proj8 favorites */
 
-app.get('/favorites', function(request, response) {
+app.get('/favorites', function (request, response) {
     if (!request.session.loginId) {
-      response.status(401).send('Current user is not logged in');
-      return;
+        response.status(401).send('Current user is not logged in');
+        return;
     }
     let user_id = request.session.loginId;
-    User.findOne({_id: user_id}).exec()
-      .then(user => {
-        if (user === null) {
-          console.log('User with _id:' + user_id + ' not found.');
-          response.status(400).send('Not found');
-          return;
-        }
-        if (!user.favorites || user.favorites.length === 0) {
-            console.log("the user has no favs");
-          response.status(200).send();
-          return;
-        }
-        let favoriteList = [];
-        async.each(user.favorites, function(photoId, done_callback) {
-          Photo.findOne({"_id": photoId}).exec()
-            .then(photo => {
-              if (photo === null) {
-                console.log('Photo with _id:' + photoId + ' not found.');
+    User.findOne({ _id: user_id }).exec()
+        .then(user => {
+            if (user === null) {
+                console.log('User with _id:' + user_id + ' not found.');
                 response.status(400).send('Not found');
                 return;
-              }
-              let newPhoto = JSON.parse(JSON.stringify(photo));
-              delete newPhoto.comments;
-              delete newPhoto.mentions;
-              favoriteList.push(newPhoto);
-              done_callback();
-            })
-            .catch(err => {
-              console.error('find photo with _id ' + photoId + 'error:', err);
-              response.status(500).send(JSON.stringify(err));
-              done_callback(err);
+            }
+            if (!user.favorites || user.favorites.length === 0) {
+                console.log("the user has no favs");
+                response.status(200).send();
+                return;
+            }
+            let favoriteList = [];
+            async.each(user.favorites, function (photoId, done_callback) {
+                Photo.findOne({ "_id": photoId }).exec()
+                    .then(photo => {
+                        if (photo === null) {
+                            console.log('Photo with _id:' + photoId + ' not found.');
+                            response.status(400).send('Not found');
+                            return;
+                        }
+                        let newPhoto = JSON.parse(JSON.stringify(photo));
+                        delete newPhoto.comments;
+                        delete newPhoto.mentions;
+                        favoriteList.push(newPhoto);
+                        done_callback();
+                    })
+                    .catch(err => {
+                        console.error('find photo with _id ' + photoId + 'error:', err);
+                        response.status(500).send(JSON.stringify(err));
+                        done_callback(err);
+                    });
+            }, function (err) {
+                if (err) {
+                    response.status(400).send(JSON.stringify(err));
+                    return;
+                }
+                response.status(200).send(favoriteList);
             });
-        }, function(err) {
-          if (err) {
-            response.status(400).send(JSON.stringify(err));
-            return;
-          }
-          response.status(200).send(favoriteList);
+        })
+        .catch(err => {
+            console.error('Doing /favorites error:', err);
+            response.status(500).send(err);
         });
-      })
-      .catch(err => {
-        console.error('Doing /favorites error:', err);
-        response.status(500).send(err);
-      });
-  });
+});
 
-  // add new fav photo
-  app.post('/favorite/:photo_id', function(request, response) {
+// add new fav photo
+app.post('/favorite/:photo_id', function (request, response) {
     if (!request.session.loginId) {
-      response.status(401).send('Current user is not logged in');
-      return;
+        response.status(401).send('Current user is not logged in');
+        return;
     }
     let photo_id = request.params.photo_id;
     let user_id = request.session.loginId;
-    User.findOne({_id: user_id}).exec()
-      .then(user => {
-        if (user === null) {
-          console.log('User with _id:' + user_id + ' not found.');
-          response.status(400).send('Not found');
-          return;
-        }
-        if (user.favorites.indexOf(photo_id) !== -1) {
-          response.status(400).send(`Add photo with _id: ${photo_id} twice`);
-          return;
-        }
-        user.favorites.push(photo_id);
-        user.save();
-        response.status(200).send('Add favorite photo to the logged in user successfully');
-      })
-      .catch(err => {
-        console.error('Doing post /favorite/:photo_id error:', err);
-        response.status(500).send(err);
-      });
-  });
+    User.findOne({ _id: user_id }).exec()
+        .then(user => {
+            if (user === null) {
+                console.log('User with _id:' + user_id + ' not found.');
+                response.status(400).send('Not found');
+                return;
+            }
+            if (user.favorites.indexOf(photo_id) !== -1) {
+                response.status(400).send(`Add photo with _id: ${photo_id} twice`);
+                return;
+            }
+            user.favorites.push(photo_id);
+            user.save();
+            response.status(200).send('Add favorite photo to the logged in user successfully');
+        })
+        .catch(err => {
+            console.error('Doing post /favorite/:photo_id error:', err);
+            response.status(500).send(err);
+        });
+});
 
-  // remove fav photo
-  app.delete('/favorite/:photo_id', function(request, response) {
+// remove fav photo
+app.delete('/favorite/:photo_id', function (request, response) {
     if (!request.session.loginId) {
-      response.status(401).send('Current user is not logged in');
-      return;
+        response.status(401).send('Current user is not logged in');
+        return;
     }
     let photo_id = request.params.photo_id;
     let user_id = request.session.loginId;
-    User.findOne({_id: user_id}).exec()
-      .then(user => {
-        if (user === null) {
-          console.log('User with _id:' + user_id + ' not found.');
-          response.status(400).send('Not found');
-          return;
-        }
-        let index = user.favorites.indexOf(photo_id);
-        if (index === -1) {
-          response.status(400).send(`No photo with _id: ${photo_id}, already deleted or never liked`);
-          return;
-        }
-        user.favorites.splice(index, 1);
-        user.save();
-        response.status(200).send('Delete liked photo of logged in user successfully');
-      })
-      .catch(err => {
-        console.error('Doing delete /favorite/:photo_id error:', err);
-        response.status(500).send(err);
-      });
-  });
-  
+    User.findOne({ _id: user_id }).exec()
+        .then(user => {
+            if (user === null) {
+                console.log('User with _id:' + user_id + ' not found.');
+                response.status(400).send('Not found');
+                return;
+            }
+            let index = user.favorites.indexOf(photo_id);
+            if (index === -1) {
+                response.status(400).send(`No photo with _id: ${photo_id}, already deleted or never liked`);
+                return;
+            }
+            user.favorites.splice(index, 1);
+            user.save();
+            response.status(200).send('Delete liked photo of logged in user successfully');
+        })
+        .catch(err => {
+            console.error('Doing delete /favorite/:photo_id error:', err);
+            response.status(500).send(err);
+        });
+});
+
 /******************************************************* */
+/******************************************************* */
+/* proj8 likes */
+// very same flow as /favorites/
 
+// get likes of a photo
+app.get('/likes/:photo_id', function (request, response) {
+    console.log("GET LIKE LIST ASKED");
+    if (!request.session.loginId) {
+        response.status(401).send('Current user is not logged in');
+        return;
+    }
+
+    let photo_id = request.params.photo_id;
+    console.log("will look for photo");
+    Photo.findOne({ _id: photo_id }).exec()
+        .then(photo => {
+            if (photo === null) {
+                console.log('photo with _id:' + photo_id + ' not found.');
+                response.status(400).send('Not found');
+                return;
+            }
+            if (!photo.likes || photo.likes.length === 0) {
+                console.log("the photo has no likes");
+                response.status(200).send();
+                return;
+            }
+            response.status(200).send(photo.likes);
+            
+            // async.each(photo.likes, function (userId, done_callback) {
+            //     User.findOne({ "_id": userId }).exec()
+            //         .then(user => {
+            //             if (user === null) {
+            //                 console.log('user with _id:' + userId + ' not found.');
+            //                 response.status(400).send('Not found');
+            //                 return;
+            //             }
+            //             let newUser = JSON.parse(JSON.stringify(user));
+
+            //             // security measure 
+            //             delete newUser.password_digest;
+            //             delete newUser.salt;
+
+            //             likesList.push(newUser._id);
+            //             done_callback();
+            //         })
+            //         .catch(err => {
+            //             console.error('find user with _id ' + userId + 'error:', err);
+            //             response.status(500).send(JSON.stringify(err));
+            //             done_callback(err);
+            //         });
+            // }, function (err) {
+            //     if (err) {
+            //         response.status(500).send(JSON.stringify(err));
+            //         return;
+            //     }
+            //     console.log("SUCCESSS IN GETTING LIKE LIST");
+            //     console.log(JSON.stringify(likesList));
+            //     response.status(200).send(likesList);
+            // });
+        })
+        .catch(err => {
+            console.error('getting /likes error:', err);
+            response.status(500).send(err);
+        });
+});
+
+// like/unlike a photo
+app.post('/likes/:photo_id', function (req, res) {
+    if (!req.session.loginId) {
+        res.status(401).send('Current user is not logged in');
+        return;
+    }
+
+    let photo_id = req.params.photo_id;
+    let user_id = req.session.loginId;
+
+    Photo.findOne({ _id: photo_id }).exec()
+        .then(photo => {
+            if (photo === null) {
+                console.log('Photo with _id:' + photo_id + ' not found.');
+                res.status(400).send('Not found');
+                return;
+            }
+
+            // like and unlike
+            if (photo.likes.includes(user_id) ) {
+                photo.likes.splice(photo.likes.indexOf(user_id), 1)
+                photo.save();
+                res.status(200).send(`unliked photo successfully`);
+                return;
+            } else {
+                photo.likes.push(user_id);
+                photo.save();
+                res.status(200).send('Add user like to photo successfully');
+                return;
+            }
+            
+        })
+        .catch(err => {
+            console.error('Doing post /like/:photo_id error:', err);
+            res.status(500).send(err);
+        });
+
+});
+
+// unlike 
+// app.delete('/likes/:photo_id', function (request, response) {
+//     console.log("delete asked ");
+//     if (!request.session.loginId) {
+//         response.status(401).send('Current user is not logged in');
+//         return;
+//     }
+//     let photo_id = request.params.photo_id;
+//     let user_id = request.session.loginId;
+//     Photo.findOne({ _id: photo_id }).exec()
+//         .then(photo => {
+//             if (photo === null) {
+//                 console.log('photo with _id:' + photo_id + ' not found.');
+//                 response.status(400).send('Not found');
+//                 return;
+//             }
+//             console.log("unlike before index");
+//             let index = photo.likes.indexOf(user_id);
+//             if (index === -1) {
+//                 response.status(400).send(`No user with _id: ${user_id}, already deleted or never liked`);
+//                 return;
+//             }
+//             console.log("unlike after index");
+//             photo.likes.splice(index, 1);
+//             photo.save();
+//             response.status(200).send('unliked photo!');
+//         })
+//         .catch(err => {
+//             console.error('Doing delete /likes/:photo_id error:', err);
+//             response.status(500).send(err);
+//         });
+// });
+
+/******************************************************* */
+/******************************************************* */
 /******************************************************* */
 
 /*
@@ -464,7 +603,7 @@ app.get('/user/:id', function (request, response) {
         response.status(401).send('401: The user is not currently logged in.');
         return;
     }
-    
+
     const id = request.params.id;
     User.findById(id, function (err, user) {
         if (err) {
@@ -502,7 +641,7 @@ app.get('/photosOfUser/:id', function (request, response) {
 
             allPhotos.forEach(photo => {
                 delete photo.__v; // avoid extra prop err due to mongoDb auto adding
-                
+
                 async.eachOf(photo.comments, (comment, index, callback) => {
                     User.findById({ _id: comment.user_id }, (error, user) => {
 
