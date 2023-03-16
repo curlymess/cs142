@@ -91,7 +91,7 @@ class UserPhotos extends React.Component {
 						}
 					}
 					return (
-						<PhotoCard key={photo._id} userPhotoIndex={index} isFav={isFav} 
+						<PhotoCard className="userPhotoSection" key={photo._id} userPhotoIndex={index} isFav={isFav} 
 							handleBack={this.handleBack} handleNext={this.handleNext} step={this.state.step}
 							photo={photo} photo_id={photo._id} user={this.state.user} userPhotos={this.state.userPhotos}
 							loggedInUserId={this.props.loggedInUserId}

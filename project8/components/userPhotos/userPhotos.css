@@ -7,4 +7,9 @@
     flex-direction: row;
 }
 
+.userPhotoSection {
+    max-height: 650px;
+    max-width: 650px;
+}
+
 

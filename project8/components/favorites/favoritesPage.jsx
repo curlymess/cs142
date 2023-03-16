@@ -29,7 +29,6 @@ class FavoritesPage extends React.Component {
     }
 
     componentDidMount() {
-        // Modal.setAppElement('body');
         if (this.props.loggedInUser) {
             console.log("loggedInUser mounted: " + this.props.loggedInUser);
         }
@@ -118,7 +117,6 @@ class FavoritesPage extends React.Component {
                             <IconButton
                                 sx={{ color: 'white' }}
                                 aria-label={`BookMarkRemoveIcon ${photo.file_name}`}
-                            // onClick={this.removeBookmarkClick(photo)}
                             >
                                 <BookmarkRemoveIcon />
                             </IconButton>
@@ -142,13 +140,31 @@ class FavoritesPage extends React.Component {
                         }
                     />
                 </ImageListItem>
-                // <Divider />
             );
         });
     }
+    
 
     render() {
-        console.log("here in fav");
+        const modalStyle = {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            margin: 'auto',
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          };
+
+          const modalPhoto = {
+            height: 400,
+            width: '100%',
+            objectFit: 'contain',
+          }
+
         return (
             <div>
                 <Typography variant="h2">Your Bookmarked Pictures</Typography>
@@ -161,9 +177,9 @@ class FavoritesPage extends React.Component {
                     open={this.state.isOpen}
                     onClose={this.handleClose}
                 >
-                    <Box>
+                    <Box sx={modalStyle}>
                         <h2 ref={_subtitle => (this.subtitle = _subtitle)}>{this.state.fileName}</h2>
-                        <img alt={this.state.fileName} src={"../../images/" + this.state.fileName}  />
+                        <img style={modalPhoto} alt={this.state.fileName} src={"../../images/" + this.state.fileName}  />
 
                         <Typography variant="body2" color="textPrimary" className="cs142-modal-time">
                             {`Posted on ${this.convertTime(this.state.dateTime)}`}

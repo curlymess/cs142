@@ -16,22 +16,24 @@ cs142-main- here.
 .user-list {
   margin: 15px;
   padding: 30px;
-  height: calc(100vh - 110px);
+  height: calc(100vh - 130px);
   margin-right: 0;
+  /* overflow: scroll; */
 }
 .user-photos {
   margin: 15px;
   margin-left: 0;
   padding: 30px;
-  height: calc(100vh - 110px);
+  height: calc(100vh - 130px);
 }
-.cs142-main-grid-item {
-  height: calc(100vh - 110px);
+/* .cs142-main-grid-item {
+  height: calc(100vh - 130px);
   padding: 30px;
-}
+} */
 
 body{
   background-color: #F7C8E0;
+  width: 100%; height: 100vh; overflow: hidden;
 }
 
 h1, h2, h5 {

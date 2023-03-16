@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import {
     Card, CardHeader, CardMedia, CardActions,
     List, ListItem, ListItemText, ListItemAvatar,
@@ -31,6 +30,7 @@ class PhotoCard extends React.Component {
         this.fetchLikes();
     }
 
+    // TO-DO: add loading variable that is true until component will mount 
     fetchLikes() {
         axios(`/likes/${this.props.photo._id}`, { cancelToken: this.source.token })
             .then((response) => {
@@ -130,9 +130,28 @@ class PhotoCard extends React.Component {
         const userPhotosLength = this.props.userPhotos.length;
         const index = this.props.userPhotoIndex;
 
+        // const styles = theme => ({
+        //     Card: {
+        //       width: 400,
+        //       margin: 'auto'
+        //     },
+        //     Media: {
+        //       height: 300,
+        //       width: '100%',
+        //       objectFit: 'contain'
+        //     }
+        //   });
+
+        const styles = ({
+            squareRatio: {
+               width: '95%',
+               aspectRatio: 1
+             }
+           });
+          
         // userPhotos
         return (
-            <Card style={{ maxWidth: "600px" }}>
+            <Card style={{ maxHeight: 650, width: 600, margin: 'auto' }}>
                 {Math.abs(step - index) < 1 ? (
                     // start of card
                     <div>
@@ -151,7 +170,7 @@ class PhotoCard extends React.Component {
                             )}
                             sx={{ backgroundColor: "#F7c8e0" }} />
                         {/* image */}
-                        <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} style={{ maxHeight: "300px", width: "auto", height: "auto" }} />
+                        <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} style={{height: 300, objectFit: 'contain'}} />
                         {/* scroll images */}
                         <MobileStepper
                             steps={userPhotosLength}
@@ -197,7 +216,7 @@ class PhotoCard extends React.Component {
                             (
                                 <div>
                                     <Typography variant='h4' sx={{ paddingLeft: "5px" }}>Comment Section</Typography>
-                                    <List sx={{ width: '100%', bgcolor: 'background.paper', position: 'relative', overflow: 'auto', maxHeight: 200, }} >
+                                    <List sx={{ width: '100%', bgcolor: 'background.paper', position: 'relative', overflow: 'auto', maxHeight: 150, }} >
                                         {photo.comments.map((comment, index) => (
                                             <ListItem divider={true} key={comment._id} sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                                 <div className='trashDiv'>
