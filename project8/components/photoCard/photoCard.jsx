@@ -4,6 +4,7 @@ import {
     Card, CardHeader, CardMedia, CardActions,
     List, ListItem, ListItemText, ListItemAvatar,
     Avatar, Typography, MobileStepper, Button, IconButton,
+    Menu, MenuItem
 } from '@mui/material';
 
 import './photoCard.css';
@@ -16,6 +17,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import DeleteIcon from '@mui/icons-material/Delete'
 import NewComment from '../userPhotos/NewComment';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import axios from 'axios';
 
@@ -25,6 +27,7 @@ class PhotoCard extends React.Component {
         this.state = {
             isFav: false,
             likeList: [],
+            anchorEl: null,
         };
         this.source = axios.CancelToken.source();
         this.fetchLikes();
@@ -49,17 +52,23 @@ class PhotoCard extends React.Component {
         this.fetchLikes();
         this.setState({
             isFav: this.props.isFav,
+            anchorEl: false,
         });
+
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.isFav !== this.props.isFav) {
             this.setState({
                 isFav: this.props.isFav,
+                anchorEl: false,
             });
         }
         if (prevProps.photo._id !== this.props.photo._id) {
             this.fetchLikes();
+            this.setState({
+                anchorEl: false,
+            });
         }
     }
 
@@ -110,18 +119,47 @@ class PhotoCard extends React.Component {
 
     };
 
-    handleDeleteCommentClick(event, commentIndex){
+    handleDeleteCommentClick(event, commentIndex) {
         event.preventDefault();
         let photo = this.props.photo;
 
-        axios.post("delete/comment", { commentIndex: commentIndex, photoId: photo._id})
-        .then(res =>{
-            console.log("delete comment done");
-        })
-        .catch( err => {
-            console.log("delete comment error: " + err);
-        })
+        axios.post("delete/comment", { commentIndex: commentIndex, photoId: photo._id })
+            .then(res => {
+                console.log("delete comment done");
+            })
+            .catch(err => {
+                console.log("delete comment error: " + err);
+            })
     }
+
+    // photo settings // delete photo
+
+    handleMenu = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+
+    handleClose = () => {
+        this.setState({ anchorEl: null });
+    };
+
+    handleCloseDelete = (event) => {
+        this.setState({ anchorEl: null });
+
+        //Delete Image
+        console.log("ask to delete image");
+        // event.preventDefault();
+
+        axios.post("delete/photo", { photo_id: this.props.photo._id })
+        .then(response => {
+            console.log("delete photo success! " + response);
+            // Force a fetch to reset state
+            // this.fetchModel(true);
+        })
+            .catch(error => {
+                console.error("delete photo failed: " + error);
+            });
+
+    };
 
     showCards() {
         const photo = this.props.photo;
@@ -130,25 +168,6 @@ class PhotoCard extends React.Component {
         const userPhotosLength = this.props.userPhotos.length;
         const index = this.props.userPhotoIndex;
 
-        // const styles = theme => ({
-        //     Card: {
-        //       width: 400,
-        //       margin: 'auto'
-        //     },
-        //     Media: {
-        //       height: 300,
-        //       width: '100%',
-        //       objectFit: 'contain'
-        //     }
-        //   });
-
-        const styles = ({
-            squareRatio: {
-               width: '95%',
-               aspectRatio: 1
-             }
-           });
-          
         // userPhotos
         return (
             <Card style={{ maxHeight: 650, width: 600, margin: 'auto' }}>
@@ -168,9 +187,40 @@ class PhotoCard extends React.Component {
                                     {`${this.convertTime(photo.date_time)}`}
                                 </Typography>
                             )}
+                            action={
+                                user._id === this.props.loggedInUserId ?
+                                    (
+                                        // <IconButton color="secondary" onClick={event => this.handleDeletePhotoClick(event)}>
+                                        //     <DeleteIcon />
+                                        // </IconButton>
+                                        <div>
+                                            <IconButton aria-label="settings" onClick={this.handleMenu}>
+                                                <MoreVertIcon />
+                                            </IconButton>
+                                            <Menu
+                                                id="menu-appbar"
+                                                anchorEl={this.state.anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                keepMounted
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                open={Boolean(this.state.anchorEl)}
+                                                onClose={this.handleClose}
+                                            >
+                                                <MenuItem onClick={event => this.handleCloseDelete(event)}>Delete Image</MenuItem>
+                                            </Menu>
+                                        </div>
+                                    ) : <></>
+
+                            }
                             sx={{ backgroundColor: "#F7c8e0" }} />
                         {/* image */}
-                        <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} style={{height: 300, objectFit: 'contain'}} />
+                        <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} style={{ height: 300, objectFit: 'contain' }} />
                         {/* scroll images */}
                         <MobileStepper
                             steps={userPhotosLength}
@@ -235,12 +285,12 @@ class PhotoCard extends React.Component {
                                                             </div>
                                                         )} />
                                                     </div>
-                                                    { comment.user._id === this.props.loggedInUserId ?
+                                                    {comment.user._id === this.props.loggedInUserId ?
                                                         (
-                                                        <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, index)}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                        ) : <></> 
+                                                            <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, index)}>
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        ) : <></>
                                                     }
                                                 </div>
                                                 <Typography variant="body1">{comment.comment}</Typography>

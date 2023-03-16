@@ -473,6 +473,17 @@ app.post('/delete/photo', function(req, res){
     }
     console.log("within delete photo");
 
+    var photo_id = req.body.photo_id;
+
+    Photo.remove({_id: photo_id, user_id: req.session.loginId}, err => {
+        if(err) {
+            console.error("delete/photo | Error: " + err);
+            res.status(400).send();
+            return;
+        } else {
+            console.log("yayyy photo deleted!");                 
+        }
+    });    
     
 });
 
@@ -483,6 +494,8 @@ app.post('/delete/user', function(req, res){
         return;
     }
     console.log("within delete user");
+
+
 
     
 });
