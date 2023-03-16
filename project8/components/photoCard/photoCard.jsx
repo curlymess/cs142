@@ -150,11 +150,9 @@ class PhotoCard extends React.Component {
         // event.preventDefault();
 
         axios.post("delete/photo", { photo_id: this.props.photo._id })
-        .then(response => {
-            console.log("delete photo success! " + response);
-            // Force a fetch to reset state
-            // this.fetchModel(true);
-        })
+            .then(response => {
+                console.log("delete photo success! " + response);
+            })
             .catch(error => {
                 console.error("delete photo failed: " + error);
             });
@@ -190,9 +188,6 @@ class PhotoCard extends React.Component {
                             action={
                                 user._id === this.props.loggedInUserId ?
                                     (
-                                        // <IconButton color="secondary" onClick={event => this.handleDeletePhotoClick(event)}>
-                                        //     <DeleteIcon />
-                                        // </IconButton>
                                         <div>
                                             <IconButton aria-label="settings" onClick={this.handleMenu}>
                                                 <MoreVertIcon />

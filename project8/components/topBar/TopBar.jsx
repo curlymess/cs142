@@ -1,11 +1,12 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Container, Button, IconButton } from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Button, IconButton, Menu, MenuItem } from '@mui/material';
 import './TopBar.css';
 import { Link } from 'react-router-dom';
 
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 import axios from 'axios';
 import NewPhoto from '../newPhoto/newPhoto';
@@ -19,6 +20,7 @@ class TopBar extends React.Component {
     this.state = {
       currVersion: 0,
       firstName: null,
+      anchorEl: null,
     };
 
     this.source = axios.CancelToken.source();
@@ -38,8 +40,29 @@ class TopBar extends React.Component {
     this.source.cancel("cancelled by topbar");
   }
 
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleDeleteAccountClick = (event) => {
+    this.setState({ anchorEl: null });
+
+    axios.post("delete/user")
+      .then(response => {
+        console.log("delete user success! " + response);
+      })
+      .catch(error => {
+        console.error("delete user failed: " + error);
+      });
+
+  }
+
   render() {
-    
+
     return (
       <AppBar className="cs142-topbar-appBar">
         <Container maxWidth="xl">
@@ -56,27 +79,49 @@ class TopBar extends React.Component {
               Photo Application v{this.state.currVersion}
             </Typography>
 
-            {/* https://mui.com/material-ui/react-app-bar/ */}
-
             {
               this.props.isLoggedIn ?
                 (
-                <div className="actionButtons">
-                  <Link to={`/favorites`}>
-                    <IconButton color="secondary" aria-label="favorites" >
-                      <BookmarksIcon />
+                  <div className="actionButtons">
+                    <Link to={`/favorites`}>
+                      <IconButton color="secondary" aria-label="favorites" >
+                        <BookmarksIcon />
+                      </IconButton>
+                    </Link>
+
+                    <NewPhoto />
+
+                    <div>
+                      <IconButton aria-label="manage-account" color="secondary" onClick={this.handleMenu}>
+                        <ManageAccountsIcon />
+                      </IconButton>
+                      <Menu
+                        id="menu-appbar"
+                        anchorEl={this.state.anchorEl}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        open={Boolean(this.state.anchorEl)}
+                        onClose={this.handleClose}
+                      >
+                        <MenuItem onClick={event => this.handleDeleteAccountClick(event)}>Delete Account</MenuItem>
+                      </Menu>
+                    </div>
+
+                    <IconButton color="secondary" aria-label="log out" onClick={this.props.handleLogOut}>
+                      <LogoutIcon />
                     </IconButton>
-                  </Link>
-                  
-                  <NewPhoto />
-                  <IconButton color="secondary" aria-label="log out" onClick={this.props.handleLogOut}>
-                    <LogoutIcon />
-                  </IconButton>
-                </div>
+                  </div>
                 ) : (
-                <Button variant="contained" color="secondary">
-                  <Typography variant="h6" noWrap >Log In</Typography>
-                </Button>
+                  <Button variant="contained" color="secondary">
+                    <Typography variant="h6" noWrap >Log In</Typography>
+                  </Button>
                 )
             }
 
@@ -88,22 +133,22 @@ class TopBar extends React.Component {
             {
               (this.props.isLoggedIn) ?
                 (
-                <div className='bar2LoggedIn'>
-               
-                  <Typography variant="h2" noWrap >
-                    hello there, &nbsp;
-                    {this.props.isLoggedIn ? this.props.firstName : 'no one'}
-                  </Typography>
+                  <div className='bar2LoggedIn'>
 
-                  <Typography variant="h2" noWrap>
-                    currently viewing &nbsp;
-                    {this.props.currUser ? this.props.currUser : 'no one'}
-                  </Typography>
-                </div>
+                    <Typography variant="h2" noWrap >
+                      hello there, &nbsp;
+                      {this.props.isLoggedIn ? this.props.firstName : 'no one'}
+                    </Typography>
+
+                    <Typography variant="h2" noWrap>
+                      currently viewing &nbsp;
+                      {this.props.currUser ? this.props.currUser : 'no one'}
+                    </Typography>
+                  </div>
                 ) : (
-                <Typography className='bar2SignedOut'>
-                  how about logging in?
-                </Typography>
+                  <Typography className='bar2SignedOut'>
+                    how about logging in?
+                  </Typography>
                 )
             }
           </div>

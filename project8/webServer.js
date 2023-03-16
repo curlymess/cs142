@@ -411,7 +411,7 @@ app.post('/likes/:photo_id', function (req, res) {
             }
 
             // like and unlike
-            if (photo.likes.includes(user_id) ) {
+            if (photo.likes.includes(user_id)) {
                 photo.likes.splice(photo.likes.indexOf(user_id), 1)
                 photo.save();
                 res.status(200).send(`unliked photo successfully`);
@@ -422,7 +422,7 @@ app.post('/likes/:photo_id', function (req, res) {
                 res.status(200).send('Add user like to photo successfully');
                 return;
             }
-            
+
         })
         .catch(err => {
             console.error('Doing post /like/:photo_id error:', err);
@@ -436,7 +436,7 @@ app.post('/likes/:photo_id', function (req, res) {
 /* proj8 delete stuff */
 
 // delete comment made by logged in user
-app.post('/delete/comment', function(req, res){
+app.post('/delete/comment', function (req, res) {
     if (!req.session.loginId) {
         res.status(401).send('Current user is not logged in');
         return;
@@ -444,21 +444,21 @@ app.post('/delete/comment', function(req, res){
 
     var commentIndex = req.body.commentIndex;
     var photoId = req.body.photoId;
-    
-    Photo.findOne({ _id: photoId}).exec()
-        .then( photo => {
+
+    Photo.findOne({ _id: photoId }).exec()
+        .then(photo => {
             if (photo === null) {
                 console.log('Photo with _id:' + photo_id + ' not found.');
                 res.status(400).send('Not found');
                 return;
             }
-            
+
             photo.comments.splice(commentIndex, 1);
             photo.save();
             console.log(" deleted comment !! ");
             res.status(200).send();
         })
-        .catch( err => {
+        .catch(err => {
             console.error('Doing delete /delete/:comment error:', err);
             res.status(500).send(err);
         });
@@ -466,7 +466,7 @@ app.post('/delete/comment', function(req, res){
 });
 
 // delete photo made by logged in user
-app.post('/delete/photo', function(req, res){
+app.post('/delete/photo', function (req, res) {
     if (!req.session.loginId) {
         res.status(401).send('Current user is not logged in');
         return;
@@ -475,29 +475,75 @@ app.post('/delete/photo', function(req, res){
 
     var photo_id = req.body.photo_id;
 
-    Photo.remove({_id: photo_id, user_id: req.session.loginId}, err => {
-        if(err) {
+    Photo.remove({ _id: photo_id, user_id: req.session.loginId }, err => {
+        if (err) {
             console.error("delete/photo | Error: " + err);
             res.status(400).send();
             return;
         } else {
-            console.log("yayyy photo deleted!");                 
+            console.log("yayyy photo deleted!");
         }
-    });    
-    
+    });
+
 });
 
 // delete account made by logged in user
-app.post('/delete/user', function(req, res){
+app.post('/delete/user', function (req, res) {
     if (!req.session.loginId) {
         res.status(401).send('Current user is not logged in');
         return;
     }
     console.log("within delete user");
 
+    var user_id = req.session.loginId;
+    // delete user photos
+    Photo.remove({ user_id: user_id }, (err) => {
+        if (err) {
+            console.error("within delete user - failed to delete photo: " + err);
+            response.status(400).send();
+            return;
+        } else {
+            console.log("within delete user - sucessfully delete photo");
 
+            // delete user comments
+            var query = Photo.find({});
+            query.exec((err2, photos) => {
+                if (err2) {
+                    console.error("within delete user - failed to delete comment: " + err2);
+                    response.status(400).send();
+                    return;
+                } else {
+                    for (var i = 0; i < photos.length; i++) {
+                        var numComments = photos[i].comments.length;
+                        for (var j = 0; j < numComments; j++) {
+                            if (String(photos[i].comments[j].user_id) === String(user_id)) {
+                                photos[i].comments.splice(j, 1);
+                                numComments--;
+                            }
+                        }
+                        photos[i].save();
+                    }
+                    console.log("within /delete/user - successfully delete comment ");
 
-    
+                    // delete user object as a whole
+                    User.remove({ _id: user_id }, (err3) => {
+                        if (err3) {
+                            console.error("within delete/error - failed to delete user");
+                            res.status(400).send();
+                        } else {
+                            console.error("within delete/error - successfully delete user");
+                            // Logout the user & respond to request
+                            delete req.session.user;
+                            req.session.destroy();
+                            res.status(200).send();
+                            console.log("200 - delete/user success !!!");
+                        }
+                    });
+                }
+            });
+        }
+    });
+
 });
 
 /******************************************************* */
