@@ -72,7 +72,8 @@ class FavoritesPage extends React.Component {
 
     // TO-DO: add more alerts
 
-    removeBookmarkClick = (photo) => {
+    removeBookmarkClick = (event, photo) => {
+        event.preventDefault();
         axios.delete(`/favorite/${photo._id}`).then(response => {
             console.log(response.data);
             this.fetchData();
@@ -117,6 +118,7 @@ class FavoritesPage extends React.Component {
                             <IconButton
                                 sx={{ color: 'white' }}
                                 aria-label={`BookMarkRemoveIcon ${photo.file_name}`}
+                                onClick={event => this.removeBookmarkClick(event, photo)}
                             >
                                 <BookmarkRemoveIcon />
                             </IconButton>
