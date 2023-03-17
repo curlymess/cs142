@@ -4,10 +4,11 @@ import {
   HashRouter, Route, Switch, Redirect
 } from 'react-router-dom';
 import {
-  Grid, Paper, ThemeProvider, Typography,
+  Grid, Paper, ThemeProvider,
 } from '@mui/material';
 import './styles/main.css';
 
+import axios from 'axios';
 import theme from './lib/theme';
 
 // import necessary components
@@ -17,8 +18,8 @@ import UserList from './components/userList/userList';
 import UserPhotos from './components/userPhotos/userPhotos';
 import LoginRegister from './components/loginRegister/LoginRegister';
 import FavoritesPage from './components/favorites/favoritesPage';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 
-import axios from 'axios';
 
 class PhotoShare extends React.Component {
   constructor(props) {
@@ -37,7 +38,12 @@ class PhotoShare extends React.Component {
     localStorage.setItem('currUser', currUser);
   };
 
+  handleRegisterUser = (message) => {
+
+  };
+
   handleLogIn = (loginData) => {
+    enqueueSnackbar("yayyy, you logged in! :)", {variant: "success"});
     this.setState({
       loggedInUser: loginData,
       isLoggedIn: true,
@@ -45,11 +51,11 @@ class PhotoShare extends React.Component {
       loggedInUserId: loginData._id,
     });
     console.log("loginData" + loginData);
-    console.log("first name: " + loginData.first_name)
-    console.log("id is: " + loginData._id)
+    console.log("first name: " + loginData.first_name);
+    console.log("id is: " + loginData._id);
     localStorage.setItem('loggedInUser', loginData);
     localStorage.setItem('loggedInFirstName', this.state.loggedInFirstName);
-    localStorage.setItem('loggedInUserId',  loginData._id);
+    localStorage.setItem('loggedInUserId', loginData._id);
     localStorage.setItem('isLoggedIn', true);
     console.log("id before userphotos " + this.state.loggedInUserId);
 
@@ -57,129 +63,134 @@ class PhotoShare extends React.Component {
 
   handleLogOut = () => {
     axios.post("/admin/logout", {})
-    .then(res => {
-      localStorage.removeItem("currUser");
-      localStorage.removeItem("loggedInUser");
-      localStorage.removeItem("loggedInFirstName");
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('loggedInUserId');
+      .then(() => {
+        enqueueSnackbar(this.state.loggedInFirstName + " logged out", {variant: "success"});
+        localStorage.removeItem("currUser");
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInFirstName");
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('loggedInUserId');
 
-      this.setState({
-        loggedInUser: null,
-        isLoggedIn: false,
-        currUser: null,
-        loggedInFirstName: null,
-        loggedInUserId: null,
+        this.setState({
+          loggedInUser: null,
+          isLoggedIn: false,
+          currUser: null,
+          loggedInFirstName: null,
+          loggedInUserId: null,
+        });
+      })
+      .catch(error => {
+        enqueueSnackbar("failed to log out :/", {variant: "error"});
+        console.log(error.message);
       });
-    })
-    .catch(error => {
-      console.log(error.message);
-    });
   };
 
   handleDeleteUser = () => {
     axios.post("delete/user")
-    .then(res => {
-      console.log("delete user success! " + res);
-      localStorage.removeItem("currUser");
-      localStorage.removeItem("loggedInUser");
-      localStorage.removeItem("loggedInFirstName");
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('loggedInUserId');
+      .then(res => {
+        console.log("delete user success! " + res);
+        enqueueSnackbar("user deleted", {variant: "success"});
+        localStorage.removeItem("currUser");
+        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("loggedInFirstName");
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('loggedInUserId');
 
-      this.setState({
-        loggedInUser: null,
-        isLoggedIn: false,
-        currUser: null,
-        loggedInFirstName: null,
-        loggedInUserId: null,
+        this.setState({
+          loggedInUser: null,
+          isLoggedIn: false,
+          currUser: null,
+          loggedInFirstName: null,
+          loggedInUserId: null,
+        });
+      })
+      .catch(error => {
+        enqueueSnackbar("failed to delete user :/", {variant: 'error'});
+        console.error("delete user failed: " + error);
       });
-    })
-    .catch(error => {
-      console.error("delete user failed: " + error);
-    });
   };
 
   render() {
     return (
-      <HashRouter>
-        <div>
-          <Grid container spacing={8}>
-            <Grid item xs={12}>
-              <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} firstName={this.state.loggedInFirstName} 
-                      handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange} 
-                      handleDeleteUser={this.handleDeleteUser} />
-            </Grid>
-            <div className="cs142-main-topbar-buffer" />
+      <div>
+        <SnackbarProvider maxSnack={2} autoHideDuration={3000} />
 
-            <Grid item sm={3}>
-              <Paper className="user-list">
-                <UserList loggedInUser={this.state.loggedInUser} />
-              </Paper>
-            </Grid>
+        <HashRouter>
+          <div>
+            <Grid container spacing={8}>
+              <Grid item xs={12}>
+                <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} firstName={this.state.loggedInFirstName}
+                  handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange}
+                  handleDeleteUser={this.handleDeleteUser} />
+              </Grid>
+              <div className="cs142-main-topbar-buffer" />
 
-            <Grid item sm={9}>
-              <Paper className="user-photos">
-                <Switch>
-                  {/* TO-DO: Realized i never passed it as this.state.log so see if it fixes things */}
-                  
-                  {/* { this.state.isLoggedIn ?
+              <Grid item sm={3}>
+                <Paper className="user-list">
+                  <UserList loggedInUser={this.state.loggedInUser} />
+                </Paper>
+              </Grid>
+
+              <Grid item sm={9}>
+                <Paper className="user-photos">
+                  <Switch>
+                    {/* TO-DO: Realized i never passed it as this.state.log so see if it fixes things */}
+
+                    {/* { this.state.isLoggedIn ?
                   (
                     <Redirect path="/login-register" to="/users/" />
                   ) : ( */}
                     <Route path="/login-register" // take out loggedInUser={this.state.loggedInUser} 
-                    render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn}  />)}
-                  />
-                  {/* )} */}
+                      render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn} />)}
+                    />
+                    {/* )} */}
 
-                  {this.state.isLoggedIn ?
-                    (
-                      <Route path="/users/:userId"
-                        render={((props) => <UserDetail {...props} handler={this.handleCurrUserChange} />)}
-                      />
-                    ) : (
-                      <Redirect path="/users/:userId" to="/login-register" />
-                    )}
-                  {this.state.isLoggedIn ?
-                    (
-                      <Route path="/photos/:userId"
-                        render={((props) => <UserPhotos {...props} handler={this.handleCurrUserChange} loggedInUserId={this.state.loggedInUserId}/>)}
-                      />
-                    ) : (
-                      <Redirect path="/photos/:userID" to="/login-register" />
-                    )}
+                    {this.state.isLoggedIn ?
+                      (
+                        <Route path="/users/:userId"
+                          render={((props) => <UserDetail {...props} handler={this.handleCurrUserChange} />)}
+                        />
+                      ) : (
+                        <Redirect path="/users/:userId" to="/login-register" />
+                      )}
+                    {this.state.isLoggedIn ?
+                      (
+                        <Route path="/photos/:userId"
+                          render={((props) => <UserPhotos {...props} handler={this.handleCurrUserChange} loggedInUserId={this.state.loggedInUserId} />)}
+                        />
+                      ) : (
+                        <Redirect path="/photos/:userID" to="/login-register" />
+                      )}
 
-                  {this.state.isLoggedIn ?
-                    (
-                      <Route path="/users">
-                        <UserList loggedInUser={this.state.loggedInUser} />
-                      </Route>
-                    ) : (
-                      <Redirect path="/users" to="/login-register" />
-                    )}
+                    {this.state.isLoggedIn ?
+                      (
+                        <Route path="/users">
+                          <UserList loggedInUser={this.state.loggedInUser} />
+                        </Route>
+                      ) : (
+                        <Redirect path="/users" to="/login-register" />
+                      )}
 
-                  {this.state.isLoggedIn ?
-                    (
-                      <Route path="/favorites"
-                        render={((props) => <FavoritesPage {...props} loggedInUser={this.state.loggedInUser} />)}
-                      />
-                    ) : (
-                      <Redirect path="/favorites" to="/login-register" />
-                    )}
+                    {this.state.isLoggedIn ?
+                      (
+                        <Route path="/favorites"
+                          render={((props) => <FavoritesPage {...props} loggedInUser={this.state.loggedInUser} />)}
+                        />
+                      ) : (
+                        <Redirect path="/favorites" to="/login-register" />
+                      )}
 
-                  <Route path="/">
-                    <Redirect path="/" to="/login-register" />
-                  </Route>
-
-
-
-
-                </Switch>
-              </Paper>
+                    <Route path="/">
+                      <Redirect path="/" to="/login-register" />
+                    </Route>
+                  </Switch>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-      </HashRouter>
+          </div>
+        </HashRouter>
+      </div>
+
     );
   }
 }

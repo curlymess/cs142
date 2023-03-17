@@ -1,14 +1,5 @@
 import React from 'react';
-
-import {
-	Grid, Card, CardHeader, CardMedia, CardActions,
-	List, ListItem, ListItemText, ListItemAvatar,
-	Avatar, Typography, MobileStepper, Button,
-} from '@mui/material';
-
 import './userPhotos.css';
-
-
 import axios from 'axios';
 import PhotoCard from '../photoCard/photoCard';
 
@@ -23,7 +14,6 @@ class UserPhotos extends React.Component {
 			userPhotos: [],
 			step: 0,
 			favorites: [],
-			likes: [],
 		};
 		this.handleBack = this.handleBack.bind(this);
 		this.handleNext = this.handleNext.bind(this);
@@ -57,12 +47,12 @@ class UserPhotos extends React.Component {
 				.catch((e) => {
 					console.log(e);
 				});
-			
+
 		}
 	}
 
 	// for new comments to be displayed
-	componentDidUpdate(prevProps) {
+	componentDidUpdate() {
 		axios(`/photosOfUser/${this.props.match.params.userId}`, { cancelToken: this.source.token })
 			.then((response) => {
 				this.setState({ userPhotos: response.data });
@@ -91,7 +81,7 @@ class UserPhotos extends React.Component {
 						}
 					}
 					return (
-						<PhotoCard className="userPhotoSection" key={photo._id} userPhotoIndex={index} isFav={isFav} 
+						<PhotoCard className="userPhotoSection" key={photo._id} userPhotoIndex={index} isFav={isFav}
 							handleBack={this.handleBack} handleNext={this.handleNext} step={this.state.step}
 							photo={photo} photo_id={photo._id} user={this.state.user} userPhotos={this.state.userPhotos}
 							loggedInUserId={this.props.loggedInUserId}

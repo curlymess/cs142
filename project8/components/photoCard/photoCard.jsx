@@ -9,17 +9,18 @@ import {
 
 import './photoCard.css';
 
-import { KeyboardArrowRight, KeyboardArrowLeft } from '@mui/icons-material';
+// icons
+import { KeyboardArrowRight, KeyboardArrowLeft, YoutubeSearchedForOutlined } from '@mui/icons-material';
 import Face2Icon from '@mui/icons-material/Face2';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-import DeleteIcon from '@mui/icons-material/Delete'
-import NewComment from '../userPhotos/NewComment';
+import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import axios from 'axios';
+import NewComment from '../userPhotos/NewComment';
 
 class PhotoCard extends React.Component {
     constructor(props) {
@@ -83,7 +84,7 @@ class PhotoCard extends React.Component {
         let photo = this.props.photo;
         if (this.state.isFav) {
             axios.delete(`/favorite/${photo._id}`, {})
-                .then(response => {
+                .then(() => {
                     this.setState({
                         isFav: false,
                     });
@@ -109,30 +110,28 @@ class PhotoCard extends React.Component {
         event.preventDefault();
         let photo = this.props.photo;
         axios.post(`/likes/${photo._id}`, {})
-            .then(response => {
+            .then(() => {
                 this.fetchLikes();
             })
             .catch(error => {
                 console.log("like/unlike failed: " + error.response.data);
             });
-
-    };
+    }
 
     handleDeleteCommentClick(event, commentIndex) {
         event.preventDefault();
         let photo = this.props.photo;
 
         axios.post("delete/comment", { commentIndex: commentIndex, photoId: photo._id })
-            .then(res => {
+            .then(() => {
                 console.log("delete comment done");
             })
             .catch(err => {
                 console.log("delete comment error: " + err);
-            })
+            });
     }
 
     // photo settings // delete photo
-
     handleMenu = event => {
         this.setState({ anchorEl: event.currentTarget });
     };
@@ -141,10 +140,8 @@ class PhotoCard extends React.Component {
         this.setState({ anchorEl: null });
     };
 
-    handleCloseDelete = (event) => {
+    handleCloseDelete = () => {
         this.setState({ anchorEl: null });
-
-        //Delete Image
         console.log("ask to delete image");
         // event.preventDefault();
 
@@ -206,12 +203,11 @@ class PhotoCard extends React.Component {
                                                 open={Boolean(this.state.anchorEl)}
                                                 onClose={this.handleClose}
                                             >
-                                                <MenuItem onClick={event => this.handleCloseDelete(event)}>Delete Image</MenuItem>
+                                                <MenuItem onClick={this.handleCloseDelete}>Delete Image</MenuItem>
                                             </Menu>
                                         </div>
-                                    ) : <></>
-
-                            }
+                                    ) : null 
+                                }
                             sx={{ backgroundColor: "#F7c8e0" }} />
                         {/* image */}
                         <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} style={{ height: 300, objectFit: 'contain' }} />
@@ -234,11 +230,7 @@ class PhotoCard extends React.Component {
                         <CardActions sx={{ display: "flex", justifyContent: "space-between", flexDirection: 'row' }}>
                             <div className='bttnRow'>
                                 <IconButton onClick={event => this.handleLikeClick(event)}>
-                                    {this.state.likeList.includes(this.props.loggedInUserId) ?
-                                        <FavoriteIcon />
-                                        :
-                                        <FavoriteBorderIcon />
-                                    }
+                                    {this.state.likeList.includes(this.props.loggedInUserId) ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                                 </IconButton>
                                 <Typography>
                                     {this.state.likeList.length} likes
@@ -246,9 +238,7 @@ class PhotoCard extends React.Component {
                             </div>
                             <div className='bttnRow'>
                                 <IconButton onClick={this.handleBookmarkClick}>
-                                    {this.state.isFav ?
-                                        <BookmarkIcon /> : <BookmarkBorderIcon />
-                                    }
+                                    {this.state.isFav ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                                 </IconButton>
                                 <NewComment currPhotoId={photo._id} currPhotoFileName={photo.file_name} currUser={user.first_name + ' ' + user.last_name} />
                             </div>
@@ -261,7 +251,7 @@ class PhotoCard extends React.Component {
                                 <div>
                                     <Typography variant='h4' sx={{ paddingLeft: "5px" }}>Comment Section</Typography>
                                     <List sx={{ width: '100%', bgcolor: 'background.paper', position: 'relative', overflow: 'auto', maxHeight: 150, }} >
-                                        {photo.comments.map((comment, index) => (
+                                        {photo.comments.map((comment, commentIndex) => (
                                             <ListItem divider={true} key={comment._id} sx={{ backgroundColor: "#fbe3ef", display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                                 <div className='trashDiv'>
                                                     <div className='commentHeader'>
@@ -281,29 +271,26 @@ class PhotoCard extends React.Component {
                                                     </div>
                                                     {comment.user._id === this.props.loggedInUserId ?
                                                         (
-                                                            <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, index)}>
+                                                            <IconButton className='trashIcon' onClick={event => this.handleDeleteCommentClick(event, commentIndex)}>
                                                                 <DeleteIcon />
                                                             </IconButton>
-                                                        ) : <></>
-                                                    }
+                                                        ) : null}
                                                 </div>
                                                 <Typography variant="body1">{comment.comment}</Typography>
                                             </ListItem>
                                         ))}
                                     </List>
                                 </div>
-                            ) :
-                            <Typography variant="body1" >
-                                no comments
-                            </Typography>
-                        }
+                            ) : ( // TO-DO: find out why this won't show when there are no comments
+                                <Typography variant="body1" > no comments </Typography>
+                            )}
                         {/* end of comment section */}
                     </div>
                     // end of card
                 ) : null}
 
             </Card>
-        )
+        );
     }
 
     render() {

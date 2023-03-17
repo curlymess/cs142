@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button, Input, FormControl, InputLabel,
   Typography, Grid, DialogContent, Dialog,
@@ -6,10 +6,10 @@ import {
 } from '@mui/material';
 
 import CloseIcon from '@mui/icons-material/Close';
-
+import { enqueueSnackbar } from 'notistack';
 import axios from 'axios';
 
-function RegisterNewUserForm (props) {
+function RegisterNewUserForm(props) {
   const defaultValues = {
     login_name: '',
     password: '',
@@ -45,29 +45,36 @@ function RegisterNewUserForm (props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formValues);
-    // verify password entered correctly both times
+
     if (formValues.password !== formValues.registerPassword2) {
-      // isnert message that password dont match
-      alert("passwords do not match, try again");
+      enqueueSnackbar("passwords do not match :/", { variant: "error" });
       return;
     }
 
     axios.post('/user', formValues, { cancelToken: source.token })
       .then(res => {
-          props.handler(res.data.first_name);
-          props.history.push(`/`);
-        console.log("successfull registration!");
+        const user = res.data;
+        props.handleLogIn(user);
+        props.history.push(`/users/${user._id}`);
         handleClose();
-        alert("successfully registered! now log in :)");
-
-      })
-      .catch(err => {
+        enqueueSnackbar("successfully registered, welcome :)", { variant: 'success' });
+      }).catch(err => {
         console.log("registration fail: " + err);
-          setFormValues(defaultValues);
-
+        setFormValues(defaultValues);
+        enqueueSnackbar(err, { variant: 'error' });
       });
+
+      
   };
+
+  useEffect(() => {
+    source.cancel();
+    console.log("acted!");
+    return () => {
+      console.log("deleted");
+      // source.cancel();
+    };
+  }, []);
 
 
   return (
@@ -146,7 +153,7 @@ function RegisterNewUserForm (props) {
                   <Input id="registerPassword2" name='registerPassword2' type='password' value={formValues.registerPassword2} onChange={handleInputChange} />
                 </FormControl>
 
-                { ( formValues.password === formValues.registerPassword2 ) ? 
+                {(formValues.password === formValues.registerPassword2) ?
                   (
                     <Typography style={{ color: "green" }}>
                       Passwords match!
@@ -156,14 +163,14 @@ function RegisterNewUserForm (props) {
                       Passwords do not match...
                     </Typography>
                   )}
-                
+
               </Grid>
 
               {/* end of registration form */}
 
-                <Button variant="contained" color="secondary" type="submit" sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                  <Typography variant="h6" noWrap >Sign Up!</Typography>
-                </Button>
+              <Button variant="contained" color="secondary" type="submit" sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h6" noWrap >Sign Up!</Typography>
+              </Button>
 
             </Grid>
 

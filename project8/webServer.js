@@ -205,6 +205,7 @@ app.post('/photos/new', (req, res) => {
 app.post('/user', upload.any(), (req, res) => {
     let { login_name, first_name } = req.body;
     let newUser = req.body;
+    let newId = null;
     req.session.loginName = login_name;
 
     if (!(newUser.first_name && newUser.last_name && newUser.password)) {
@@ -223,10 +224,13 @@ app.post('/user', upload.any(), (req, res) => {
 
                 // create the user in the DB
                 User.create(newUser)
-                    .then(() => console.log("New User created in the DB"))
+                    .then((user) => {
+                        console.log("New User created in the DB" + user._id);
+                        res.status(200).send(user);
+                    })
                     .catch(e => console.log("Error creating new user ", e));
                 // res.status(200).json({ message: "succesfull login!!"});
-                res.status(200).send({ login_name: login_name, first_name: first_name });
+                
             } else { // user exists already
                 console.log("User already exists!");
                 console.log(user);
@@ -263,7 +267,7 @@ app.get('/favorites', function (request, response) {
             }
             let favoriteList = [];
             async.each(user.favorites, function (photoId, done_callback) {
-                Photo.findOne({ "_id": photoId }).exec()
+                Photo.findOne({ _id: photoId }).exec()
                     .then(photo => {
                         if (photo === null) {
                             console.log('Photo with _id:' + photoId + ' not found.');
@@ -408,15 +412,13 @@ app.post('/likes/:photo_id', function (req, res) {
 
             // like and unlike
             if (photo.likes.includes(user_id)) {
-                photo.likes.splice(photo.likes.indexOf(user_id), 1)
+                photo.likes.splice(photo.likes.indexOf(user_id), 1);
                 photo.save();
                 res.status(200).send(`unliked photo successfully`);
-                return;
             } else {
                 photo.likes.push(user_id);
                 photo.save();
                 res.status(200).send('Add user like to photo successfully');
-                return;
             }
 
         })
@@ -444,7 +446,7 @@ app.post('/delete/comment', function (req, res) {
     Photo.findOne({ _id: photoId }).exec()
         .then(photo => {
             if (photo === null) {
-                console.log('Photo with _id:' + photo_id + ' not found.');
+                console.log('Photo id ' + photoId + ' not found :/');
                 res.status(400).send('Not found');
                 return;
             }
@@ -475,7 +477,6 @@ app.post('/delete/photo', function (req, res) {
         if (err) {
             console.error("delete/photo | Error: " + err);
             res.status(400).send();
-            return;
         } else {
             console.log("yayyy photo deleted!");
         }
@@ -496,18 +497,15 @@ app.post('/delete/user', function (req, res) {
     Photo.remove({ user_id: user_id }, (err) => {
         if (err) {
             console.error("within delete user - failed to delete photo: " + err);
-            response.status(400).send();
-            return;
+            res.status(400).send();
         } else {
             console.log("within delete user - sucessfully delete photo");
-
             // delete user comments
             var query = Photo.find({});
             query.exec((err2, photos) => {
                 if (err2) {
                     console.error("within delete user - failed to delete comment: " + err2);
-                    response.status(400).send();
-                    return;
+                    res.status(400).send();
                 } else {
                     for (var i = 0; i < photos.length; i++) {
                         var numComments = photos[i].comments.length;

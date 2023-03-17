@@ -87,7 +87,7 @@ class LoginRegister extends React.Component {
 
                 {/* register */}
                 <Grid item >
-                    <RegisterNewUserForm handler={this.props.handleLogIn} history={this.props.history} />
+                    <RegisterNewUserForm handleLogIn={this.props.handleLogIn} history={this.props.history} />
                 </Grid>
 
             </Grid>

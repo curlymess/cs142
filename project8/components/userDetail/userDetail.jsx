@@ -83,7 +83,7 @@ constructor(props) {
 				</div>
 				<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none',  }}>
 					<Button variant='contained' color='secondary' disableElevation>
-						<PhotoLibraryIcon color="third"  sx={{paddingRight: "5px"}}/>
+						<PhotoLibraryIcon color="third" sx={{paddingRight: "5px"}}/>
 						<Typography variant='h6' noWrap>
 							View Photos
 						</Typography>

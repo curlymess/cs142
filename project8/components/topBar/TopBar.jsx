@@ -19,7 +19,6 @@ class TopBar extends React.Component {
     super(props);
     this.state = {
       currVersion: 0,
-      firstName: null,
       anchorEl: null,
     };
 
@@ -51,11 +50,9 @@ class TopBar extends React.Component {
   handleDeleteAccountClick = () => {
     this.setState({ anchorEl: null });
     this.props.handleDeleteUser();
-
-  }
+  };
 
   render() {
-
     return (
       <AppBar className="cs142-topbar-appBar">
         <Container maxWidth="xl">

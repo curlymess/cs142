@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-    Typography, List, ListItem, Avatar, IconButton, Divider, Button,
-    ImageList, ImageListItem, ImageListItemBar, ListSubheader,
+    Typography, IconButton, Button,
+    ImageList, ImageListItem, ImageListItemBar,
     Modal, Box
 } from '@mui/material';
 
@@ -94,7 +94,7 @@ class FavoritesPage extends React.Component {
                 </Typography>
             );
         }
-        return this.state.favorites.map((photo, index) => {
+        return this.state.favorites.map((photo) => {
             return (
                 <ImageListItem key={photo._id}>
                     <img
@@ -114,7 +114,7 @@ class FavoritesPage extends React.Component {
                                 'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
                         }}
                         position="top"
-                        actionIcon={
+                        actionIcon={(
                             <IconButton
                                 sx={{ color: 'white' }}
                                 aria-label={`BookMarkRemoveIcon ${photo.file_name}`}
@@ -122,14 +122,14 @@ class FavoritesPage extends React.Component {
                             >
                                 <BookmarkRemoveIcon />
                             </IconButton>
-                        }
+                        )}
                         actionPosition="left"
                     />
 
                     <ImageListItemBar
                         title={photo.file_name}
                         subtitle={photo.date_time}
-                        actionIcon={
+                        actionIcon={(
                             <IconButton
                                 sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                                 aria-label={`info about ${photo.file_name}`}
@@ -139,13 +139,13 @@ class FavoritesPage extends React.Component {
                             >
                                 <InfoIcon />
                             </IconButton>
-                        }
+                        )}
                     />
                 </ImageListItem>
             );
         });
     }
-    
+
 
     render() {
         const modalStyle = {
@@ -159,13 +159,13 @@ class FavoritesPage extends React.Component {
             border: '2px solid #000',
             boxShadow: 24,
             p: 4,
-          };
+        };
 
-          const modalPhoto = {
+        const modalPhoto = {
             height: 400,
             width: '100%',
             objectFit: 'contain',
-          }
+        };
 
         return (
             <div>
@@ -181,7 +181,7 @@ class FavoritesPage extends React.Component {
                 >
                     <Box sx={modalStyle}>
                         <h2 ref={_subtitle => (this.subtitle = _subtitle)}>{this.state.fileName}</h2>
-                        <img style={modalPhoto} alt={this.state.fileName} src={"../../images/" + this.state.fileName}  />
+                        <img style={modalPhoto} alt={this.state.fileName} src={"../../images/" + this.state.fileName} />
 
                         <Typography variant="body2" color="textPrimary" className="cs142-modal-time">
                             {`Posted on ${this.convertTime(this.state.dateTime)}`}
