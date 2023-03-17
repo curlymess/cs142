@@ -37,7 +37,6 @@ class PhotoCard extends React.Component {
     fetchLikes() {
         axios(`/likes/${this.props.photo._id}`, { cancelToken: this.source.token })
             .then((response) => {
-                console.log("retrieved likes and here they are : " + JSON.stringify(response.data));
                 const list = response.data;
                 this.setState({
                     likeList: list,
@@ -115,19 +114,19 @@ class PhotoCard extends React.Component {
             })
             .catch(error => {
                 console.log("like/unlike failed: " + error.response.data);
+                enqueueSnackbar("error with liking post, try again later :/", { variant: 'error' });
             });
     }
 
     handleDeleteCommentClick(event, commentIndex) {
         event.preventDefault();
         let photo = this.props.photo;
-
         axios.post("delete/comment", { commentIndex: commentIndex, photoId: photo._id })
             .then(() => {
-                console.log("delete comment done");
+                enqueueSnackbar("successfully deleted comment!", { variant: 'success' });
             })
-            .catch(err => {
-                console.log("delete comment error: " + err);
+            .catch(() => {
+                enqueueSnackbar("error with deleting comment :/", { variant: 'error' });
             });
     }
 
@@ -142,15 +141,15 @@ class PhotoCard extends React.Component {
 
     handleCloseDelete = () => {
         this.setState({ anchorEl: null });
-        console.log("ask to delete image");
         // event.preventDefault();
 
         axios.post("delete/photo", { photo_id: this.props.photo._id })
-            .then(response => {
-                console.log("delete photo success! " + response);
+            .then(() => {
+                enqueueSnackbar("successfully deleted photo!", { variant: 'success' });
             })
             .catch(error => {
                 console.error("delete photo failed: " + error);
+                enqueueSnackbar("error with deleting photo :/", { variant: 'error' });
             });
 
     };

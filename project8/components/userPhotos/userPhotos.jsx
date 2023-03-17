@@ -47,7 +47,6 @@ class UserPhotos extends React.Component {
 				.catch((e) => {
 					console.log(e);
 				});
-
 		}
 	}
 
