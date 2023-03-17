@@ -121,8 +121,6 @@ app.post('/admin/logout', (req, res) => {
             console.log(err + "failled to destroy :/");
             res.status(500).send(err);
         } else {
-            // req.session.loginName = '';
-            // req.session.loginId = '';
             res.status(200).send('The user logged out successfully!');
         }
     });
@@ -154,8 +152,6 @@ app.post("/commentsOfPhoto/:photo_id", upload.any(), (req, res) => {
                 user_id: req.session.loginId
             }]
         })
-            // e => res.status(500).send(JSON.stringify(e))
-            // );
             .then(res.status(200).send())
             .catch(e => res.status(500).send(e));
 

@@ -33,7 +33,6 @@ class PhotoCard extends React.Component {
         this.fetchLikes();
     }
 
-    // TO-DO: add loading variable that is true until component will mount 
     fetchLikes() {
         axios(`/likes/${this.props.photo._id}`, { cancelToken: this.source.token })
             .then((response) => {

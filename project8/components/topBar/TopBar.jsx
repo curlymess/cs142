@@ -48,16 +48,9 @@ class TopBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  handleDeleteAccountClick = (event) => {
+  handleDeleteAccountClick = () => {
     this.setState({ anchorEl: null });
-
-    axios.post("delete/user")
-      .then(response => {
-        console.log("delete user success! " + response);
-      })
-      .catch(error => {
-        console.error("delete user failed: " + error);
-      });
+    this.props.handleDeleteUser();
 
   }
 
@@ -110,7 +103,7 @@ class TopBar extends React.Component {
                         open={Boolean(this.state.anchorEl)}
                         onClose={this.handleClose}
                       >
-                        <MenuItem onClick={event => this.handleDeleteAccountClick(event)}>Delete Account</MenuItem>
+                        <MenuItem onClick={this.handleDeleteAccountClick}>Delete Account</MenuItem>
                       </Menu>
                     </div>
 

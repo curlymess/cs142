@@ -77,6 +77,28 @@ class PhotoShare extends React.Component {
     });
   };
 
+  handleDeleteUser = () => {
+    axios.post("delete/user")
+    .then(res => {
+      console.log("delete user success! " + res);
+      localStorage.removeItem("currUser");
+      localStorage.removeItem("loggedInUser");
+      localStorage.removeItem("loggedInFirstName");
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('loggedInUserId');
+
+      this.setState({
+        loggedInUser: null,
+        isLoggedIn: false,
+        currUser: null,
+        loggedInFirstName: null,
+        loggedInUserId: null,
+      });
+    })
+    .catch(error => {
+      console.error("delete user failed: " + error);
+    });
+  };
 
   render() {
     return (
@@ -84,7 +106,9 @@ class PhotoShare extends React.Component {
         <div>
           <Grid container spacing={8}>
             <Grid item xs={12}>
-              <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} firstName={this.state.loggedInFirstName} handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange} />
+              <TopBar currUser={this.state.currUser} isLoggedIn={this.state.isLoggedIn} firstName={this.state.loggedInFirstName} 
+                      handleLogIn={this.handleLogIn} handleLogOut={this.handleLogOut} currUserHandler={this.handleCurrUserChange} 
+                      handleDeleteUser={this.handleDeleteUser} />
             </Grid>
             <div className="cs142-main-topbar-buffer" />
 
