@@ -41,4 +41,19 @@
    padding-left: 5px;
  }
 
+ .topPhotoBar {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+ }
+
+ .viewBttn {
+   height: 200px;
+   width: 200px;
+   flex-direction: column;
+   border-radius: 15px;
+
+ }
+
+
 

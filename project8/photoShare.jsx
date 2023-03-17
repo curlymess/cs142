@@ -125,15 +125,10 @@ class PhotoShare extends React.Component {
               <Grid item sm={9}>
                 <Paper className="user-photos">
                   <Switch>
-                    
-                  { this.state.isLoggedIn ?
-                  (
-                    <Redirect path="/login-register" to="/users/" />
-                  ) : ( 
+                  
                     <Route path="/login-register"
                       render={((props) => <LoginRegister {...props} handleLogIn={this.handleLogIn} />)}
                     />
-                  )}
 
                     {this.state.isLoggedIn ?
                       (

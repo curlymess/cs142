@@ -230,7 +230,7 @@ app.post('/user', upload.any(), (req, res) => {
                     })
                     .catch(e => console.log("Error creating new user ", e));
                 // res.status(200).json({ message: "succesfull login!!"});
-                
+
             } else { // user exists already
                 console.log("User already exists!");
                 console.log(user);
@@ -542,7 +542,69 @@ app.post('/delete/user', function (req, res) {
 
 /******************************************************* */
 /******************************************************* */
-/* proj8 ** */
+/* proj8 user details extension */
+// get most commented photo
+app.get('/most-comment', function (req, res) {
+    if (!req.session.loginId) {
+        res.status(401).send('Current user is not logged in');
+        return;
+    }
+    let loginId = req.session.loginId;
+
+    Photo.find(
+        { user_id: loginId },
+        '_id user_id comments file_name date_time'
+    ).then(photos => {
+        let topPhoto = photos[Object.keys(photos)[0]];
+        let numComments = 0;
+        console.log("insidie comments");
+        Object.keys(photos).forEach(function (currKey) {
+            let currPhoto = photos[currKey];
+            if (currPhoto.comments.length > numComments) {
+                topPhoto = currPhoto;
+                numComments = currPhoto.comments.length;
+                console.log('top photo', currPhoto.file_name);
+            }
+        });
+        if (numComments === 0) {
+            res.status(200).send(JSON.stringify({}));
+        } else {
+            console.log("found yayayy!");
+            console.log(JSON.stringify(topPhoto));
+            res.status(200).send(topPhoto);
+        }
+    },
+        err => {
+            if (err) {
+                res.status(400).send(JSON.stringify(err));
+            }
+        }
+    );
+});
+
+// most recent photo
+app.get('/most-recent', function (req, res) {
+    if (!req.session.loginId) {
+        res.status(401).send('Current user is not logged in');
+        return;
+    }
+    let loginId = req.session.loginId;
+
+    Photo.find(
+        { user_id: loginId },
+        '_id user_id comments file_name date_time'
+    ).then(photos => {
+        let lastPhoto = photos[Object.keys(photos).length - 1];
+        res.status(200).send(JSON.stringify(lastPhoto));
+    },
+        err => {
+            if (err) {
+                res.status(400).send(JSON.stringify(err));
+            }
+        }
+    );
+
+});
 
 /******************************************************* */
 

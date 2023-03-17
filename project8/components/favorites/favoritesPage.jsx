@@ -12,6 +12,7 @@ import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import InfoIcon from '@mui/icons-material/Info';
 
 import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
 
 class FavoritesPage extends React.Component {
     constructor(props) {
@@ -23,9 +24,7 @@ class FavoritesPage extends React.Component {
             dateTime: "",
             isOpen: false,
         };
-
         this.handleClose = this.handleClose.bind(this);
-
     }
 
     componentDidMount() {
@@ -58,10 +57,8 @@ class FavoritesPage extends React.Component {
         return replaced.slice(0, pos);
     }
 
-
     fetchData() {
         axios.get(`/favorites`).then(response => {
-            console.log("response fata her is " + response.data);
             this.setState({
                 favorites: response.data,
             });
@@ -70,16 +67,13 @@ class FavoritesPage extends React.Component {
         });
     }
 
-    // TO-DO: add more alerts
-
     removeBookmarkClick = (event, photo) => {
         event.preventDefault();
-        axios.delete(`/favorite/${photo._id}`).then(response => {
-            console.log(response.data);
+        axios.delete(`/favorite/${photo._id}`).then(() => {
             this.fetchData();
-            alert("successfully delete photo");
+            enqueueSnackbar("successfully removed bookmark", {variant: 'success'});
         }).catch(error => {
-            alert("failed to delete photo");
+            enqueueSnackbar("failed to remove bookmark", {variant: 'error'});
             console.log(error.response.data);
         });
     };

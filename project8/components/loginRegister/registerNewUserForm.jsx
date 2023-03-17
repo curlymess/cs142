@@ -71,8 +71,7 @@ function RegisterNewUserForm(props) {
     source.cancel();
     console.log("acted!");
     return () => {
-      console.log("deleted");
-      // source.cancel();
+      console.log("useEffect returned");
     };
   }, []);
 
