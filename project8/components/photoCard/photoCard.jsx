@@ -24,7 +24,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import axios from 'axios';
 import NewComment from '../userPhotos/NewComment';
 
-function convertTime(time){
+function convertTime(time) {
     let pos = time.indexOf('.');
     let replaced = time.replace(/[A-Z]/g, function () {
         return " ";
@@ -207,8 +207,8 @@ class PhotoCard extends React.Component {
                                                 <MenuItem onClick={this.handleCloseDelete}>Delete Image</MenuItem>
                                             </Menu>
                                         </div>
-                                    ) : null 
-                                }
+                                    ) : null
+                            }
                             sx={{ backgroundColor: "#F7c8e0" }} />
                         {/* image */}
                         <CardMedia component='img' image={`/images/${photo.file_name}`} alt={photo._id} style={{ height: 300, objectFit: 'contain' }} />
