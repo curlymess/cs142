@@ -162,8 +162,7 @@ class PhotoCard extends React.Component {
         const step = this.props.step;
         const userPhotosLength = this.props.userPhotos.length;
         const index = this.props.userPhotoIndex;
-
-        // userPhotos
+        const timeToConvert = this.props.photo.date_time;
         return (
             <Card style={{ maxHeight: 650, width: 600, margin: 'auto' }}>
                 {Math.abs(step - index) < 1 ? (
@@ -179,7 +178,7 @@ class PhotoCard extends React.Component {
                             )}
                             subheader={(
                                 <Typography variant="h7">
-                                    {`${convertTime(photo.date_time)}`}
+                                    {`${convertTime(timeToConvert)}`}
                                 </Typography>
                             )}
                             action={
@@ -266,7 +265,7 @@ class PhotoCard extends React.Component {
                                                                 <Link to={`/users/${comment.user._id}`} style={{ textDecoration: 'none' }}>
                                                                     <Typography variant="h4">{`${comment.user.first_name} ${comment.user.last_name}`}</Typography>
                                                                 </Link>
-                                                                <Typography variant="h7">{`${this.convertTime(photo.date_time)}`}</Typography>
+                                                                <Typography variant="h7">{`${convertTime(timeToConvert)}`}</Typography>
                                                             </div>
                                                         )} />
                                                     </div>
