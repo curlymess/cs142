@@ -1,11 +1,17 @@
 import React from 'react';
 import {
-    Typography, IconButton, Button,
-    ImageList, ImageListItem, ImageListItemBar,
-    Modal, Box
+    Typography, ImageList, ImageListItem, ImageListItemBar,
 } from '@mui/material';
 
 import axios from 'axios';
+
+function convertTime(time){
+    let pos = time.indexOf('.');
+    let replaced = time.replace(/[A-Z]/g, function () {
+        return " ";
+    });
+    return replaced.slice(0, pos);
+}
 
 class TopPhotos extends React.Component {
     constructor(props) {
@@ -47,14 +53,6 @@ class TopPhotos extends React.Component {
         });
     }
 
-    convertTime(time) {
-        let pos = time.indexOf('.');
-        let replaced = time.replace(/[A-Z]/g, function () {
-            return " ";
-        });
-        return replaced.slice(0, pos);
-    }
-
     render() {
         return (
             (!this.state.loading1 && !this.state.loading2) ? (
@@ -66,7 +64,7 @@ class TopPhotos extends React.Component {
                             src={"../../images/" + this.state.mostRecent.file_name + "?w=200&h=200&fit=crop&auto=format"}
                             srcSet={"../../images/" + this.state.mostRecent.file_name + `?w=200&h=200&fit=crop&auto=format&dpr=2 2x`}
                         />
-                        
+
                         <ImageListItemBar
                             sx={{
                                 background:
@@ -75,12 +73,11 @@ class TopPhotos extends React.Component {
                             }}
                             position="top"
                             title="Most Recent"
-
                             actionPosition="left"
                         />
                         <ImageListItemBar
                             title={this.state.mostRecent.file_name}
-                            subtitle={"posted " + this.convertTime(this.state.mostRecent.date_time)}
+                            subtitle={"posted " + convertTime(this.state.mostRecent.date_time)}
                         />
                     </ImageListItem>
 
@@ -99,7 +96,6 @@ class TopPhotos extends React.Component {
                             }}
                             position="top"
                             title="Most Commented"
-
                             actionPosition="left"
                         />
                         <ImageListItemBar

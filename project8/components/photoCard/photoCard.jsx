@@ -7,10 +7,12 @@ import {
     Menu, MenuItem
 } from '@mui/material';
 
+import { enqueueSnackbar } from 'notistack';
+
 import './photoCard.css';
 
 // icons
-import { KeyboardArrowRight, KeyboardArrowLeft, YoutubeSearchedForOutlined } from '@mui/icons-material';
+import { KeyboardArrowRight, KeyboardArrowLeft } from '@mui/icons-material';
 import Face2Icon from '@mui/icons-material/Face2';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -21,6 +23,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import axios from 'axios';
 import NewComment from '../userPhotos/NewComment';
+
+function convertTime(time){
+    let pos = time.indexOf('.');
+    let replaced = time.replace(/[A-Z]/g, function () {
+        return " ";
+    });
+    return replaced.slice(0, pos);
+}
 
 class PhotoCard extends React.Component {
     constructor(props) {
@@ -69,14 +79,6 @@ class PhotoCard extends React.Component {
                 anchorEl: false,
             });
         }
-    }
-
-    convertTime(time) {
-        let pos = time.indexOf('.');
-        let replaced = time.replace(/[A-Z]/g, function () {
-            return " ";
-        });
-        return replaced.slice(0, pos);
     }
 
     handleBookmarkClick = () => {
@@ -177,7 +179,7 @@ class PhotoCard extends React.Component {
                             )}
                             subheader={(
                                 <Typography variant="h7">
-                                    {`${this.convertTime(photo.date_time)}`}
+                                    {`${convertTime(photo.date_time)}`}
                                 </Typography>
                             )}
                             action={

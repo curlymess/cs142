@@ -203,9 +203,8 @@ app.post('/photos/new', (req, res) => {
 /* proj7 problem 4 */
 // new user registration
 app.post('/user', upload.any(), (req, res) => {
-    let { login_name, first_name } = req.body;
+    let { login_name } = req.body;
     let newUser = req.body;
-    let newId = null;
     req.session.loginName = login_name;
 
     if (!(newUser.first_name && newUser.last_name && newUser.password)) {
@@ -224,9 +223,9 @@ app.post('/user', upload.any(), (req, res) => {
 
                 // create the user in the DB
                 User.create(newUser)
-                    .then((user) => {
-                        console.log("New User created in the DB" + user._id);
-                        res.status(200).send(user);
+                    .then((new_user) => {
+                        console.log("New User created in the DB" + new_user._id);
+                        res.status(200).send(new_user);
                     })
                     .catch(e => console.log("Error creating new user ", e));
                 // res.status(200).json({ message: "succesfull login!!"});

@@ -14,6 +14,14 @@ import InfoIcon from '@mui/icons-material/Info';
 import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 
+function convertTime(time){
+    let pos = time.indexOf('.');
+    let replaced = time.replace(/[A-Z]/g, function () {
+        return " ";
+    });
+    return replaced.slice(0, pos);
+}
+
 class FavoritesPage extends React.Component {
     constructor(props) {
         super(props);
@@ -49,13 +57,7 @@ class FavoritesPage extends React.Component {
         });
     };
 
-    convertTime(time) {
-        let pos = time.indexOf('.');
-        let replaced = time.replace(/[A-Z]/g, function () {
-            return " ";
-        });
-        return replaced.slice(0, pos);
-    }
+    
 
     fetchData() {
         axios.get(`/favorites`).then(response => {
@@ -154,6 +156,7 @@ class FavoritesPage extends React.Component {
             boxShadow: 24,
             p: 4,
         };
+        const { timeToConvert } = this.state.dateTime;
 
         const modalPhoto = {
             height: 400,
@@ -174,11 +177,11 @@ class FavoritesPage extends React.Component {
                     onClose={this.handleClose}
                 >
                     <Box sx={modalStyle}>
-                        <h2 ref={_subtitle => (this.subtitle = _subtitle)}>{this.state.fileName}</h2>
+                        <Typography variant="subtitle" >{this.state.fileName}</Typography>
                         <img style={modalPhoto} alt={this.state.fileName} src={"../../images/" + this.state.fileName} />
 
                         <Typography variant="body2" color="textPrimary" className="cs142-modal-time">
-                            {`Posted on ${this.convertTime(this.state.dateTime)}`}
+                            {`Posted on ${convertTime(timeToConvert)}`}
                         </Typography>
                         <div className="cs142-modal-container">
                             <Button

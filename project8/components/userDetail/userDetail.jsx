@@ -85,23 +85,21 @@ class UserDetail extends React.Component {
 					</div>
 
 					<div className="topPhotoBar">
-					{/* most recent photo */}
-					{/* top comment */}
-					<TopPhotos history={this.props.history} />
+						{/* most recent photo */}
+						{/* top comment */}
+						<TopPhotos history={this.props.history} />
 
-					{/* all user photos */}
-					<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none', borderRadius: "15px" }}>
-						<Button variant='contained' color='secondary' disableElevation className='viewBttn'>
-							<PhotoLibraryIcon color="third" sx={{ paddingRight: "5px", fontSize: "40px" }} />
-							<Typography variant='h6' noWrap>
-								View Photos
-							</Typography>
-						</Button>
-					</Link>
+						{/* all user photos */}
+						<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none', borderRadius: "15px" }}>
+							<Button variant='contained' color='secondary' disableElevation className='viewBttn'>
+								<PhotoLibraryIcon color="third" sx={{ paddingRight: "5px", fontSize: "40px" }} />
+								<Typography variant='h6' noWrap>
+									View Photos
+								</Typography>
+							</Button>
+						</Link>
+					</div>
 				</div>
-
-				</div>
-
 			</div>
 		);
 	}

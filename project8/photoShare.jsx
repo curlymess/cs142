@@ -9,6 +9,7 @@ import {
 import './styles/main.css';
 
 import axios from 'axios';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import theme from './lib/theme';
 
 // import necessary components
@@ -18,7 +19,6 @@ import UserList from './components/userList/userList';
 import UserPhotos from './components/userPhotos/userPhotos';
 import LoginRegister from './components/loginRegister/LoginRegister';
 import FavoritesPage from './components/favorites/favoritesPage';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack'
 
 
 class PhotoShare extends React.Component {
