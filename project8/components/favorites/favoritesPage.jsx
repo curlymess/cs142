@@ -156,7 +156,6 @@ class FavoritesPage extends React.Component {
             boxShadow: 24,
             p: 4,
         };
-        const { timeToConvert } = this.state.dateTime;
 
         const modalPhoto = {
             height: 400,
@@ -181,7 +180,7 @@ class FavoritesPage extends React.Component {
                         <img style={modalPhoto} alt={this.state.fileName} src={"../../images/" + this.state.fileName} />
 
                         <Typography variant="body2" color="textPrimary" className="cs142-modal-time">
-                            {`Posted on ${convertTime(timeToConvert)}`}
+                            {`Posted on ${convertTime(this.state.dateTime)}`}
                         </Typography>
                         <div className="cs142-modal-container">
                             <Button

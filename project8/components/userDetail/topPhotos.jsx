@@ -65,7 +65,7 @@ class TopPhotos extends React.Component {
     render() {
         return (
             (!this.state.loading1 && !this.state.loading2) ? (
-                <ImageList component="nav" sx={{ width: 400, height: 200 }} cols={2} rowHeight={200}>
+                <ImageList component="nav" sx={{ width: 400, height: 200, overflow: "hidden" }} cols={2} rowHeight={200}>
                     <ImageListItem key={this.state.mostRecent._id + 1}>
                         <img
                             alt={this.state.mostRecent.file_name}
