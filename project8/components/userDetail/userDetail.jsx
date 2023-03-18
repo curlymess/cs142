@@ -54,6 +54,7 @@ class UserDetail extends React.Component {
 		this.source.cancel("user cancelled req in userDetail");
 	}
 
+
 	render() {
 		return (
 			<div>
@@ -87,7 +88,7 @@ class UserDetail extends React.Component {
 					<div className="topPhotoBar">
 						{/* most recent photo */}
 						{/* top comment */}
-						<TopPhotos history={this.props.history} />
+						<TopPhotos history={this.props.history} viewUserId={ this.state.user._id} />
 
 						{/* all user photos */}
 						<Link to={`/photos/${this.state.user._id}`} className='button' style={{ textDecoration: 'none', borderRadius: "15px" }}>

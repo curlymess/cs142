@@ -5,7 +5,7 @@ import {
 
 import axios from 'axios';
 
-function convertTime(time){
+function convertTime(time) {
     let pos = time.indexOf('.');
     let replaced = time.replace(/[A-Z]/g, function () {
         return " ";
@@ -29,8 +29,16 @@ class TopPhotos extends React.Component {
         this.fetchMostRecent();
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.viewUserId !== this.props.viewUserId) {
+            this.fetchMostComment();
+            this.fetchMostRecent();
+        }
+    }
+
     fetchMostComment() {
-        axios.get(`/most-comment`).then(response => {
+        const viewId = this.props.viewUserId;
+        axios.get(`/most-comment/${viewId}`).then(response => {
             this.setState({
                 mostComment: response.data,
                 loading1: false,
@@ -42,7 +50,8 @@ class TopPhotos extends React.Component {
     }
 
     fetchMostRecent() {
-        axios.get(`/most-recent`).then(response => {
+        const viewId = this.props.viewUserId;
+        axios.get(`/most-recent/${viewId}`).then(response => {
             this.setState({
                 mostRecent: response.data,
                 loading2: false,

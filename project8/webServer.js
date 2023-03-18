@@ -543,15 +543,15 @@ app.post('/delete/user', function (req, res) {
 /******************************************************* */
 /* proj8 user details extension */
 // get most commented photo
-app.get('/most-comment', function (req, res) {
+app.get('/most-comment/:userId', function (req, res) {
     if (!req.session.loginId) {
         res.status(401).send('Current user is not logged in');
         return;
     }
-    let loginId = req.session.loginId;
+    let userId = req.params.userId;
 
     Photo.find(
-        { user_id: loginId },
+        { user_id: userId },
         '_id user_id comments file_name date_time'
     ).then(photos => {
         let topPhoto = photos[Object.keys(photos)[0]];
@@ -582,15 +582,14 @@ app.get('/most-comment', function (req, res) {
 });
 
 // most recent photo
-app.get('/most-recent', function (req, res) {
+app.get('/most-recent/:userId', function (req, res) {
     if (!req.session.loginId) {
         res.status(401).send('Current user is not logged in');
         return;
     }
-    let loginId = req.session.loginId;
-
+    let userId = req.params.userId;
     Photo.find(
-        { user_id: loginId },
+        { user_id: userId },
         '_id user_id comments file_name date_time'
     ).then(photos => {
         let lastPhoto = photos[Object.keys(photos).length - 1];
